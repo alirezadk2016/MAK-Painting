@@ -1,24 +1,20 @@
-/* MAK Painting Group — JS */
-
-// Nav scroll effect
+// Nav scroll
 const nav = document.getElementById('nav');
 window.addEventListener('scroll', () => {
-  nav.classList.toggle('scrolled', window.scrollY > 60);
+  nav.classList.toggle('scrolled', window.scrollY > 40);
 }, { passive: true });
 
-// Mobile burger menu
+// Mobile burger
 const burger = document.getElementById('burger');
 const navLinks = document.getElementById('navLinks');
 burger.addEventListener('click', () => {
-  navLinks.classList.toggle('open');
-  const isOpen = navLinks.classList.contains('open');
-  burger.children[0].style.transform = isOpen ? 'rotate(45deg) translate(5px, 5px)' : '';
-  burger.children[1].style.opacity = isOpen ? '0' : '';
-  burger.children[2].style.transform = isOpen ? 'rotate(-45deg) translate(5px, -5px)' : '';
+  const open = navLinks.classList.toggle('open');
+  burger.children[0].style.transform = open ? 'rotate(45deg) translate(5px, 5px)' : '';
+  burger.children[1].style.opacity = open ? '0' : '';
+  burger.children[2].style.transform = open ? 'rotate(-45deg) translate(5px, -5px)' : '';
 });
-
-navLinks.querySelectorAll('a').forEach(link => {
-  link.addEventListener('click', () => {
+navLinks.querySelectorAll('a').forEach(a => {
+  a.addEventListener('click', () => {
     navLinks.classList.remove('open');
     burger.children[0].style.transform = '';
     burger.children[1].style.opacity = '';
@@ -26,86 +22,90 @@ navLinks.querySelectorAll('a').forEach(link => {
   });
 });
 
-// Hero image load animation
-document.querySelector('.hero').classList.add('loaded');
-
-// Intersection Observer for fade-up animations
-const fadeEls = document.querySelectorAll(
-  '.service-card, .process__step, .gallery__item, .testimonial, .stats__item, .contact__detail'
-);
-fadeEls.forEach(el => el.classList.add('fade-up'));
-
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach((entry, i) => {
-    if (entry.isIntersecting) {
-      setTimeout(() => entry.target.classList.add('visible'), i * 80);
-      observer.unobserve(entry.target);
-    }
-  });
-}, { threshold: 0.12 });
-
-fadeEls.forEach(el => observer.observe(el));
-
-// Counter animation for stats
-const statNums = document.querySelectorAll('.stats__num');
-const statsObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      animateCounter(entry.target);
-      statsObserver.unobserve(entry.target);
-    }
-  });
-}, { threshold: 0.5 });
-
-statNums.forEach(el => statsObserver.observe(el));
-
-function animateCounter(el) {
-  const target = parseInt(el.dataset.target, 10);
-  const duration = 1800;
-  const start = performance.now();
-  function step(now) {
-    const progress = Math.min((now - start) / duration, 1);
-    const eased = 1 - Math.pow(1 - progress, 3);
-    el.textContent = Math.floor(eased * target);
-    if (progress < 1) requestAnimationFrame(step);
-    else el.textContent = target;
-  }
-  requestAnimationFrame(step);
-}
-
-// Contact form submission
-const form = document.getElementById('contactForm');
-const successMsg = document.getElementById('formSuccess');
-form.addEventListener('submit', (e) => {
-  e.preventDefault();
-  const btn = form.querySelector('button[type="submit"]');
-  btn.textContent = 'Sending...';
-  btn.disabled = true;
-  setTimeout(() => {
-    form.querySelectorAll('input, select, textarea').forEach(f => f.value = '');
-    btn.textContent = 'Send Enquiry';
-    btn.disabled = false;
-    successMsg.classList.add('visible');
-    setTimeout(() => successMsg.classList.remove('visible'), 6000);
-  }, 1200);
+// Fade-up on scroll
+const fadeEls = document.querySelectorAll('.scard, .review-card, .how__steps li, .faq__item, .trust-item, .contact__detail');
+fadeEls.forEach((el, i) => {
+  el.classList.add('fade-up');
+  el.style.transitionDelay = (i % 4) * 0.08 + 's';
 });
 
-// Smooth section reveal for about, process, cta-banner
-const sectionEls = document.querySelectorAll('.about__content, .about__image, .cta-banner__content, .section__header');
-sectionEls.forEach(el => {
-  el.style.opacity = '0';
-  el.style.transform = 'translateY(24px)';
-  el.style.transition = 'opacity .8s cubic-bezier(.25,.46,.45,.94), transform .8s cubic-bezier(.25,.46,.45,.94)';
-});
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+  });
+}, { threshold: 0.1 });
+fadeEls.forEach(el => io.observe(el));
 
-const sectionObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.style.opacity = '1';
-      entry.target.style.transform = 'translateY(0)';
-      sectionObserver.unobserve(entry.target);
+// Section reveals
+const sectionReveal = document.querySelectorAll('.section__header, .how__content, .how__visual, .about__content, .about__images, .faq__header, .contact__info');
+sectionReveal.forEach(el => {
+  el.style.cssText += 'opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s ease';
+});
+const sr = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.style.opacity = '1';
+      e.target.style.transform = 'translateY(0)';
+      sr.unobserve(e.target);
     }
   });
 }, { threshold: 0.1 });
+sectionReveal.forEach(el => sr.observe(el));
 
-sectionEls.forEach(el => sectionObserver.observe(el));
+// Counter animation
+const statEls = document.querySelectorAll('.about__stat-num');
+const counterIO = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { animCount(e.target); counterIO.unobserve(e.target); }
+  });
+}, { threshold: 0.5 });
+statEls.forEach(el => counterIO.observe(el));
+
+function animCount(el) {
+  const target = parseInt(el.dataset.target, 10);
+  const start = performance.now();
+  const dur = 1600;
+  (function step(now) {
+    const t = Math.min((now - start) / dur, 1);
+    el.textContent = Math.floor((1 - Math.pow(1 - t, 3)) * target);
+    if (t < 1) requestAnimationFrame(step);
+    else el.textContent = target;
+  })(start);
+}
+
+// FAQ accordion
+document.querySelectorAll('.faq__q').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const item = btn.closest('.faq__item');
+    const answer = item.querySelector('.faq__a');
+    const isOpen = btn.getAttribute('aria-expanded') === 'true';
+
+    // close all
+    document.querySelectorAll('.faq__q').forEach(b => {
+      b.setAttribute('aria-expanded', 'false');
+      b.closest('.faq__item').querySelector('.faq__a').style.maxHeight = '0';
+    });
+
+    if (!isOpen) {
+      btn.setAttribute('aria-expanded', 'true');
+      answer.style.maxHeight = answer.scrollHeight + 'px';
+    }
+  });
+});
+
+// Contact form
+const form = document.getElementById('contactForm');
+const success = document.getElementById('formSuccess');
+form.addEventListener('submit', e => {
+  e.preventDefault();
+  const btn = form.querySelector('button[type=submit]');
+  btn.textContent = 'Sending…';
+  btn.disabled = true;
+  setTimeout(() => {
+    form.reset();
+    btn.textContent = 'Send enquiry';
+    btn.disabled = false;
+    success.classList.add('visible');
+    setTimeout(() => success.classList.remove('visible'), 6000);
+  }, 1200);
+});
