@@ -1,13 +1,14 @@
 export const BRAND = {
   name: "MAK Painting Group",
   tagline: "Stress-free painting you can depend on.",
-  sub: "Relax — your home's in expert hands. Premium prep, flawless finish, fully insured Melbourne painters.",
+  sub: "Relax — your home's in expert hands. Premium prep, flawless finish, fully insured Melbourne painters. Commercial, domestic, interior & exterior.",
+  contactName: "Hossain",
   phone: "0404 000 772",
-  email: "hello@makpainting.com.au",
+  email: "mak.painting.group@gmail.com",
   whatsapp: "+61404000772",
-  abn: "12 345 678 901",
-  license: "DB-L 12345",
-  address: "Melbourne, Victoria, Australia",
+  serviceTypes: "Commercial · Domestic · Interior & Exterior",
+  address: "Ferntree Gully, Melbourne, VIC 3156",
+  suburb: "Ferntree Gully",
   googleRating: "5.0",
   googleReviewCount: 7,
   googleMapsUrl: "https://www.google.com/maps/place/MAK+Painting+Group/@-37.9725665,145.0531353,17z",
@@ -168,18 +169,22 @@ export const PACKAGES = [
 ];
 
 export const EXTRAS = [
-  "Wall repairs & patching",
-  "Plastering",
-  "Feature walls",
-  "Ceiling repaint",
-  "Cornice & trim painting",
-  "Anti-mould coating",
-  "Colour consultation",
-  "Furniture & floor protection",
-  "Pressure washing",
-  "Weatherboard repair",
-  "Window & door frames",
-  "Garage doors",
+  "Cabinet painting",
+  "Deck painting",
+  "Door painting",
+  "Drywall painting",
+  "Drywall repair",
+  "Faux finishes",
+  "Furniture painting",
+  "Metal painting",
+  "Mural painting",
+  "Roof painting",
+  "Siding painting",
+  "Spray painting",
+  "Wallpaper hanging",
+  "Wallpaper removal",
+  "Water damage repair",
+  "Wood staining & varnishing",
 ];
 
 export const STATS = [
@@ -309,13 +314,13 @@ export const REVIEWS = [
 ];
 
 export const SUBURBS = [
-  "Glen Waverley", "Mount Waverley", "Clayton", "Oakleigh", "Brighton",
-  "South Yarra", "Toorak", "Camberwell", "Doncaster", "Box Hill",
-  "Hawthorn", "Richmond", "Prahran", "St Kilda", "Port Melbourne",
-  "South Melbourne", "Fitzroy", "Collingwood", "Carlton", "Northcote",
-  "Thornbury", "Brunswick", "Essendon", "Moonee Ponds", "Footscray",
-  "Williamstown", "Altona", "Werribee", "Dandenong", "Frankston",
-  "Mornington", "Berwick", "Narre Warren", "Cranbourne", "Pakenham",
+  "Ferntree Gully", "Knoxfield", "Wantirna", "Rowville", "Scoresby",
+  "Boronia", "Bayswater", "Ringwood", "Croydon", "Mooroolbark",
+  "Lilydale", "Wheelers Hill", "Glen Waverley", "Mount Waverley", "Vermont",
+  "Mitcham", "Nunawading", "Box Hill", "Doncaster", "Camberwell",
+  "Hawthorn", "Kew", "Balwyn", "Blackburn", "Forest Hill",
+  "Dandenong", "Berwick", "Narre Warren", "Endeavour Hills", "Hallam",
+  "Clayton", "Oakleigh", "Notting Hill", "Burwood", "Templestowe",
 ];
 
 export const FAQS = [

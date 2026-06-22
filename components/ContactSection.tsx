@@ -32,7 +32,7 @@ export function ContactSection() {
                 { icon: "phone", label: "Phone", val: BRAND.phone, href: `tel:${BRAND.phone.replace(/\s/g,"")}` },
                 { icon: "whatsapp", label: "WhatsApp", val: "Chat on WhatsApp", href: `https://wa.me/${BRAND.whatsapp}` },
                 { icon: "email", label: "Email", val: BRAND.email, href: `mailto:${BRAND.email}` },
-                { icon: "pin", label: "Location", val: BRAND.address, href: undefined },
+                { icon: "pin", label: "Location", val: BRAND.address, href: BRAND.googleMapsUrl },
               ].map((item) => (
                 <div key={item.label} className="flex items-start gap-3.5">
                   <div className="w-10 h-10 bg-blue-muted rounded-xl flex items-center justify-center flex-shrink-0 text-blue-brand">
@@ -62,9 +62,9 @@ export function ContactSection() {
             </div>
 
             <div className="mt-8 p-4 bg-white rounded-2xl border border-gray-100 shadow-card text-xs text-gray-400 leading-relaxed">
-              <strong className="text-gray-600">ABN:</strong> {BRAND.abn} &nbsp;·&nbsp;
-              <strong className="text-gray-600">Lic:</strong> {BRAND.license} &nbsp;·&nbsp;
-              Fully insured $20M public liability
+              <strong className="text-gray-600">Speak to {BRAND.contactName}</strong> &nbsp;·&nbsp;
+              {BRAND.serviceTypes} &nbsp;·&nbsp;
+              Fully insured public liability
             </div>
           </div>
 

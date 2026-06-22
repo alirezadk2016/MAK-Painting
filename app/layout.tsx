@@ -61,14 +61,14 @@ const jsonLd = {
     "Professional residential and commercial painting services across Melbourne, Victoria. Interior, exterior, roof painting and special finishes.",
   url: "https://www.makpainting.com.au",
   telephone: "+61404000772",
-  email: "hello@makpainting.com.au",
+  email: "mak.painting.group@gmail.com",
   image: "https://www.makpainting.com.au/og-image.jpg",
   logo: "https://www.makpainting.com.au/logo.png",
   address: {
     "@type": "PostalAddress",
-    addressLocality: "Melbourne",
+    addressLocality: "Ferntree Gully",
     addressRegion: "VIC",
-    postalCode: "3000",
+    postalCode: "3156",
     addressCountry: "AU",
   },
   geo: {

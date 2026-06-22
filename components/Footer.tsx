@@ -28,7 +28,7 @@ export function Footer() {
               </span>
             </div>
             <p className="text-gray-400 text-sm leading-relaxed mb-4">
-              Melbourne&apos;s trusted residential &amp; commercial painting specialists.
+              {BRAND.serviceTypes} painting specialists based in {BRAND.suburb}, serving all of Melbourne.
             </p>
             {/* Google rating badge */}
             <a href={MAPS_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/15 rounded-xl px-3 py-2 mb-4 transition-colors">
@@ -104,7 +104,7 @@ export function Footer() {
         {/* Bottom */}
         <div className="border-t border-white/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-xs text-gray-600">
-            © {year} MAK Painting Group Pty Ltd. ABN {BRAND.abn} · Vic Builders Lic. {BRAND.license}
+            © {year} MAK Painting Group · {BRAND.serviceTypes} · {BRAND.suburb}, Melbourne
           </p>
           <div className="flex items-center gap-4 text-xs text-gray-600">
             <a href={MAPS_URL} target="_blank" rel="noopener noreferrer" className="hover:text-gray-400 transition-colors">Google Maps</a>
