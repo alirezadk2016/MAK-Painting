@@ -28,13 +28,13 @@ export function Pricing() {
               className={clsx(
                 "relative rounded-2xl border p-8 flex flex-col",
                 pkg.popular
-                  ? "bg-blue-brand border-blue-brand shadow-card-hover scale-[1.03]"
+                  ? "bg-charcoal border-gold/40 shadow-card-hover scale-[1.03]"
                   : "bg-white border-gray-200 shadow-card"
               )}
             >
               {pkg.popular && (
                 <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-                  <span className="bg-terra text-white text-xs font-bold rounded-full px-4 py-1.5 whitespace-nowrap shadow-md">
+                  <span className="bg-terra text-ink text-xs font-bold rounded-full px-4 py-1.5 whitespace-nowrap shadow-md">
                     ★ Most popular
                   </span>
                 </div>
@@ -43,7 +43,7 @@ export function Pricing() {
                 <h3 className={clsx("text-xl font-black mb-1", pkg.popular ? "text-white" : "text-charcoal")}>
                   {pkg.name}
                 </h3>
-                <p className={clsx("text-sm mb-3", pkg.popular ? "text-blue-200" : "text-gray-400")}>
+                <p className={clsx("text-sm mb-3", pkg.popular ? "text-gray-300" : "text-gray-400")}>
                   {pkg.desc}
                 </p>
                 <p className={clsx("text-3xl font-black", pkg.popular ? "text-white" : "text-charcoal")}>
@@ -54,20 +54,20 @@ export function Pricing() {
               <ul className="space-y-3 mb-6 flex-1">
                 {pkg.features.map((f) => (
                   <li key={f} className="flex items-start gap-2.5 text-sm">
-                    <svg className={clsx("w-4 h-4 mt-0.5 flex-shrink-0", pkg.popular ? "text-white" : "text-blue-brand")} viewBox="0 0 16 16" fill="none">
+                    <svg className={clsx("w-4 h-4 mt-0.5 flex-shrink-0", pkg.popular ? "text-gold" : "text-gold-deep")} viewBox="0 0 16 16" fill="none">
                       <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.2"/>
                       <path d="M5 8l2 2 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
-                    <span className={pkg.popular ? "text-blue-100" : "text-gray-600"}>{f}</span>
+                    <span className={pkg.popular ? "text-gray-300" : "text-gray-600"}>{f}</span>
                   </li>
                 ))}
                 {pkg.notIncluded.map((f) => (
                   <li key={f} className="flex items-start gap-2.5 text-sm">
-                    <svg className={clsx("w-4 h-4 mt-0.5 flex-shrink-0", pkg.popular ? "text-blue-300" : "text-gray-300")} viewBox="0 0 16 16" fill="none">
+                    <svg className={clsx("w-4 h-4 mt-0.5 flex-shrink-0", pkg.popular ? "text-gray-500" : "text-gray-300")} viewBox="0 0 16 16" fill="none">
                       <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.2"/>
                       <path d="M5.5 10.5l5-5M10.5 10.5l-5-5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
                     </svg>
-                    <span className={pkg.popular ? "text-blue-300 line-through" : "text-gray-300 line-through"}>{f}</span>
+                    <span className={pkg.popular ? "text-gray-500 line-through" : "text-gray-300 line-through"}>{f}</span>
                   </li>
                 ))}
               </ul>
@@ -77,8 +77,8 @@ export function Pricing() {
                 className={clsx(
                   "w-full rounded-xl py-3 text-sm font-bold transition-all",
                   pkg.popular
-                    ? "bg-white text-blue-brand hover:bg-blue-50"
-                    : "bg-blue-brand text-white hover:bg-blue-dark"
+                    ? "bg-gold text-ink hover:bg-gold-light"
+                    : "bg-blue-brand text-ink hover:bg-blue-dark"
                 )}
               >
                 {pkg.cta}

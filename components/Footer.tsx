@@ -20,11 +20,11 @@ export function Footer() {
           {/* Brand */}
           <div className="lg:col-span-1">
             <div className="flex items-center gap-2.5 mb-4">
-              <div className="w-8 h-8 rounded-lg bg-blue-brand flex items-center justify-center">
-                <span className="text-white font-black text-sm">M</span>
+              <div className="w-9 h-9 rounded-lg bg-gold flex items-center justify-center">
+                <span className="text-ink font-black text-base">M</span>
               </div>
               <span className="font-black text-white text-sm tracking-tight leading-tight">
-                MAK<br /><span className="text-blue-brand/80 font-semibold text-xs">Painting Group</span>
+                MAK<br /><span className="text-gold font-semibold text-xs">Painting Group</span>
               </span>
             </div>
             <p className="text-gray-400 text-sm leading-relaxed mb-4">
@@ -86,7 +86,7 @@ export function Footer() {
               {SUBURBS.slice(0, 12).map((s) => (
                 <span key={s} className="text-xs text-gray-500 hover:text-gray-300 transition-colors cursor-default">{s}</span>
               ))}
-              <span className="text-xs text-blue-brand/70">+ all Melbourne suburbs</span>
+              <span className="text-xs text-gold/80">+ all Melbourne suburbs</span>
             </div>
             <div className="mt-5 space-y-2">
               <a href={`tel:${BRAND.phone.replace(/\s/g,"")}`} className="flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors">

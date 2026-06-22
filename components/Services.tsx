@@ -48,10 +48,10 @@ export function Services() {
                 <div className="p-5">
                   <p className="text-gray-500 text-sm leading-relaxed mb-4">{s.short}</p>
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-blue-brand bg-blue-muted px-3 py-1 rounded-full">
+                    <span className="text-xs font-bold text-gold-deep bg-blue-muted px-3 py-1 rounded-full">
                       {s.priceFrom}
                     </span>
-                    <span className="text-sm font-bold text-charcoal flex items-center gap-1.5 group-hover:text-blue-brand transition-colors">
+                    <span className="text-sm font-bold text-charcoal flex items-center gap-1.5 group-hover:text-gold-deep transition-colors">
                       Book a quote
                       <svg className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" viewBox="0 0 14 14" fill="none">
                         <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>

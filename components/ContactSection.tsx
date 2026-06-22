@@ -35,7 +35,7 @@ export function ContactSection() {
                 { icon: "pin", label: "Location", val: BRAND.address, href: BRAND.googleMapsUrl },
               ].map((item) => (
                 <div key={item.label} className="flex items-start gap-3.5">
-                  <div className="w-10 h-10 bg-blue-muted rounded-xl flex items-center justify-center flex-shrink-0 text-blue-brand">
+                  <div className="w-10 h-10 bg-blue-muted rounded-xl flex items-center justify-center flex-shrink-0 text-gold-deep">
                     {item.icon === "phone" && (
                       <svg className="w-5 h-5" viewBox="0 0 20 20" fill="none"><path d="M5.5 9c1.16 2.33 3.17 4.26 5.5 5.5l1.83-1.83c.25-.25.58-.33.83-.17.92.33 1.92.5 3 .5.46 0 .84.37.84.83V16.5c0 .46-.38.83-.84.83A14.17 14.17 0 0 1 2.67 3.33c0-.46.37-.83.83-.83h2.67c.46 0 .83.37.83.83 0 1.08.17 2.08.5 3 .17.25.08.58-.17.83L5.5 9z" stroke="currentColor" strokeWidth="1.4"/></svg>
                     )}
@@ -52,7 +52,7 @@ export function ContactSection() {
                   <div>
                     <p className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-0.5">{item.label}</p>
                     {item.href ? (
-                      <a href={item.href} className="font-semibold text-charcoal hover:text-blue-brand transition-colors">{item.val}</a>
+                      <a href={item.href} className="font-semibold text-charcoal hover:text-gold-deep transition-colors">{item.val}</a>
                     ) : (
                       <p className="font-semibold text-charcoal">{item.val}</p>
                     )}
@@ -136,7 +136,7 @@ export function ContactSection() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-terra hover:bg-terra-dark disabled:opacity-70 text-white font-bold rounded-xl py-4 text-base transition-all hover:shadow-md"
+                  className="w-full bg-terra hover:bg-terra-dark disabled:opacity-70 text-ink font-bold rounded-xl py-4 text-base transition-all hover:shadow-md"
                 >
                   {loading ? "Sending…" : "Send my free quote request"}
                 </button>

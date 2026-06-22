@@ -21,7 +21,7 @@ export function Extras() {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.04, duration: 0.3 }}
-              className="flex items-center gap-2 bg-white text-charcoal font-semibold text-sm rounded-full px-4 py-2.5 border border-gray-200 shadow-sm hover:border-blue-brand hover:text-blue-brand hover:shadow-card transition-all cursor-default"
+              className="flex items-center gap-2 bg-white text-charcoal font-semibold text-sm rounded-full px-4 py-2.5 border border-gray-200 shadow-sm hover:border-blue-brand hover:text-gold-deep hover:shadow-card transition-all cursor-default"
             >
               <svg className="w-3.5 h-3.5 text-terra" viewBox="0 0 14 14" fill="none">
                 <path d="M7 1v12M1 7h12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>

@@ -48,7 +48,7 @@ function BeforeAfterSlider({ before, after, title }: { before: string; after: st
       </div>
       {/* Labels */}
       <span className="absolute top-3 left-3 bg-charcoal/70 text-white text-xs font-bold px-2.5 py-1 rounded-full">Before</span>
-      <span className="absolute top-3 right-3 bg-blue-brand/90 text-white text-xs font-bold px-2.5 py-1 rounded-full">After</span>
+      <span className="absolute top-3 right-3 bg-blue-brand/90 text-ink text-xs font-bold px-2.5 py-1 rounded-full">After</span>
     </div>
   );
 }
@@ -85,7 +85,7 @@ export function Gallery() {
                   <div className="flex items-center gap-2 mt-1">
                     <span className="text-xs text-gray-400">{item.suburb}</span>
                     <span className="text-gray-200">·</span>
-                    <span className="text-xs bg-blue-muted text-blue-brand font-semibold px-2 py-0.5 rounded-full">{item.service}</span>
+                    <span className="text-xs bg-blue-muted text-gold-deep font-semibold px-2 py-0.5 rounded-full">{item.service}</span>
                   </div>
                 </div>
               </div>

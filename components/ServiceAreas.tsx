@@ -15,7 +15,7 @@ export function ServiceAreas() {
           {SUBURBS.map((suburb) => (
             <span
               key={suburb}
-              className="bg-white text-charcoal text-sm font-semibold rounded-full px-4 py-2 border border-gray-200 shadow-sm hover:border-blue-brand hover:text-blue-brand transition-colors cursor-default"
+              className="bg-white text-charcoal text-sm font-semibold rounded-full px-4 py-2 border border-gray-200 shadow-sm hover:border-blue-brand hover:text-gold-deep transition-colors cursor-default"
             >
               {suburb}
             </span>

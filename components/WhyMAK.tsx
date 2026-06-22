@@ -72,14 +72,14 @@ export function WhyMAK() {
                   {...(wrapperProps as Record<string, string>)}
                   className={`bg-canvas rounded-2xl p-8 text-center border border-gray-100 block ${isRating ? "hover:border-blue-brand/30 hover:shadow-card transition-shadow" : ""}`}
                 >
-                  <div className="w-14 h-14 bg-blue-muted rounded-2xl flex items-center justify-center mx-auto mb-5 text-blue-brand">
+                  <div className="w-14 h-14 bg-blue-muted rounded-2xl flex items-center justify-center mx-auto mb-5 text-gold-deep">
                     {ICONS[i]}
                   </div>
                   <p className="text-4xl font-black text-charcoal mb-1">
                     <Counter target={stat.num} suffix={stat.suffix} />
                   </p>
                   <p className="text-sm font-semibold text-gray-500">{stat.label}</p>
-                  {isRating && <p className="text-xs text-blue-brand mt-1">View on Google →</p>}
+                  {isRating && <p className="text-xs text-gold-deep mt-1">View on Google →</p>}
                 </Wrapper>
               </motion.div>
             );

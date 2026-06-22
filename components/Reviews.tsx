@@ -33,7 +33,7 @@ export function Reviews() {
 
   return (
     <section id="reviews" className="relative py-20 overflow-hidden">
-      <div className="absolute inset-0 bg-blue-brand" />
+      <div className="absolute inset-0 bg-charcoal" />
       <div className="absolute top-0 inset-x-0">
         <svg viewBox="0 0 1440 80" fill="none" preserveAspectRatio="none" className="w-full h-16">
           <path d="M0,40 C360,0 1080,80 1440,40 L1440,0 L0,0 Z" fill="white"/>
@@ -47,7 +47,7 @@ export function Reviews() {
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-8">
         <div className="text-center mb-12">
-          <p className="text-xs font-bold uppercase tracking-widest text-blue-200 mb-2">What clients say</p>
+          <p className="text-xs font-bold uppercase tracking-widest text-gold-light mb-2">What clients say</p>
           <h2 className="text-4xl lg:text-5xl font-black text-white mb-4">
             Our customers say great things
           </h2>
@@ -65,7 +65,7 @@ export function Reviews() {
               <StarRating rating={5} />
               <span className="text-gray-500 text-sm">({BRAND.googleReviewCount} reviews)</span>
             </div>
-            <span className="text-xs text-blue-brand font-semibold group-hover:underline">View on Google →</span>
+            <span className="text-xs text-gold-deep font-semibold group-hover:underline">View on Google →</span>
           </a>
         </div>
 
@@ -85,7 +85,7 @@ export function Reviews() {
             >
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-9 h-9 rounded-full bg-blue-brand text-white flex items-center justify-center text-xs font-black">
+                  <div className="w-9 h-9 rounded-full bg-blue-brand text-ink flex items-center justify-center text-xs font-black">
                     {r.avatar}
                   </div>
                   <div>
@@ -118,7 +118,7 @@ export function Reviews() {
               >
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2.5">
-                    <div className="w-9 h-9 rounded-full bg-terra text-white flex items-center justify-center text-xs font-black">
+                    <div className="w-9 h-9 rounded-full bg-terra text-ink flex items-center justify-center text-xs font-black">
                       {r.avatar}
                     </div>
                     <div>
