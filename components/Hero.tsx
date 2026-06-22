@@ -93,7 +93,7 @@ export function Hero() {
                 <div className="flex items-center gap-1 text-amber-400 text-sm">
                   {"★★★★★"}
                 </div>
-                <p className="text-xs text-gray-500 font-medium">200+ verified Google reviews</p>
+                <a href="https://www.google.com/maps/place/MAK+Painting+Group/@-37.9725665,145.0531353,17z" target="_blank" rel="noopener noreferrer" className="text-xs text-gray-500 font-medium hover:text-blue-brand transition-colors">7 verified Google reviews →</a>
               </div>
             </div>
           </div>
@@ -130,10 +130,10 @@ export function Hero() {
               <p className="text-2xl font-black text-charcoal">500+</p>
               <p className="text-xs text-gray-500 font-medium">Homes painted</p>
             </div>
-            <div className="absolute -right-4 top-1/3 bg-terra rounded-2xl shadow-card-lg px-4 py-3">
-              <p className="text-2xl font-black text-white">4.9★</p>
+            <a href="https://www.google.com/maps/place/MAK+Painting+Group/@-37.9725665,145.0531353,17z" target="_blank" rel="noopener noreferrer" className="absolute -right-4 top-1/3 bg-terra rounded-2xl shadow-card-lg px-4 py-3 hover:bg-terra-dark transition-colors">
+              <p className="text-2xl font-black text-white">5.0★</p>
               <p className="text-xs text-white/80 font-medium">Google rating</p>
-            </div>
+            </a>
           </div>
         </div>
       </div>
