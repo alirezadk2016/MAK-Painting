@@ -1,0 +1,368 @@
+export const BRAND = {
+  name: "MAK Painting Group",
+  tagline: "Stress-free painting you can depend on.",
+  sub: "Relax — your home's in expert hands. Premium prep, flawless finish, fully insured Melbourne painters.",
+  phone: "0411 234 567",
+  email: "hello@makpainting.com.au",
+  whatsapp: "+61411234567",
+  abn: "12 345 678 901",
+  license: "DB-L 12345",
+  address: "Melbourne, Victoria, Australia",
+  googleMapsUrl: "https://maps.google.com/?q=MAK+Painting+Group+Melbourne",
+  instagram: "https://instagram.com/makpaintinggroup",
+  facebook: "https://facebook.com/makpaintinggroup",
+};
+
+export const SERVICES = [
+  {
+    id: "interior",
+    title: "Interior Painting",
+    slug: "interior",
+    image: "https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=800&q=85",
+    short: "Immaculate walls, ceilings & trims. Zero mess, zero hassle.",
+    description: "Transform every room with precision interior painting. We handle full prep — washing, filling, sanding — then apply premium Dulux or Taubmans paints for a finish that lasts.",
+    priceFrom: "from $18/m²",
+    features: ["Full surface prep included", "Premium Dulux/Taubmans paints", "2–3 coats standard", "Furniture protection", "Same-day clean-up", "7-year warranty"],
+    metaTitle: "Interior Painting Melbourne | MAK Painting Group",
+    metaDesc: "Expert interior painters in Melbourne. Premium prep, flawless finish, 7-year warranty. Free on-site quote.",
+  },
+  {
+    id: "exterior",
+    title: "Exterior Painting",
+    slug: "exterior",
+    image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=85",
+    short: "Weather-resistant coatings that protect and refresh your home.",
+    description: "Full exterior painting including prep, priming, and weather-resistant topcoats engineered for Melbourne's climate. We scrape, sand, fill and prime before every coat.",
+    priceFrom: "from $22/m²",
+    features: ["Full scrape & sand prep", "Pressure washing", "Weatherboard repair", "Premium exterior paints", "Fascias, soffits & trims", "7-year warranty"],
+    metaTitle: "Exterior Painting Melbourne | MAK Painting Group",
+    metaDesc: "Professional exterior painters in Melbourne. Weather-resistant coatings, full prep included. Free on-site quote.",
+  },
+  {
+    id: "roof",
+    title: "Roof Painting",
+    slug: "roof",
+    image: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=85",
+    short: "Restore and protect your roof with specialist coatings.",
+    description: "High-pressure cleaning, moss and lichen treatment, crack repair and specialist roof-grade coatings. Extends roof life and dramatically improves curb appeal.",
+    priceFrom: "from $25/m²",
+    features: ["High-pressure clean", "Moss & lichen treatment", "Crack & bedding repair", "Roof-grade primer & paint", "Colour matching available", "10-year roof coating warranty"],
+    metaTitle: "Roof Painting Melbourne | MAK Painting Group",
+    metaDesc: "Expert roof painters in Melbourne. Specialist coatings, full restoration. Free on-site quote.",
+  },
+  {
+    id: "commercial",
+    title: "Commercial & Strata",
+    slug: "commercial",
+    image: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=85",
+    short: "Minimal disruption, maximum results for offices & strata.",
+    description: "We work around your schedule — nights, weekends and staged works — to deliver commercial-grade finishes for offices, retail, strata complexes and industrial facilities.",
+    priceFrom: "POA",
+    features: ["Flexible scheduling", "Night & weekend works", "OH&S compliant", "Strata experience", "Project management", "Contract work accepted"],
+    metaTitle: "Commercial Painting Melbourne | MAK Painting Group",
+    metaDesc: "Commercial and strata painters in Melbourne. Flexible scheduling, OH&S compliant. Free quote.",
+  },
+  {
+    id: "special-finishes",
+    title: "Special Finishes",
+    slug: "special-finishes",
+    image: "https://images.unsplash.com/photo-1615874694520-474822394e73?w=800&q=85",
+    short: "Venetian plaster, limewash, textured & feature walls.",
+    description: "Elevate your space beyond standard paint. Our specialist decorative painters deliver Venetian plaster, limewash, marmorino, textured finishes and bespoke feature walls.",
+    priceFrom: "from $45/m²",
+    features: ["Venetian plaster", "Limewash & marmorino", "Textured coatings", "Feature walls", "Faux finishes", "Colour consultation included"],
+    metaTitle: "Decorative & Special Finishes Melbourne | MAK Painting Group",
+    metaDesc: "Venetian plaster, limewash and decorative finishes in Melbourne. Specialist painters. Free consultation.",
+  },
+  {
+    id: "repaints",
+    title: "Repaints & Touch-ups",
+    slug: "repaints",
+    image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=85",
+    short: "Quick, clean refreshes for landlords, renovators & sale prep.",
+    description: "Fast turnaround repaints and touch-ups for rental properties, pre-sale preparations and renovation projects. Matched colours, minimal disruption.",
+    priceFrom: "from $14/m²",
+    features: ["Colour matching", "Fast turnaround", "Landlord packages", "Pre-sale refresh", "Minor repairs included", "Vacant property specialists"],
+    metaTitle: "Repaints & Touch-ups Melbourne | MAK Painting Group",
+    metaDesc: "Fast, clean repaints and touch-ups in Melbourne for landlords, renovators and pre-sale preparation.",
+  },
+];
+
+export const STEPS = [
+  {
+    num: "01",
+    title: "Enter your postcode",
+    desc: "Tell us your suburb and what you'd like painted — takes 60 seconds.",
+  },
+  {
+    num: "02",
+    title: "Free on-site quote",
+    desc: "We visit your property, assess the work and give you a transparent, itemised quote — completely free.",
+  },
+  {
+    num: "03",
+    title: "We paint, you relax",
+    desc: "Our expert team arrives on time, preps every surface and delivers a flawless, tidy result.",
+  },
+  {
+    num: "04",
+    title: "7-year warranty",
+    desc: "Every job is backed by our industry-leading 7-year workmanship guarantee. Any issues? We fix it free.",
+  },
+];
+
+export const PACKAGES = [
+  {
+    name: "Refresh",
+    price: "From $1,200",
+    desc: "Perfect for a single room or quick touch-up.",
+    popular: false,
+    features: [
+      "Up to 2 rooms",
+      "Walls only",
+      "2 coats standard paint",
+      "Basic prep included",
+      "Same-day clean-up",
+      "2-year warranty",
+    ],
+    notIncluded: ["Ceilings & trims", "Colour consultation", "Repairs & patching"],
+    cta: "Get a quote",
+  },
+  {
+    name: "Full Repaint",
+    price: "From $3,800",
+    desc: "The most popular choice for whole-home repaints.",
+    popular: true,
+    features: [
+      "Whole house (up to 4 bed)",
+      "Walls, ceilings & trims",
+      "Premium 2–3 coat system",
+      "Full surface prep",
+      "Colour consultation included",
+      "Minor repairs & patching",
+      "7-year warranty",
+    ],
+    notIncluded: ["Exterior", "Special finishes"],
+    cta: "Get a quote",
+  },
+  {
+    name: "Premium Finish",
+    price: "From $6,500",
+    desc: "Complete transformation — interior, exterior or both.",
+    popular: false,
+    features: [
+      "Interior + exterior",
+      "Premium Dulux Wash&Wear",
+      "Decorative finish option",
+      "Full prep & repairs",
+      "Free colour consultation",
+      "Feature wall included",
+      "Priority scheduling",
+      "7-year warranty",
+    ],
+    notIncluded: [],
+    cta: "Get a quote",
+  },
+];
+
+export const EXTRAS = [
+  "Wall repairs & patching",
+  "Plastering",
+  "Feature walls",
+  "Ceiling repaint",
+  "Cornice & trim painting",
+  "Anti-mould coating",
+  "Colour consultation",
+  "Furniture & floor protection",
+  "Pressure washing",
+  "Weatherboard repair",
+  "Window & door frames",
+  "Garage doors",
+];
+
+export const STATS = [
+  { num: 500, suffix: "+", label: "Homes painted" },
+  { num: 4.9, suffix: "★", label: "Google rating" },
+  { num: 7, suffix: "-yr", label: "Workmanship warranty" },
+  { num: 15, suffix: "+", label: "Years experience" },
+];
+
+export const GALLERY = [
+  {
+    id: 1,
+    title: "Brighton Weatherboard Repaint",
+    suburb: "Brighton",
+    service: "Exterior",
+    before: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=700&q=80",
+    after: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&q=80",
+  },
+  {
+    id: 2,
+    title: "Toorak Luxury Interior",
+    suburb: "Toorak",
+    service: "Interior",
+    before: "https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?w=700&q=80",
+    after: "https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=700&q=80",
+  },
+  {
+    id: 3,
+    title: "South Yarra Feature Wall",
+    suburb: "South Yarra",
+    service: "Special Finishes",
+    before: "https://images.unsplash.com/photo-1513694203232-719a280e022f?w=700&q=80",
+    after: "https://images.unsplash.com/photo-1615874694520-474822394e73?w=700&q=80",
+  },
+  {
+    id: 4,
+    title: "CBD Office Repaint",
+    suburb: "Melbourne CBD",
+    service: "Commercial",
+    before: "https://images.unsplash.com/photo-1497366858526-0766cadbe8fa?w=700&q=80",
+    after: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=700&q=80",
+  },
+  {
+    id: 5,
+    title: "Camberwell Full Exterior",
+    suburb: "Camberwell",
+    service: "Exterior",
+    before: "https://images.unsplash.com/photo-1519046904884-53103b34b206?w=700&q=80",
+    after: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=700&q=80",
+  },
+  {
+    id: 6,
+    title: "Hawthorn Venetian Plaster",
+    suburb: "Hawthorn",
+    service: "Special Finishes",
+    before: "https://images.unsplash.com/photo-1560184897-ae75f418493e?w=700&q=80",
+    after: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=700&q=80",
+  },
+];
+
+export const PALETTES = [
+  { name: "Modern Coastal", colors: ["#E8EDF0", "#B8CBD5", "#6B92A5", "#2E5F75", "#1A3A4A"] },
+  { name: "Warm Minimal", colors: ["#F6F1EA", "#E8D5C0", "#C4A882", "#8B6F4E", "#3D2B1A"] },
+  { name: "Heritage Melbourne", colors: ["#E8E0D5", "#C9B8A0", "#8B7355", "#4A3728", "#1F1510"] },
+  { name: "Fresh & Bright", colors: ["#FFFFFF", "#F0F4F8", "#D1E0EE", "#6B9EC9", "#1E5AA8"] },
+  { name: "Moody Sophisticate", colors: ["#F2EEE8", "#D4CBC0", "#8A7B6E", "#4A3F35", "#1C1410"] },
+  { name: "Terracotta Living", colors: ["#FBF5EF", "#F2D5C4", "#E5A882", "#C4682E", "#7A3510"] },
+];
+
+export const REVIEWS = [
+  {
+    id: 1,
+    name: "James M.",
+    suburb: "Brighton",
+    rating: 5,
+    text: "MAK Painting transformed our weatherboard home completely. Arrived on time every day, zero mess left behind, and the finish is absolutely flawless. Already booked them for the interior.",
+    avatar: "JM",
+  },
+  {
+    id: 2,
+    name: "Sarah R.",
+    suburb: "South Yarra",
+    rating: 5,
+    text: "We've used MAK for three commercial fit-outs. Always professional, always on time and the results are consistently first-class. The project manager is excellent with communication.",
+    avatar: "SR",
+  },
+  {
+    id: 3,
+    name: "Karen P.",
+    suburb: "Toorak",
+    rating: 5,
+    text: "The Venetian plaster feature wall in our living room is stunning. The team took their time, the finish is perfect, and they genuinely cared about getting it right. True craftsmen.",
+    avatar: "KP",
+  },
+  {
+    id: 4,
+    name: "David L.",
+    suburb: "Port Melbourne",
+    rating: 5,
+    text: "Had the full exterior done including the roof. The prep work was incredibly thorough — they fixed cracks I didn't even know existed. 10/10 would recommend to anyone.",
+    avatar: "DL",
+  },
+  {
+    id: 5,
+    name: "Michelle T.",
+    suburb: "Camberwell",
+    rating: 5,
+    text: "Quoted fairly, started on time, finished ahead of schedule, and left the place spotless. The colour consultation saved me from making a huge mistake. So happy with the result!",
+    avatar: "MT",
+  },
+  {
+    id: 6,
+    name: "Andrew K.",
+    suburb: "Hawthorn",
+    rating: 5,
+    text: "Used MAK to repaint before selling our property. They turned it around in 3 days, the place looked brand new and we sold well above reserve. Worth every cent.",
+    avatar: "AK",
+  },
+  {
+    id: 7,
+    name: "Lisa W.",
+    suburb: "Glen Waverley",
+    rating: 5,
+    text: "Very impressed with the anti-mould treatment in our bathroom. No more black spots and the finish looks beautiful. Their team were respectful, clean and efficient.",
+    avatar: "LW",
+  },
+  {
+    id: 8,
+    name: "Tom F.",
+    suburb: "Doncaster",
+    rating: 5,
+    text: "Best painters I've ever hired. Showed up exactly when they said, explained everything beforehand and the quality is incredible. The 7-year warranty gave us total peace of mind.",
+    avatar: "TF",
+  },
+];
+
+export const SUBURBS = [
+  "Glen Waverley", "Mount Waverley", "Clayton", "Oakleigh", "Brighton",
+  "South Yarra", "Toorak", "Camberwell", "Doncaster", "Box Hill",
+  "Hawthorn", "Richmond", "Prahran", "St Kilda", "Port Melbourne",
+  "South Melbourne", "Fitzroy", "Collingwood", "Carlton", "Northcote",
+  "Thornbury", "Brunswick", "Essendon", "Moonee Ponds", "Footscray",
+  "Williamstown", "Altona", "Werribee", "Dandenong", "Frankston",
+  "Mornington", "Berwick", "Narre Warren", "Cranbourne", "Pakenham",
+];
+
+export const FAQS = [
+  {
+    q: "How quickly can you provide a quote?",
+    a: "We typically provide a free on-site quote within 24–48 hours of your enquiry. For commercial or large projects, allow up to 72 hours for a full itemised quote.",
+  },
+  {
+    q: "What paint brands do you use?",
+    a: "We are certified Dulux Accredited painters and also work with Taubmans, Haymes and Wattyl. We always recommend the best product for your specific surface, conditions and budget.",
+  },
+  {
+    q: "How long does interior paint take to dry?",
+    a: "Most premium paints are touch-dry in 2–4 hours and ready for a second coat in 4–6 hours. We recommend waiting 24 hours before placing furniture back. Full curing takes around 4 weeks.",
+  },
+  {
+    q: "What happens if it rains during an exterior job?",
+    a: "We monitor the weather closely and won't apply paint in unsuitable conditions. If unexpected rain interrupts a job, we pause, protect the work and return as soon as conditions allow — at no extra cost to you.",
+  },
+  {
+    q: "Is surface preparation included in your quote?",
+    a: "Yes, always. Every MAK quote includes full prep: washing, sanding, filling holes and cracks, and priming bare surfaces. We never skip prep — it's what separates a lasting finish from a cheap job.",
+  },
+  {
+    q: "What does your 7-year warranty cover?",
+    a: "Our 7-year workmanship warranty covers peeling, flaking, blistering and any other defect caused by application errors. It does not cover damage from impact, flooding or structural movement. If anything isn't right, we return and fix it free of charge.",
+  },
+  {
+    q: "What are your payment terms?",
+    a: "We require a 20% deposit upon acceptance of the quote to schedule your job. The remaining balance is due upon completion and your satisfaction. We accept EFT, credit card and cash.",
+  },
+  {
+    q: "Are you insured and police checked?",
+    a: "Yes. MAK Painting Group holds a current $20M public liability policy and all team members hold a valid Working With Children Check and police clearance. Certificates are available on request.",
+  },
+  {
+    q: "Do you do weekend work?",
+    a: "Yes. We offer Saturday work at standard rates for residential projects. Sunday and public holiday work is available for commercial clients at a small surcharge. Just let us know your preference when booking.",
+  },
+  {
+    q: "How do you keep the job site clean?",
+    a: "We use dust sheets, drop cloths and masking to protect all surfaces. At the end of each day we tidy up, and on completion we do a full clean-up including removing all materials, rubbish and touch-up any accidental marks.",
+  },
+];
