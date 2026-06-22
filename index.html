@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MAK Painting Group | Premium Painting Services Melbourne</title>
+  <meta name="description" content="MAK Painting Group delivers premium residential and commercial painting services across Melbourne. Excellence in every stroke." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav" id="nav">
+    <div class="nav__logo">
+      <span class="nav__logo-mak">MAK</span>
+      <span class="nav__logo-text">Painting Group</span>
+    </div>
+    <button class="nav__burger" id="burger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav__links" id="navLinks">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#process">Process</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#testimonials">Testimonials</a></li>
+      <li><a href="#contact" class="nav__cta">Get a Quote</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <div class="hero__bg"></div>
+    <div class="hero__overlay"></div>
+    <div class="hero__content">
+      <p class="hero__tagline">Melbourne's Premier Painting Specialists</p>
+      <h1 class="hero__title">Where Colour<br/><em>Meets Craft</em></h1>
+      <p class="hero__sub">Transforming spaces with precision, artistry and uncompromising quality since 2010.</p>
+      <div class="hero__actions">
+        <a href="#contact" class="btn btn--gold">Request a Free Quote</a>
+        <a href="#services" class="btn btn--outline">Explore Services</a>
+      </div>
+    </div>
+    <div class="hero__scroll">
+      <span>Scroll</span>
+      <div class="hero__scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="stats">
+    <div class="stats__inner">
+      <div class="stats__item">
+        <span class="stats__num" data-target="500">0</span><span class="stats__plus">+</span>
+        <p>Projects Completed</p>
+      </div>
+      <div class="stats__item">
+        <span class="stats__num" data-target="15">0</span><span class="stats__plus">+</span>
+        <p>Years Experience</p>
+      </div>
+      <div class="stats__item">
+        <span class="stats__num" data-target="98">0</span><span class="stats__plus">%</span>
+        <p>Client Satisfaction</p>
+      </div>
+      <div class="stats__item">
+        <span class="stats__num" data-target="50">0</span><span class="stats__plus">+</span>
+        <p>Expert Painters</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="services section" id="services">
+    <div class="container">
+      <div class="section__header">
+        <p class="section__label">What We Do</p>
+        <h2 class="section__title">Our <em>Services</em></h2>
+        <p class="section__desc">Every project we undertake is treated with the same level of care, precision and dedication — whether it's a single room or an entire commercial complex.</p>
+      </div>
+      <div class="services__grid">
+
+        <div class="service-card">
+          <div class="service-card__icon">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 40V20L24 8l16 12v20H30V28h-12v12H8Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+          </div>
+          <h3>Residential Painting</h3>
+          <p>Transform your home with flawless interior and exterior finishes. We use premium paints and meticulous preparation for results that last.</p>
+          <a href="#contact" class="service-card__link">Enquire <span>→</span></a>
+        </div>
+
+        <div class="service-card service-card--featured">
+          <div class="service-card__badge">Most Popular</div>
+          <div class="service-card__icon">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="12" width="40" height="28" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M4 20h40M16 12V8M32 12V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <h3>Commercial Painting</h3>
+          <p>Minimal disruption, maximum impact. Our commercial teams work efficiently to deliver exceptional results for offices, retail spaces and industrial facilities.</p>
+          <a href="#contact" class="service-card__link">Enquire <span>→</span></a>
+        </div>
+
+        <div class="service-card">
+          <div class="service-card__icon">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M24 4L4 16v4h40v-4L24 4Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M10 20v20M18 20v20M30 20v20M38 20v20M4 40h40" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <h3>New Construction</h3>
+          <p>From bare plaster to perfect finish. We partner with builders and developers to deliver high-specification painting across all new build projects.</p>
+          <a href="#contact" class="service-card__link">Enquire <span>→</span></a>
+        </div>
+
+        <div class="service-card">
+          <div class="service-card__icon">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 36l4-16 8 8 8-12 4 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="36" cy="12" r="4" stroke="currentColor" stroke-width="1.5"/></svg>
+          </div>
+          <h3>Decorative Finishes</h3>
+          <p>Venetian plaster, textured coatings, feature walls and bespoke colour consultations. Elevate your space beyond the ordinary.</p>
+          <a href="#contact" class="service-card__link">Enquire <span>→</span></a>
+        </div>
+
+        <div class="service-card">
+          <div class="service-card__icon">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 42l10-10M16 32l4-12 6 6 4-8 6 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M28 10l4 4-14 14-4-4L28 10Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+          </div>
+          <h3>Exterior Painting</h3>
+          <p>Weather-resistant coatings applied by specialists. Protect and beautify your property's exterior with finishes engineered for Melbourne's climate.</p>
+          <a href="#contact" class="service-card__link">Enquire <span>→</span></a>
+        </div>
+
+        <div class="service-card">
+          <div class="service-card__icon">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M24 44c0 0-18-10-18-24a18 18 0 0 1 36 0c0 14-18 24-18 24Z" stroke="currentColor" stroke-width="1.5"/><circle cx="24" cy="20" r="5" stroke="currentColor" stroke-width="1.5"/></svg>
+          </div>
+          <h3>Colour Consultation</h3>
+          <p>Our expert colour consultants guide you through the perfect palette for your space. Complimentary consultation with every project.</p>
+          <a href="#contact" class="service-card__link">Enquire <span>→</span></a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT / SPLIT -->
+  <section class="about section" id="about">
+    <div class="about__image">
+      <div class="about__image-inner"></div>
+      <div class="about__badge">
+        <span class="about__badge-num">15</span>
+        <span class="about__badge-text">Years of Excellence</span>
+      </div>
+    </div>
+    <div class="about__content">
+      <p class="section__label">About MAK Painting Group</p>
+      <h2 class="section__title">Craftsmanship<br/><em>You Can See</em></h2>
+      <p class="about__text">MAK Painting Group was founded on a simple belief: that every surface deserves the best possible finish. Based in Melbourne, we bring together master painters with a passion for perfection and a commitment to using only the finest materials.</p>
+      <p class="about__text">From luxury residences in Brighton to large-scale commercial fit-outs in the CBD, our portfolio speaks to a consistent standard of excellence that has made us one of Melbourne's most trusted painting companies.</p>
+      <ul class="about__list">
+        <li>
+          <svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Fully licensed &amp; insured in Victoria
+        </li>
+        <li>
+          <svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Premium Dulux &amp; Taubmans certified applicators
+        </li>
+        <li>
+          <svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          5-year workmanship guarantee on all projects
+        </li>
+        <li>
+          <svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Clean, respectful and punctual teams
+        </li>
+      </ul>
+      <a href="#contact" class="btn btn--gold">Work With Us</a>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section class="process section" id="process">
+    <div class="container">
+      <div class="section__header">
+        <p class="section__label">How We Work</p>
+        <h2 class="section__title">Our <em>Process</em></h2>
+        <p class="section__desc">A seamless experience from first contact to final reveal.</p>
+      </div>
+      <div class="process__steps">
+        <div class="process__step">
+          <div class="process__step-num">01</div>
+          <div class="process__step-line"></div>
+          <h3>Free Consultation</h3>
+          <p>We visit your property, understand your vision and assess the scope of work — completely free of charge.</p>
+        </div>
+        <div class="process__step">
+          <div class="process__step-num">02</div>
+          <div class="process__step-line"></div>
+          <h3>Detailed Quote</h3>
+          <p>You receive a transparent, itemised quote with no hidden costs within 24 hours of the consultation.</p>
+        </div>
+        <div class="process__step">
+          <div class="process__step-num">03</div>
+          <div class="process__step-line"></div>
+          <h3>Colour Selection</h3>
+          <p>Our colour consultant helps you choose the perfect palette, with sample patches applied for your approval.</p>
+        </div>
+        <div class="process__step">
+          <div class="process__step-num">04</div>
+          <div class="process__step-line"></div>
+          <h3>Expert Execution</h3>
+          <p>Our master painters get to work with meticulous preparation and premium materials. On time, every time.</p>
+        </div>
+        <div class="process__step">
+          <div class="process__step-num">05</div>
+          <div class="process__step-line"></div>
+          <h3>Final Inspection</h3>
+          <p>A thorough walkthrough with you to ensure every detail meets our exacting standards — and yours.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALLERY -->
+  <section class="gallery section" id="gallery">
+    <div class="container">
+      <div class="section__header">
+        <p class="section__label">Portfolio</p>
+        <h2 class="section__title">Our <em>Work</em></h2>
+        <p class="section__desc">A selection of recent projects across Melbourne.</p>
+      </div>
+    </div>
+    <div class="gallery__grid">
+      <div class="gallery__item gallery__item--wide">
+        <div class="gallery__img" style="background-image:url('https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=1200&q=80')"></div>
+        <div class="gallery__info"><span>Residential Interior — Brighton</span></div>
+      </div>
+      <div class="gallery__item">
+        <div class="gallery__img" style="background-image:url('https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=800&q=80')"></div>
+        <div class="gallery__info"><span>Commercial Office — CBD</span></div>
+      </div>
+      <div class="gallery__item">
+        <div class="gallery__img" style="background-image:url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80')"></div>
+        <div class="gallery__info"><span>Exterior Repaint — South Yarra</span></div>
+      </div>
+      <div class="gallery__item">
+        <div class="gallery__img" style="background-image:url('https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=80')"></div>
+        <div class="gallery__info"><span>Decorative Finish — Toorak</span></div>
+      </div>
+      <div class="gallery__item gallery__item--wide">
+        <div class="gallery__img" style="background-image:url('https://images.unsplash.com/photo-1484101403633-562f891dc89a?w=1200&q=80')"></div>
+        <div class="gallery__info"><span>New Construction — Port Melbourne</span></div>
+      </div>
+      <div class="gallery__item">
+        <div class="gallery__img" style="background-image:url('https://images.unsplash.com/photo-1615874694520-474822394e73?w=800&q=80')"></div>
+        <div class="gallery__info"><span>Feature Wall — St Kilda</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="testimonials section" id="testimonials">
+    <div class="container">
+      <div class="section__header">
+        <p class="section__label">What Clients Say</p>
+        <h2 class="section__title">Client <em>Reviews</em></h2>
+      </div>
+      <div class="testimonials__grid">
+
+        <div class="testimonial">
+          <div class="testimonial__stars">★★★★★</div>
+          <p class="testimonial__text">"MAK Painting transformed our home completely. The attention to detail was extraordinary — clean lines, perfect coverage, and the team was respectful of our space throughout. Couldn't recommend them more highly."</p>
+          <div class="testimonial__author">
+            <div class="testimonial__avatar">JM</div>
+            <div>
+              <strong>James M.</strong>
+              <span>Brighton, Melbourne</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial testimonial--featured">
+          <div class="testimonial__quote">"</div>
+          <div class="testimonial__stars">★★★★★</div>
+          <p class="testimonial__text">"We've used MAK for three commercial fit-outs now. They are professional, efficient and the results are always first-class. The project manager keeps you updated every step of the way."</p>
+          <div class="testimonial__author">
+            <div class="testimonial__avatar">SR</div>
+            <div>
+              <strong>Sarah R.</strong>
+              <span>Property Developer, Melbourne CBD</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial">
+          <div class="testimonial__stars">★★★★★</div>
+          <p class="testimonial__text">"From the colour consultation right through to the final touch-up, the experience was seamless. The decorative finish in our living room is absolutely stunning. True craftsmen."</p>
+          <div class="testimonial__author">
+            <div class="testimonial__avatar">KP</div>
+            <div>
+              <strong>Karen P.</strong>
+              <span>Toorak, Melbourne</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA BANNER -->
+  <section class="cta-banner">
+    <div class="cta-banner__content">
+      <h2>Ready to Transform<br/><em>Your Space?</em></h2>
+      <p>Contact us today for a free, no-obligation consultation and quote.</p>
+      <a href="#contact" class="btn btn--gold btn--lg">Get Your Free Quote</a>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact section" id="contact">
+    <div class="container">
+      <div class="section__header">
+        <p class="section__label">Get In Touch</p>
+        <h2 class="section__title">Contact <em>Us</em></h2>
+        <p class="section__desc">Fill in the form below and we'll be in touch within one business day.</p>
+      </div>
+      <div class="contact__inner">
+        <div class="contact__info">
+          <div class="contact__detail">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" stroke="currentColor" stroke-width="1.2"/></svg>
+            <div>
+              <strong>Location</strong>
+              <span>Melbourne, Victoria, Australia</span>
+            </div>
+          </div>
+          <div class="contact__detail">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" stroke="currentColor" stroke-width="1.2"/></svg>
+            <div>
+              <strong>Phone</strong>
+              <span><a href="tel:+61400000000">0400 000 000</a></span>
+            </div>
+          </div>
+          <div class="contact__detail">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="currentColor" stroke-width="1.2"/><path d="M22 6l-10 7L2 6" stroke="currentColor" stroke-width="1.2"/></svg>
+            <div>
+              <strong>Email</strong>
+              <span><a href="mailto:info@makpainting.com.au">info@makpainting.com.au</a></span>
+            </div>
+          </div>
+          <div class="contact__detail">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.2"/><path d="M12 6v6l4 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+            <div>
+              <strong>Hours</strong>
+              <span>Mon – Sat: 7:00am – 6:00pm</span>
+            </div>
+          </div>
+        </div>
+
+        <form class="contact__form" id="contactForm">
+          <div class="form__row">
+            <div class="form__group">
+              <label for="fname">First Name</label>
+              <input type="text" id="fname" name="fname" placeholder="John" required />
+            </div>
+            <div class="form__group">
+              <label for="lname">Last Name</label>
+              <input type="text" id="lname" name="lname" placeholder="Smith" required />
+            </div>
+          </div>
+          <div class="form__row">
+            <div class="form__group">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" name="email" placeholder="john@example.com" required />
+            </div>
+            <div class="form__group">
+              <label for="phone">Phone Number</label>
+              <input type="tel" id="phone" name="phone" placeholder="0400 000 000" />
+            </div>
+          </div>
+          <div class="form__group">
+            <label for="service">Service Required</label>
+            <select id="service" name="service">
+              <option value="">Select a service...</option>
+              <option>Residential Interior</option>
+              <option>Residential Exterior</option>
+              <option>Commercial Painting</option>
+              <option>New Construction</option>
+              <option>Decorative Finishes</option>
+              <option>Colour Consultation</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form__group">
+            <label for="message">Tell Us About Your Project</label>
+            <textarea id="message" name="message" rows="5" placeholder="Describe your project, property size, timeline..."></textarea>
+          </div>
+          <button type="submit" class="btn btn--gold btn--full">Send Enquiry</button>
+          <div class="form__success" id="formSuccess">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Thank you! We'll be in touch within one business day.
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <div class="footer__logo">
+          <span class="nav__logo-mak">MAK</span>
+          <span class="nav__logo-text">Painting Group</span>
+        </div>
+        <p>Melbourne's trusted painting specialists, delivering premium results for homes and businesses since 2010.</p>
+      </div>
+      <div class="footer__links">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="#services">Residential Painting</a></li>
+          <li><a href="#services">Commercial Painting</a></li>
+          <li><a href="#services">New Construction</a></li>
+          <li><a href="#services">Decorative Finishes</a></li>
+          <li><a href="#services">Exterior Painting</a></li>
+        </ul>
+      </div>
+      <div class="footer__links">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#about">About Us</a></li>
+          <li><a href="#process">Our Process</a></li>
+          <li><a href="#gallery">Portfolio</a></li>
+          <li><a href="#testimonials">Reviews</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer__contact">
+        <h4>Contact</h4>
+        <p>Melbourne, Victoria<br/>Australia</p>
+        <p><a href="tel:+61400000000">0400 000 000</a></p>
+        <p><a href="mailto:info@makpainting.com.au">info@makpainting.com.au</a></p>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <p>© 2025 MAK Painting Group. All rights reserved. | Lic. No. DB-L XXXXXX | ABN XX XXX XXX XXX</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
