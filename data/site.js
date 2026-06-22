@@ -183,10 +183,10 @@ export const EXTRAS = [
 ];
 
 export const STATS = [
-  { num: 500, suffix: "+", label: "Homes painted" },
-  { num: 4.9, suffix: "★", label: "Google rating" },
+  { num: 5.0, suffix: "★", label: "Google rating" },
+  { num: 7, suffix: "", label: "Verified Google reviews" },
   { num: 7, suffix: "-yr", label: "Workmanship warranty" },
-  { num: 15, suffix: "+", label: "Years experience" },
+  { num: 100, suffix: "%", label: "Satisfaction guaranteed" },
 ];
 
 export const GALLERY = [
