@@ -49,7 +49,7 @@ const jsonLd = {
   description:
     "Premium residential and commercial painting services across Melbourne, Victoria.",
   url: "https://www.makpainting.com.au",
-  telephone: "0411 234 567",
+  telephone: "0404 000 772",
   email: "hello@makpainting.com.au",
   address: {
     "@type": "PostalAddress",

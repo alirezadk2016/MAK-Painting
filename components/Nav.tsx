@@ -73,7 +73,7 @@ export function Nav() {
 
           {/* CTA */}
           <div className="hidden lg:flex items-center gap-3">
-            <Link href="tel:0411234567" className="text-sm font-semibold text-blue-brand border border-blue-brand/30 rounded-full px-4 py-2 hover:bg-blue-muted transition-colors">
+            <Link href="tel:0404000772" className="text-sm font-semibold text-blue-brand border border-blue-brand/30 rounded-full px-4 py-2 hover:bg-blue-muted transition-colors">
               04xx xxx xxx
             </Link>
             <button
