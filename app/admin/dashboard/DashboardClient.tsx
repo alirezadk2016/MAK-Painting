@@ -177,6 +177,7 @@ export function DashboardClient({ bookings, config: initialConfig, hasBlobToken 
 
   // Site config state
   const [cfg, setCfg] = useState<SiteConfig>(initialConfig);
+  const [dirty, setDirty] = useState(false);
 
   // Service cards derived from config (fall back to DEFAULT_SERVICES)
   const defaultServiceCards: ServiceCard[] = DEFAULT_SERVICES.map(s => ({
@@ -228,8 +229,14 @@ export function DashboardClient({ bookings, config: initialConfig, hasBlobToken 
 
   function persist(next: SiteConfig) {
     setCfg(next);
+    setDirty(true);
+  }
+
+  function handleSave() {
+    const snapshot = cfg;
     start(async () => {
-      await saveSiteConfigAction(next);
+      await saveSiteConfigAction(snapshot);
+      setDirty(false);
       setSaved(true);
       setTimeout(() => setSaved(false), 2500);
     });
@@ -770,6 +777,26 @@ export function DashboardClient({ bookings, config: initialConfig, hasBlobToken 
                 {gModal.mode === "add" ? "Add Pair" : "Save Changes"}
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Sticky save bar ── */}
+      {dirty && (
+        <div className="fixed bottom-0 inset-x-0 z-50 flex items-center justify-between gap-4 bg-[#1a1a1a] border-t border-[#c9a24b]/30 px-6 py-4 shadow-2xl">
+          <p className="text-sm text-gray-300 font-medium">You have unsaved changes.</p>
+          <div className="flex items-center gap-3">
+            <button onClick={() => { setCfg(initialConfig); setDirty(false); }}
+              className="text-sm font-bold text-gray-400 hover:text-white transition-colors px-4 py-2 rounded-xl hover:bg-white/5">
+              Discard
+            </button>
+            <button onClick={handleSave} disabled={isPending}
+              className="flex items-center gap-2 bg-[#c9a24b] hover:bg-[#b8913a] disabled:opacity-60 text-[#1a1a1a] font-black text-sm px-6 py-2.5 rounded-xl transition-colors">
+              {isPending
+                ? <><svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeDasharray="40" strokeDashoffset="10"/></svg>Saving…</>
+                : <><svg className="w-4 h-4" viewBox="0 0 16 16" fill="none"><path d="M2 8l4 4 8-8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>Save Changes</>
+              }
+            </button>
           </div>
         </div>
       )}
