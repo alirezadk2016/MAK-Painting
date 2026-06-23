@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { WhyMAK } from "@/components/WhyMAK";
 import { Reviews } from "@/components/Reviews";
@@ -79,7 +80,23 @@ export default async function AboutPage({
           </div>
 
           <h2 className="text-2xl lg:text-3xl font-black text-charcoal mb-4">{t("storyTitle")}</h2>
-          <p className="text-gray-600 leading-relaxed">{t("storyBody")}</p>
+          <p className="text-gray-600 leading-relaxed mb-10">{t("storyBody")}</p>
+
+          {/* Project photos */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            {[
+              { src: "/exterior-terrace.jpg", alt: "Exterior painting Melbourne" },
+              { src: "/hero-living-room.jpg", alt: "Interior painting Melbourne" },
+              { src: "/interior-timber-ceiling.jpg", alt: "Timber ceiling painting" },
+              { src: "/feature-wall-lilac.jpg", alt: "Feature wall painting" },
+              { src: "/commercial-prep.jpg", alt: "Commercial painting Melbourne" },
+              { src: "/exterior-render.jpg", alt: "Exterior render painting" },
+            ].map((img) => (
+              <div key={img.src} className="relative aspect-square rounded-2xl overflow-hidden">
+                <Image src={img.src} alt={img.alt} fill className="object-cover hover:scale-105 transition-transform duration-500" sizes="(max-width: 640px) 50vw, 33vw" />
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
