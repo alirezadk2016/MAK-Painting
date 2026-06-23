@@ -71,18 +71,18 @@ export function QuoteWizard({
         return;
       }
     }
-    if (step === 3 && !data.rooms.trim()) {
-      setStepError("Please enter the number of rooms.");
+    if (step === 3 && !(Number(data.rooms) > 0)) {
+      setStepError(t("errRooms"));
       return;
     }
     if (step === 5 && !data.date) {
-      setStepError("Please select a preferred date.");
+      setStepError(t("errDate"));
       return;
     }
     if (step === 6) {
-      if (!data.name.trim())  { setStepError("Please enter your full name.");  return; }
-      if (!data.phone.trim()) { setStepError("Please enter your phone number."); return; }
-      if (!data.email.trim()) { setStepError("Please enter your email address."); return; }
+      if (!data.name.trim())  { setStepError(t("errName"));  return; }
+      if (!data.phone.trim()) { setStepError(t("errPhone")); return; }
+      if (!data.email.trim()) { setStepError(t("errEmail")); return; }
     }
     setStep((s) => Math.min(s + 1, STEPS_WIZARD.length - 1));
   }
@@ -224,6 +224,7 @@ export function QuoteWizard({
                       placeholder={t("ph3sqm")}
                       value={data.sqm}
                       onChange={(e) => update("sqm", e.target.value)}
+                      min="1"
                       className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:border-gold"
                     />
                     {stepError && (
@@ -323,7 +324,7 @@ export function QuoteWizard({
                 <button
                   onClick={async () => {
                     if (!data.name.trim() || !data.phone.trim() || !data.email.trim()) {
-                      setStepError(!data.name.trim() ? "Please enter your full name." : !data.phone.trim() ? "Please enter your phone number." : "Please enter your email address.");
+                      setStepError(!data.name.trim() ? t("errName") : !data.phone.trim() ? t("errPhone") : t("errEmail"));
                       return;
                     }
                     setSubmitting(true);

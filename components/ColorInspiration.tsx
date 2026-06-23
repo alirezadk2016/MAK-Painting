@@ -48,6 +48,7 @@ export function ColorInspiration() {
         <button
           onClick={() => scroll(-1)}
           aria-label="Scroll left"
+          disabled={!canPrev}
           className={`absolute left-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white border border-gray-200 shadow-md flex items-center justify-center transition-all duration-200 ${
             canPrev ? "opacity-100 hover:bg-gray-50 hover:shadow-lg hover:scale-110" : "opacity-0 pointer-events-none"
           }`}
@@ -61,6 +62,7 @@ export function ColorInspiration() {
         <button
           onClick={() => scroll(1)}
           aria-label="Scroll right"
+          disabled={!canNext}
           className={`absolute right-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white border border-gray-200 shadow-md flex items-center justify-center transition-all duration-200 ${
             canNext ? "opacity-100 hover:bg-gray-50 hover:shadow-lg hover:scale-110" : "opacity-0 pointer-events-none"
           }`}

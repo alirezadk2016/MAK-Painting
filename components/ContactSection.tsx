@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { BRAND, SERVICES } from "@/data/site";
 
@@ -7,7 +7,7 @@ export function ContactSection() {
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [filePreviews, setFilePreviews] = useState<{ name: string; url: string }[]>([]);
+  const [files, setFiles] = useState<{ name: string; url: string }[]>([]);
   const fileRef = useRef<HTMLInputElement>(null);
   const t = useTranslations("Contact");
 
@@ -16,9 +16,29 @@ export function ContactSection() {
     suburb: "", service: "", message: "",
   });
 
+  // Revoke object URLs on unmount to prevent memory leaks
+  useEffect(() => {
+    return () => { files.forEach(f => URL.revokeObjectURL(f.url)); };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   function set(k: keyof typeof form) {
     return (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
       setForm((f) => ({ ...f, [k]: e.target.value }));
+  }
+
+  function addFiles(e: React.ChangeEvent<HTMLInputElement>) {
+    const picked = Array.from(e.target.files ?? []);
+    if (!picked.length) return;
+    const newEntries = picked.map(f => ({ name: f.name, url: URL.createObjectURL(f) }));
+    setFiles(prev => [...prev, ...newEntries]);
+    // Reset input so same file can be picked again
+    if (fileRef.current) fileRef.current.value = "";
+  }
+
+  function removeFile(url: string) {
+    URL.revokeObjectURL(url);
+    setFiles(prev => prev.filter(f => f.url !== url));
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -29,9 +49,10 @@ export function ContactSection() {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, photoCount: files.length }),
       });
       if (res.ok) {
+        files.forEach(f => URL.revokeObjectURL(f.url));
         setSent(true);
       } else {
         setError(t("errorGeneric"));
@@ -150,6 +171,7 @@ export function ContactSection() {
                   />
                 </div>
 
+                {/* Photo upload */}
                 <div className="flex flex-col gap-1">
                   <label className="text-xs font-bold uppercase tracking-wide text-gray-500">
                     {t("uploadPhotos")}
@@ -170,18 +192,27 @@ export function ContactSection() {
                       accept="image/*"
                       multiple
                       className="hidden"
-                      onChange={(e) => {
-                        const files = Array.from(e.target.files ?? []);
-                        setFilePreviews(files.map((f) => ({ name: f.name, url: URL.createObjectURL(f) })));
-                      }}
+                      onChange={addFiles}
                     />
                   </label>
-                  {filePreviews.length > 0 && (
+
+                  {files.length > 0 && (
                     <div className="grid grid-cols-3 gap-2 mt-2">
-                      {filePreviews.map((f) => (
+                      {files.map((f) => (
                         <div key={f.url} className="relative group">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img src={f.url} alt={f.name} className="w-full h-20 object-cover rounded-xl border border-gray-200" />
+                          {/* Remove button */}
+                          <button
+                            type="button"
+                            onClick={() => removeFile(f.url)}
+                            aria-label="Remove photo"
+                            className="absolute top-1 right-1 w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-sm"
+                          >
+                            <svg className="w-3 h-3" viewBox="0 0 12 12" fill="none">
+                              <path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+                            </svg>
+                          </button>
                           <p className="text-xs text-gray-400 truncate mt-1">{f.name}</p>
                         </div>
                       ))}
