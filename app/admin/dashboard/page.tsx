@@ -27,6 +27,7 @@ export default async function AdminDashboard() {
 
   const config: SiteConfig = {
     hero:         saved?.hero         ?? "/1.png",
+    heroPosition: saved?.heroPosition,
     services:     saved?.services     ?? {},
     serviceCards: saved?.serviceCards,
     gallery:      saved?.gallery?.length  ? saved.gallery  : DEFAULT_GALLERY,

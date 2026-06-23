@@ -530,38 +530,101 @@ export function DashboardClient({ bookings, config: initialConfig, hasBlobToken 
             </div>
 
             {view === "calendar" && (
-              <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
-                <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-                  <button onClick={() => calMonth === 0 ? (setCalMonth(11), setCalYear(y => y-1)) : setCalMonth(m => m-1)}
-                    className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 text-lg font-bold text-gray-500">‹</button>
-                  <h2 className="font-black text-[#1a1a1a]">{monthLabel}</h2>
-                  <button onClick={() => calMonth === 11 ? (setCalMonth(0), setCalYear(y => y+1)) : setCalMonth(m => m+1)}
-                    className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 text-lg font-bold text-gray-500">›</button>
+              <div className="rounded-2xl overflow-hidden shadow-sm" style={{ border: "1px solid #e5e7eb" }}>
+                {/* Calendar header */}
+                <div className="flex items-center justify-between px-6 py-5"
+                  style={{ background: "linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)" }}>
+                  <button
+                    onClick={() => calMonth === 0 ? (setCalMonth(11), setCalYear(y => y-1)) : setCalMonth(m => m-1)}
+                    className="w-9 h-9 flex items-center justify-center rounded-xl transition-colors text-white/60 hover:text-white hover:bg-white/10"
+                  >
+                    <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                  </button>
+                  <div className="text-center">
+                    <h2 className="font-black text-white text-lg tracking-tight">{monthLabel}</h2>
+                    <div className="flex items-center justify-center gap-3 mt-1">
+                      {[
+                        { color: "#d97706", label: `${stats.pending} pending` },
+                        { color: "#16a34a", label: `${stats.approved} approved` },
+                      ].map(s => (
+                        <span key={s.label} className="text-[10px] font-bold flex items-center gap-1" style={{ color: s.color }}>
+                          <span className="w-1.5 h-1.5 rounded-full inline-block" style={{ background: s.color }} />
+                          {s.label}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => calMonth === 11 ? (setCalMonth(0), setCalYear(y => y+1)) : setCalMonth(m => m+1)}
+                    className="w-9 h-9 flex items-center justify-center rounded-xl transition-colors text-white/60 hover:text-white hover:bg-white/10"
+                  >
+                    <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                  </button>
                 </div>
-                <div className="grid grid-cols-7 border-b border-gray-100 bg-gray-50">
+
+                {/* Day labels */}
+                <div className="grid grid-cols-7 bg-[#f9fafb] border-b border-gray-100">
                   {["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].map(d => (
-                    <div key={d} className="py-2 text-center text-xs font-bold text-gray-400">{d}</div>
+                    <div key={d} className="py-3 text-center text-[10px] font-black uppercase tracking-widest text-gray-400">{d}</div>
                   ))}
                 </div>
-                <div className="grid grid-cols-7">
+
+                {/* Day cells */}
+                <div className="grid grid-cols-7 bg-white">
                   {Array.from({ length: first }).map((_,i) => (
-                    <div key={`e${i}`} className="min-h-[90px] border-b border-r border-gray-50 bg-gray-50/50" />
+                    <div key={`e${i}`} className="min-h-[100px] border-b border-r border-gray-50 bg-gray-50/40" />
                   ))}
                   {Array.from({ length: days }).map((_,i) => {
                     const day = i + 1;
                     const ds = `${calYear}-${String(calMonth+1).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
                     const dayBs = byDay[ds] ?? [];
                     const isToday = ds === todayStr;
+                    const hasPending   = dayBs.some(b => b.status === "pending");
+                    const hasApproved  = dayBs.some(b => b.status === "approved");
                     return (
-                      <div key={day} className={`min-h-[90px] border-b border-r border-gray-50 p-2 ${isToday ? "bg-amber-50/60" : ""}`}>
-                        <p className={`text-xs font-bold mb-1 w-6 h-6 flex items-center justify-center rounded-full ${isToday ? "bg-[#c9a24b] text-[#1a1a1a]" : "text-gray-400"}`}>{day}</p>
+                      <div key={day}
+                        className={`min-h-[100px] border-b border-r border-gray-50 p-2 transition-colors ${
+                          isToday ? "bg-amber-50/70" : dayBs.length > 0 ? "hover:bg-gray-50/80" : ""
+                        }`}
+                      >
+                        {/* Day number */}
+                        <div className="flex items-center justify-between mb-1.5">
+                          <span className={`text-xs font-black w-6 h-6 flex items-center justify-center rounded-full transition-all ${
+                            isToday
+                              ? "bg-[#c9a24b] text-[#1a1a1a] shadow-sm"
+                              : dayBs.length > 0 ? "text-[#1a1a1a]" : "text-gray-300"
+                          }`}>{day}</span>
+                          {dayBs.length > 1 && (
+                            <span className="text-[9px] font-black text-gray-400 bg-gray-100 rounded-full px-1.5 py-0.5">{dayBs.length}</span>
+                          )}
+                        </div>
+
+                        {/* Status dots strip */}
+                        {dayBs.length > 0 && (
+                          <div className="flex gap-0.5 mb-1.5">
+                            {hasPending  && <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />}
+                            {hasApproved && <span className="w-1.5 h-1.5 rounded-full bg-green-500" />}
+                          </div>
+                        )}
+
+                        {/* Booking pills */}
                         <div className="space-y-0.5">
-                          {dayBs.map(b => (
+                          {dayBs.slice(0, 2).map(b => (
                             <button key={b.id} onClick={() => setSelected(b)}
-                              className={`w-full text-start text-xs font-semibold px-1.5 py-1 rounded-md border truncate hover:opacity-80 transition-opacity ${STATUS_STYLE[b.status]}`}>
-                              {b.name}
+                              className={`w-full text-start text-[10px] font-bold px-2 py-1 rounded-lg truncate transition-all hover:opacity-80 active:scale-95 ${
+                                b.status === "approved"  ? "bg-green-50  text-green-700  border border-green-200" :
+                                b.status === "cancelled" ? "bg-red-50    text-red-600    border border-red-100 opacity-60" :
+                                                           "bg-amber-50  text-amber-800  border border-amber-200"
+                              }`}>
+                              {b.name.split(" ")[0]}
                             </button>
                           ))}
+                          {dayBs.length > 2 && (
+                            <button onClick={() => setSelected(dayBs[2])}
+                              className="w-full text-[9px] font-bold text-gray-400 hover:text-gray-600 text-center py-0.5 transition-colors">
+                              +{dayBs.length - 2} more
+                            </button>
+                          )}
                         </div>
                       </div>
                     );
@@ -571,19 +634,40 @@ export function DashboardClient({ bookings, config: initialConfig, hasBlobToken 
             )}
 
             {view === "list" && (
-              <div className="space-y-3">
+              <div className="space-y-2">
                 {filtered.length === 0
-                  ? <div className="text-center py-20 text-gray-400 bg-white rounded-2xl border border-gray-100">No bookings found.</div>
+                  ? (
+                    <div className="text-center py-20 bg-white rounded-2xl border border-gray-100">
+                      <svg className="w-10 h-10 text-gray-200 mx-auto mb-3" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="3" stroke="currentColor" strokeWidth="1.5"/><path d="M3 9h18M8 2v4M16 2v4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>
+                      <p className="text-sm text-gray-400 font-medium">No bookings found</p>
+                    </div>
+                  )
                   : filtered.map(b => (
                     <button key={b.id} onClick={() => setSelected(b)}
-                      className="w-full bg-white rounded-2xl border border-gray-100 p-5 text-start hover:border-[#c9a24b]/50 hover:shadow-sm transition-all">
-                      <div className="flex items-start justify-between gap-4">
-                        <div>
-                          <p className="font-black text-[#1a1a1a]">{b.name}</p>
-                          <p className="text-sm text-gray-500 mt-0.5">{b.postcode} · {b.scope || b.service || "—"}</p>
-                          <p className="text-xs text-gray-400 mt-1">{fmt(b.date)} · Submitted {fmt(b.createdAt)} {fmtTime(b.createdAt)}</p>
+                      className="w-full bg-white rounded-2xl border text-start transition-all group hover:shadow-md active:scale-[0.995]"
+                      style={{ borderColor: b.status === "pending" ? "#fde68a" : b.status === "approved" ? "#bbf7d0" : "#fecaca" }}>
+                      <div className="flex items-center gap-4 px-5 py-4">
+                        {/* Status indicator strip */}
+                        <div className={`w-1 h-10 rounded-full flex-shrink-0 ${
+                          b.status === "approved"  ? "bg-green-500" :
+                          b.status === "cancelled" ? "bg-red-400" : "bg-amber-400"
+                        }`} />
+                        {/* Avatar */}
+                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 font-black text-sm ${
+                          b.status === "approved"  ? "bg-green-50 text-green-700" :
+                          b.status === "cancelled" ? "bg-red-50 text-red-500" : "bg-amber-50 text-amber-700"
+                        }`}>
+                          {b.name.charAt(0).toUpperCase()}
                         </div>
-                        <span className={`flex-shrink-0 text-xs font-bold px-3 py-1.5 rounded-full border ${STATUS_STYLE[b.status]}`}>{STATUS_LABEL[b.status]}</span>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-black text-[#1a1a1a] truncate group-hover:text-[#c9a24b] transition-colors">{b.name}</p>
+                          <p className="text-xs text-gray-500 truncate mt-0.5">{b.postcode} · {b.scope || b.service || "General enquiry"}</p>
+                        </div>
+                        <div className="flex-shrink-0 text-right">
+                          <span className={`text-xs font-bold px-2.5 py-1 rounded-full border ${STATUS_STYLE[b.status]}`}>{STATUS_LABEL[b.status]}</span>
+                          <p className="text-[10px] text-gray-400 mt-1">{fmt(b.date, { day:"numeric", month:"short" })}</p>
+                        </div>
+                        <svg className="w-4 h-4 text-gray-300 group-hover:text-[#c9a24b] transition-colors flex-shrink-0" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
                       </div>
                     </button>
                   ))
