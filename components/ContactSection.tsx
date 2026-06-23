@@ -117,7 +117,7 @@ export function ContactSection() {
           </div>
 
           {/* Form */}
-          <div className="bg-white rounded-3xl shadow-card-lg border border-gray-100 p-8">
+          <div className="bg-white rounded-3xl shadow-card-lg border border-gray-100 p-5 sm:p-8">
             {sent ? (
               <div className="text-center py-12">
                 <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -207,7 +207,7 @@ export function ContactSection() {
                             type="button"
                             onClick={() => removeFile(f.url)}
                             aria-label="Remove photo"
-                            className="absolute top-1 right-1 w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-sm"
+                            className="absolute top-1 right-1 w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center opacity-100 transition-opacity shadow-sm"
                           >
                             <svg className="w-3 h-3" viewBox="0 0 12 12" fill="none">
                               <path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>

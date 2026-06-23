@@ -10,6 +10,7 @@ import { Footer } from "@/components/Footer";
 import { CookieBanner } from "@/components/CookieBanner";
 import { MobileStickyBar } from "@/components/MobileStickyBar";
 import { QuoteWizardProvider } from "@/components/QuoteWizardProvider";
+import { ScrollToTop } from "@/components/ScrollToTop";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -178,6 +179,7 @@ export default async function LocaleLayout({
             <Nav />
             <main>{children}</main>
             <Footer />
+            <ScrollToTop />
             <MobileStickyBar />
             <CookieBanner />
           </QuoteWizardProvider>

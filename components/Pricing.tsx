@@ -22,7 +22,7 @@ export function Pricing({ tiers = DEFAULT_PRICING }: Props) {
           <p className="text-gray-500 text-lg max-w-xl mx-auto">{t("subtitle")}</p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6 items-stretch">
+        <div className="grid md:grid-cols-3 gap-6 items-stretch overflow-x-hidden">
           {tiers.map((tier, i) => (
             <motion.div
               key={tier.id}
@@ -32,7 +32,7 @@ export function Pricing({ tiers = DEFAULT_PRICING }: Props) {
               transition={{ delay: i * 0.1, duration: 0.5 }}
               className={`relative rounded-2xl border p-8 flex flex-col ${
                 tier.popular
-                  ? "bg-charcoal border-gold/40 shadow-card-hover scale-[1.03]"
+                  ? "bg-charcoal border-gold/40 shadow-card-hover md:scale-[1.03]"
                   : "bg-white border-gray-200 shadow-card"
               }`}
             >
