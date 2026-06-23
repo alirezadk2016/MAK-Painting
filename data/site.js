@@ -171,14 +171,23 @@ export const PACKAGES = [
 export const EXTRAS = [
   "Cabinet painting",
   "Deck painting",
-  "Roof painting",
+  "Door painting",
+  "Drywall painting",
   "Drywall repair",
+  "Faux finishes",
+  "Furniture painting",
+  "Metal painting",
+  "Mural painting",
+  "Roof painting",
+  "Siding painting",
+  "Specialty design painting",
   "Spray painting",
+  "Wallpaper hanging",
   "Wallpaper removal",
   "Water damage repair",
+  "Wood painting",
   "Wood staining",
   "Wood varnishing",
-  "Metal painting",
 ];
 
 export const STATS = [
