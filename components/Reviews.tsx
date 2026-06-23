@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { REVIEWS, BRAND } from "@/data/site";
 
-const MAPS_URL = "https://www.google.com/maps/place/MAK+Painting+Group/@-37.9725665,145.0531353,17z";
+const MAPS_URL = "https://maps.app.goo.gl/eyYsR4ViUKb8RQrF9";
 
 function GoogleIcon() {
   return (

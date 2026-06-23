@@ -11,7 +11,7 @@ export const BRAND = {
   suburb: "Ferntree Gully",
   googleRating: "5.0",
   googleReviewCount: 7,
-  googleMapsUrl: "https://www.google.com/maps/place/MAK+Painting+Group/@-37.9725665,145.0531353,17z",
+  googleMapsUrl: "https://maps.app.goo.gl/eyYsR4ViUKb8RQrF9",
   instagram: "https://instagram.com/makpaintinggroup",
   facebook: "https://facebook.com/makpaintinggroup",
 };
@@ -198,14 +198,6 @@ export const STATS = [
 export const GALLERY = [
   {
     id: 1,
-    title: "Bathroom Repaint",
-    suburb: "Melbourne",
-    service: "Interior",
-    before: "/bathroom-before.jpg",
-    after: "/bathroom-after.jpg",
-  },
-  {
-    id: 2,
     title: "Lounge Room — Timber Ceiling",
     suburb: "Melbourne",
     service: "Interior",
@@ -213,15 +205,7 @@ export const GALLERY = [
     after: "/lounge-after.jpg",
   },
   {
-    id: 3,
-    title: "Deck & Exterior",
-    suburb: "Melbourne",
-    service: "Deck Painting",
-    before: "/deck-before.jpg",
-    after: "/deck-after.jpg",
-  },
-  {
-    id: 4,
+    id: 2,
     title: "Front Entry Door — Gloss Black",
     suburb: "Melbourne",
     service: "Exterior",
@@ -229,7 +213,7 @@ export const GALLERY = [
     after: "/door-exterior-after.jpg",
   },
   {
-    id: 5,
+    id: 3,
     title: "Interior Door Respray",
     suburb: "Melbourne",
     service: "Door Painting",
@@ -237,7 +221,7 @@ export const GALLERY = [
     after: "/door-interior-after.jpg",
   },
   {
-    id: 6,
+    id: 4,
     title: "Bedroom Feature Wall",
     suburb: "Melbourne",
     service: "Feature Wall",
@@ -245,7 +229,7 @@ export const GALLERY = [
     after: "/feature-wall-lilac.jpg",
   },
   {
-    id: 7,
+    id: 5,
     title: "Water Damage Wall Repair",
     suburb: "Melbourne",
     service: "Repairs",
@@ -253,7 +237,7 @@ export const GALLERY = [
     after: "/wall-repair-after.jpg",
   },
   {
-    id: 8,
+    id: 6,
     title: "Ceiling Repair & Patch",
     suburb: "Melbourne",
     service: "Plaster Repair",
