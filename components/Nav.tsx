@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { useTranslations, useLocale } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 import { useQuoteWizard } from "./QuoteWizardProvider";
@@ -55,14 +56,15 @@ export function Nav() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-18">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5 group flex-shrink-0">
-            <div className="w-9 h-9 rounded-lg bg-charcoal flex items-center justify-center shadow-sm ring-1 ring-gold/40">
-              <span className="text-gold font-black text-base tracking-tight">M</span>
-            </div>
-            <span className="font-black text-charcoal text-sm tracking-tight leading-tight">
-              MAK<br />
-              <span className="text-gold-deep font-semibold text-xs">Painting Group</span>
-            </span>
+          <Link href="/" className="flex items-center gap-2.5 group flex-shrink-0" aria-label="MAK Painting Group — home">
+            <Image
+              src="/logo.jpg"
+              alt="MAK Painting Group"
+              width={150}
+              height={90}
+              priority
+              className="h-11 w-auto rounded-lg object-contain ring-1 ring-gold/20 shadow-sm"
+            />
           </Link>
 
           {/* Desktop links */}

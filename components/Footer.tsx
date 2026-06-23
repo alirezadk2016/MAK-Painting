@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { BRAND, SERVICES, SUBURBS } from "@/data/site";
@@ -22,13 +23,14 @@ export function Footer() {
 
           {/* Brand */}
           <div className="lg:col-span-1">
-            <div className="flex items-center gap-2.5 mb-4">
-              <div className="w-9 h-9 rounded-lg bg-gold flex items-center justify-center">
-                <span className="text-ink font-black text-base">M</span>
-              </div>
-              <span className="font-black text-white text-sm tracking-tight leading-tight">
-                MAK<br /><span className="text-gold font-semibold text-xs">Painting Group</span>
-              </span>
+            <div className="mb-4">
+              <Image
+                src="/logo.jpg"
+                alt="MAK Painting Group"
+                width={200}
+                height={120}
+                className="h-16 w-auto rounded-xl object-contain"
+              />
             </div>
             <p className="text-gray-400 text-sm leading-relaxed mb-4">
               {t("tagline", { types: BRAND.serviceTypes, suburb: BRAND.suburb })}

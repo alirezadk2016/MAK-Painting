@@ -79,7 +79,7 @@ const jsonLd = {
   telephone: "+61404000772",
   email: "mak.painting.group@gmail.com",
   image: "https://www.makpainting.com.au/og-image.jpg",
-  logo: "https://www.makpainting.com.au/logo.png",
+  logo: "https://www.makpainting.com.au/logo.jpg",
   address: {
     "@type": "PostalAddress",
     addressLocality: "Ferntree Gully",

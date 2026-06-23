@@ -95,8 +95,8 @@ export function Hero() {
           <div className="relative hidden lg:block">
             <div className="relative rounded-3xl overflow-hidden shadow-card-hover aspect-[4/5]">
               <Image
-                src="https://images.unsplash.com/photo-1604079628040-94301bb21b91?w=900&q=85"
-                alt="Professional MAK painter applying a flawless finish"
+                src="/hero-living-room.jpg"
+                alt="MAK Painting Group — freshly painted Melbourne living room"
                 fill
                 className="object-cover"
                 priority
