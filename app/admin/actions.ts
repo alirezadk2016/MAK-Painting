@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { requireAdmin } from "@/lib/auth";
 import { updateBookingStatus, type BookingStatus } from "@/lib/db";
-import { setMediaConfig, type MediaConfig } from "@/lib/site-config";
+import { setSiteConfig, type SiteConfig } from "@/lib/site-config";
 import { sendCancellationEmail } from "@/lib/email";
 
 export async function loginAction(_prev: { error: string } | null, formData: FormData) {
@@ -41,10 +41,12 @@ export async function updateBookingAction(id: string, status: BookingStatus) {
   return booking;
 }
 
-export async function saveMediaAction(config: MediaConfig) {
+export async function saveSiteConfigAction(config: SiteConfig) {
   await requireAdmin();
-  await setMediaConfig(config);
+  await setSiteConfig(config);
   revalidatePath("/admin/dashboard");
+  revalidatePath("/en");
+  revalidatePath("/fa");
 }
 
 export async function uploadImageAction(formData: FormData) {

@@ -14,6 +14,7 @@ import { FAQ } from "@/components/FAQ";
 import { ContactSection } from "@/components/ContactSection";
 import { FAQS } from "@/data/site";
 import { canonicalAlternates, pageOG, pageTwitter } from "@/lib/seo";
+import { getSiteConfig, DEFAULT_PRICING } from "@/lib/site-config";
 
 export async function generateMetadata({
   params,
@@ -46,13 +47,15 @@ export default async function HomePage({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
+  const siteConfig = await getSiteConfig();
+  const pricingTiers = siteConfig?.pricing?.length ? siteConfig.pricing : DEFAULT_PRICING;
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <Hero />
       <Services />
       <HowItWorks />
-      <Pricing />
+      <Pricing tiers={pricingTiers} />
       <Extras />
       <WhyMAK />
       <Gallery />

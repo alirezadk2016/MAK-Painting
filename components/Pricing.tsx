@@ -2,50 +2,14 @@
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { useQuoteWizard } from "./QuoteWizardProvider";
+import type { PricingTier } from "@/lib/site-config";
+import { DEFAULT_PRICING } from "@/lib/site-config";
 
-const TIERS = [
-  {
-    name: "Residential",
-    desc: "Interior & exterior painting for homes and apartments.",
-    popular: false,
-    features: [
-      "Full surface preparation",
-      "Premium Dulux / Taubmans paints",
-      "2–3 coat system",
-      "Furniture & floor protection",
-      "Same-day clean-up",
-      "7-year workmanship warranty",
-    ],
-  },
-  {
-    name: "Full Repaint",
-    desc: "Complete transformation — the most popular choice.",
-    popular: true,
-    features: [
-      "Whole house (walls, ceilings & trims)",
-      "Premium 2–3 coat system",
-      "Full prep + minor repairs",
-      "Colour consultation included",
-      "Priority scheduling",
-      "7-year workmanship warranty",
-    ],
-  },
-  {
-    name: "Commercial",
-    desc: "Offices, strata complexes & industrial facilities.",
-    popular: false,
-    features: [
-      "Flexible night & weekend scheduling",
-      "OH&S compliant crew",
-      "Strata & body corporate experience",
-      "Project management included",
-      "Contract work accepted",
-      "Certificate of insurance on request",
-    ],
-  },
-] as const;
+interface Props {
+  tiers?: PricingTier[];
+}
 
-export function Pricing() {
+export function Pricing({ tiers = DEFAULT_PRICING }: Props) {
   const { open } = useQuoteWizard();
   const t = useTranslations("Pricing");
 
@@ -59,9 +23,9 @@ export function Pricing() {
         </div>
 
         <div className="grid md:grid-cols-3 gap-6 items-stretch">
-          {TIERS.map((tier, i) => (
+          {tiers.map((tier, i) => (
             <motion.div
-              key={tier.name}
+              key={tier.id}
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -87,7 +51,6 @@ export function Pricing() {
                 <p className={`text-sm mb-4 ${tier.popular ? "text-gray-300" : "text-gray-400"}`}>
                   {tier.desc}
                 </p>
-                {/* Pricing coming soon */}
                 <div className={`inline-flex items-center gap-2 rounded-xl px-4 py-2 border ${
                   tier.popular
                     ? "bg-white/10 border-white/20 text-white"
@@ -97,7 +60,7 @@ export function Pricing() {
                     <circle cx="8" cy="8" r="6.5" stroke="currentColor" strokeWidth="1.2"/>
                     <path d="M8 5v3.5L10 10" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
                   </svg>
-                  <span className="text-sm font-bold">Pricing coming soon</span>
+                  <span className="text-sm font-bold">{tier.priceLabel || "Pricing coming soon"}</span>
                 </div>
               </div>
 
