@@ -44,7 +44,7 @@ export default async function GalleryPage({
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(galleryJsonLd) }} />
       <PageHeader eyebrow={t("eyebrow")} title={t("title")} subtitle={t("subtitle")} />
-      <Gallery hideHeading />
+      <Gallery hideHeading showAll />
       <ColorInspiration />
       <Reviews />
     </>
