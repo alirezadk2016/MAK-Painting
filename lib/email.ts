@@ -1,7 +1,11 @@
 import { Resend } from "resend";
 import type { Booking } from "./db";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Lazy init — throws at call time (not module load) if API key is missing
+function getResend() {
+  if (!process.env.RESEND_API_KEY) throw new Error("RESEND_API_KEY is not set");
+  return new Resend(process.env.RESEND_API_KEY);
+}
 const FROM = "MAK Painting Group <no-reply@makvandi.info>";
 const OWNER_EMAIL = process.env.OWNER_EMAIL ?? "mak.painting.group@gmail.com";
 
@@ -113,7 +117,7 @@ export async function sendCustomerConfirmation(b: Booking) {
 </body>
 </html>`;
 
-  return resend.emails.send({
+  return getResend().emails.send({
     from: FROM,
     to: b.email,
     subject: `✓ Booking Confirmed — MAK Painting Group (Ref: ${b.id.slice(0, 8).toUpperCase()})`,
@@ -164,7 +168,7 @@ export async function sendOwnerNotification(b: Booking) {
 </body>
 </html>`;
 
-  return resend.emails.send({
+  return getResend().emails.send({
     from: FROM,
     to: OWNER_EMAIL,
     subject: `🎨 New Booking: ${b.name} — ${b.postcode} (${formatDate(b.date)})`,
@@ -229,7 +233,7 @@ export async function sendCancellationEmail(b: Booking) {
 </body>
 </html>`;
 
-  return resend.emails.send({
+  return getResend().emails.send({
     from: FROM,
     to: b.email,
     subject: `Your Booking Has Been Cancelled — MAK Painting Group`,
