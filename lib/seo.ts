@@ -1,5 +1,5 @@
 const BASE = "https://www.makvandi.info";
-const OG_IMAGE = `${BASE}/og-image.jpg`;
+const OG_IMAGE = `${BASE}/opengraph-image`;
 
 export function hreflang(path: string) {
   return {
