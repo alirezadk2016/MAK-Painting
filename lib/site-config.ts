@@ -20,7 +20,15 @@ export interface ServiceCard {
   id: string;
   label: string;
   img: string;
-  slug?: string; // links to /services/[slug] if set
+  slug?: string;
+  short?: string;
+  priceFrom?: string;
+}
+
+export interface ServicesSection {
+  eyebrow?: string;
+  title?: string;
+  subtitle?: string;
 }
 
 export interface HeroPosition {
@@ -34,6 +42,7 @@ export interface SiteConfig {
   heroPosition?: HeroPosition;
   services: Record<string, string>; // legacy image overrides
   serviceCards?: ServiceCard[];      // admin-managed service card list
+  servicesSection?: ServicesSection; // section heading overrides
   gallery: GalleryPair[];
   pricing: PricingTier[];
 }

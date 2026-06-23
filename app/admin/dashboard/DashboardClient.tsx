@@ -4,7 +4,7 @@ import { useTransition, useOptimistic, useState, useRef, useCallback } from "rea
 import Image from "next/image";
 import { logoutAction, updateBookingAction, saveSiteConfigAction, uploadImageAction } from "../actions";
 import type { Booking, BookingStatus } from "@/lib/db";
-import type { SiteConfig, GalleryPair, PricingTier, ServiceCard, HeroPosition } from "@/lib/site-config";
+import type { SiteConfig, GalleryPair, PricingTier, ServiceCard, HeroPosition, ServicesSection } from "@/lib/site-config";
 
 // ─── Static defaults ──────────────────────────────────────────────────────────
 const DEFAULT_SERVICES = [
@@ -260,16 +260,25 @@ export function DashboardClient({ bookings, config: initialConfig, hasBlobToken 
   }));
   const serviceCards: ServiceCard[] = cfg.serviceCards ?? defaultServiceCards;
 
+  // Services section heading state — keep in sync with cfg
+  const [svcSection, setSvcSection] = useState<ServicesSection>(initialConfig.servicesSection ?? {});
+  function updateSvcSection(patch: Partial<ServicesSection>) {
+    const next = { ...svcSection, ...patch };
+    setSvcSection(next);
+    setCfg(prev => ({ ...prev, servicesSection: next }));
+    setDirty(true);
+  }
+
   // Service card modal
   const [svcModal, setSvcModal] = useState<{ mode: "add" | "edit"; idx?: number } | null>(null);
-  const [svcForm, setSvcForm] = useState<ServiceCard>({ id: "", label: "", img: "", slug: "" });
+  const [svcForm, setSvcForm] = useState<ServiceCard>({ id: "", label: "", img: "", slug: "", short: "", priceFrom: "" });
 
   function openAddService() {
-    setSvcForm({ id: `custom-${Date.now()}`, label: "", img: "", slug: "" });
+    setSvcForm({ id: `custom-${Date.now()}`, label: "", img: "", slug: "", short: "", priceFrom: "" });
     setSvcModal({ mode: "add" });
   }
   function openEditService(card: ServiceCard, idx: number) {
-    setSvcForm({ ...card });
+    setSvcForm({ ...card, short: card.short ?? "", priceFrom: card.priceFrom ?? "" });
     setSvcModal({ mode: "edit", idx });
   }
   function deleteService(idx: number) {
@@ -286,9 +295,16 @@ export function DashboardClient({ bookings, config: initialConfig, hasBlobToken 
   }
   function saveService() {
     if (!svcForm.label || !svcForm.img) return;
+    // Strip empty optional fields so they fall back to static/translation values
+    const card: ServiceCard = {
+      ...svcForm,
+      short: svcForm.short?.trim() || undefined,
+      priceFrom: svcForm.priceFrom?.trim() || undefined,
+      slug: svcForm.slug?.trim() || undefined,
+    };
     const next = svcModal?.mode === "add"
-      ? [...serviceCards, svcForm]
-      : serviceCards.map((c, i) => i === svcModal!.idx ? svcForm : c);
+      ? [...serviceCards, card]
+      : serviceCards.map((c, i) => i === svcModal!.idx ? card : c);
     persist({ ...cfg, serviceCards: next });
     setSvcModal(null);
   }
@@ -706,15 +722,51 @@ export function DashboardClient({ bookings, config: initialConfig, hasBlobToken 
               </div>
             </section>
 
+            {/* Services Section Text */}
+            <section className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
+              <SectionHead letter="T" title="Services Section Text" sub="Eyebrow · headline · subtitle shown above the service cards" />
+              <div className="p-6 space-y-4">
+                <div>
+                  <label className="block text-xs font-bold text-gray-600 mb-1.5 uppercase tracking-wide">Eyebrow <span className="normal-case text-gray-400 font-normal">(small label above title)</span></label>
+                  <input
+                    value={svcSection.eyebrow ?? ""}
+                    onChange={e => updateSvcSection({ eyebrow: e.target.value || undefined })}
+                    placeholder="What we do"
+                    className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#c9a24b]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-gray-600 mb-1.5 uppercase tracking-wide">Heading</label>
+                  <input
+                    value={svcSection.title ?? ""}
+                    onChange={e => updateSvcSection({ title: e.target.value || undefined })}
+                    placeholder="Painting services for every surface"
+                    className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#c9a24b]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-gray-600 mb-1.5 uppercase tracking-wide">Subtitle</label>
+                  <textarea
+                    value={svcSection.subtitle ?? ""}
+                    onChange={e => updateSvcSection({ subtitle: e.target.value || undefined })}
+                    placeholder="From single rooms to full repaints — we have you covered."
+                    rows={2}
+                    className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#c9a24b] resize-none"
+                  />
+                </div>
+                <p className="text-xs text-gray-400">Leave blank to use the default translated text.</p>
+              </div>
+            </section>
+
             {/* Services */}
             <section className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
               <SectionHead
-                letter="S" title="Service Images" sub={`${serviceCards.length} service cards on homepage`}
+                letter="S" title="Service Cards" sub={`${serviceCards.length} cards · edit title, description, price and image`}
                 action={
                   <button onClick={openAddService}
                     className="flex items-center gap-1.5 bg-[#c9a24b] hover:bg-[#b8913a] text-[#1a1a1a] text-xs font-bold px-4 py-2 rounded-xl transition-colors">
                     <svg className="w-3.5 h-3.5" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
-                    Add Service
+                    Add Card
                   </button>
                 }
               />
@@ -723,7 +775,7 @@ export function DashboardClient({ bookings, config: initialConfig, hasBlobToken 
                   ? <p className="text-center text-gray-400 text-sm py-12">No service cards.</p>
                   : serviceCards.map((card, idx) => (
                     <div key={card.id} className="p-4 hover:bg-gray-50/50 transition-colors">
-                      <div className="flex items-center gap-4">
+                      <div className="flex items-start gap-4">
                         <UploadableImg src={card.img} className="w-20 h-16 flex-shrink-0"
                           onDone={url => {
                             const next = serviceCards.map((c, i) => i === idx ? { ...c, img: url } : c);
@@ -731,8 +783,14 @@ export function DashboardClient({ bookings, config: initialConfig, hasBlobToken 
                           }} />
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-bold text-[#1a1a1a] truncate">{card.label}</p>
-                          <p className="text-xs text-gray-400 truncate">{card.img.split("/").pop()}</p>
-                          {card.slug && <p className="text-xs text-[#c9a24b] mt-0.5">/services/{card.slug}</p>}
+                          {card.short
+                            ? <p className="text-xs text-gray-500 mt-0.5 line-clamp-1">{card.short}</p>
+                            : <p className="text-xs text-gray-300 mt-0.5 italic">No description</p>
+                          }
+                          <div className="flex items-center gap-2 mt-1">
+                            {card.priceFrom && <span className="text-xs bg-amber-50 text-amber-700 px-2 py-0.5 rounded-full font-medium">{card.priceFrom}</span>}
+                            {card.slug && <span className="text-xs text-[#c9a24b]">/services/{card.slug}</span>}
+                          </div>
                         </div>
                         <div className="flex items-center gap-1.5 flex-shrink-0">
                           <button onClick={() => moveService(idx, -1)} disabled={idx === 0}
@@ -921,17 +979,30 @@ export function DashboardClient({ bookings, config: initialConfig, hasBlobToken 
               <p className="text-white font-black">{svcModal.mode === "add" ? "Add Service Card" : "Edit Service Card"}</p>
               <button onClick={() => setSvcModal(null)} className="text-white/60 hover:text-white"><svg className="w-5 h-5" viewBox="0 0 20 20" fill="none"><path d="M15 5L5 15M5 5l10 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg></button>
             </div>
-            <div className="p-6 space-y-4">
+            <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
               <div>
-                <label className="block text-xs font-bold text-gray-600 mb-1.5 uppercase tracking-wide">Label</label>
+                <label className="block text-xs font-bold text-gray-600 mb-1.5 uppercase tracking-wide">Card Title</label>
                 <input value={svcForm.label} onChange={e => setSvcForm(f => ({ ...f, label: e.target.value }))}
                   placeholder="e.g. Roof Painting"
                   className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#c9a24b]" />
               </div>
               <div>
-                <label className="block text-xs font-bold text-gray-600 mb-1.5 uppercase tracking-wide">Service Page Slug (optional)</label>
+                <label className="block text-xs font-bold text-gray-600 mb-1.5 uppercase tracking-wide">Short Description <span className="normal-case text-gray-400 font-normal">(optional — shown under card)</span></label>
+                <textarea value={svcForm.short ?? ""} onChange={e => setSvcForm(f => ({ ...f, short: e.target.value }))}
+                  placeholder="e.g. Restore and protect your roof with specialist coatings."
+                  rows={2}
+                  className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#c9a24b] resize-none" />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-gray-600 mb-1.5 uppercase tracking-wide">Price Badge <span className="normal-case text-gray-400 font-normal">(optional — e.g. "from $18/m²")</span></label>
+                <input value={svcForm.priceFrom ?? ""} onChange={e => setSvcForm(f => ({ ...f, priceFrom: e.target.value }))}
+                  placeholder="e.g. from $18/m²"
+                  className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#c9a24b]" />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-gray-600 mb-1.5 uppercase tracking-wide">Service Page Slug <span className="normal-case text-gray-400 font-normal">(optional — links to /services/slug)</span></label>
                 <input value={svcForm.slug ?? ""} onChange={e => setSvcForm(f => ({ ...f, slug: e.target.value || undefined }))}
-                  placeholder="e.g. roof (links to /services/roof)"
+                  placeholder="e.g. roof"
                   className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#c9a24b]" />
               </div>
               <div>

@@ -4,10 +4,11 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { motion } from "framer-motion";
 import { SERVICES } from "@/data/site";
-import type { ServiceCard } from "@/lib/site-config";
+import type { ServiceCard, ServicesSection } from "@/lib/site-config";
 
 interface Props {
   cards?: ServiceCard[];
+  section?: ServicesSection;
 }
 
 const SVC_KEY: Record<string, string> = {
@@ -15,7 +16,7 @@ const SVC_KEY: Record<string, string> = {
   "commercial": "commercial", "special-finishes": "specialFinishes", "repaints": "repaints",
 };
 
-export function Services({ cards }: Props) {
+export function Services({ cards, section }: Props) {
   const t = useTranslations("Services");
   const tData = useTranslations("ServicesData");
 
@@ -37,8 +38,9 @@ export function Services({ cards }: Props) {
           title: svcTitle(c.id, c.label),
           image: c.img,
           slug: c.slug ?? match?.slug,
-          short: svcShort(c.id, match?.short ?? ""),
-          priceFrom: match?.priceFrom ?? "",
+          // KV-stored short/priceFrom take priority over static data and translations
+          short: c.short ?? svcShort(c.id, match?.short ?? ""),
+          priceFrom: c.priceFrom ?? match?.priceFrom ?? "",
         };
       })
     : SERVICES.map(s => ({ id: s.id, title: svcTitle(s.id, s.title), image: s.image, slug: s.slug, short: svcShort(s.id, s.short), priceFrom: s.priceFrom }));
@@ -47,10 +49,10 @@ export function Services({ cards }: Props) {
     <section id="services" className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <p className="text-xs font-bold uppercase tracking-widest text-terra mb-2">{t("eyebrow")}</p>
-          <h2 className="text-4xl lg:text-5xl font-black text-charcoal mb-4">{t("title")}</h2>
+          <p className="text-xs font-bold uppercase tracking-widest text-terra mb-2">{section?.eyebrow || t("eyebrow")}</p>
+          <h2 className="text-4xl lg:text-5xl font-black text-charcoal mb-4">{section?.title || t("title")}</h2>
           <p className="text-gray-500 text-lg max-w-xl mx-auto">
-            {t("subtitle")}
+            {section?.subtitle || t("subtitle")}
           </p>
         </div>
 
