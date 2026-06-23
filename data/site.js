@@ -45,7 +45,7 @@ export const SERVICES = [
     id: "roof",
     title: "Roof Painting",
     slug: "roof",
-    image: "/exterior-render.jpg",
+    image: "/deck-exterior-after.jpg",
     short: "Restore and protect your roof with specialist coatings.",
     description: "High-pressure cleaning, moss and lichen treatment, crack repair and specialist roof-grade coatings. Extends roof life and dramatically improves curb appeal.",
     priceFrom: "from $25/m²",
@@ -206,6 +206,14 @@ export const GALLERY = [
   },
   {
     id: 2,
+    title: "Exterior Render & Repaint",
+    suburb: "Melbourne",
+    service: "Exterior",
+    before: "/exterior-render.jpg",
+    after: "/exterior-terrace.jpg",
+  },
+  {
+    id: 3,
     title: "Front Entry Door — Gloss Black",
     suburb: "Melbourne",
     service: "Exterior",
@@ -213,7 +221,7 @@ export const GALLERY = [
     after: "/door-exterior-after.jpg",
   },
   {
-    id: 3,
+    id: 4,
     title: "Interior Door Respray",
     suburb: "Melbourne",
     service: "Door Painting",
@@ -221,7 +229,7 @@ export const GALLERY = [
     after: "/door-interior-after.jpg",
   },
   {
-    id: 4,
+    id: 5,
     title: "Bedroom Feature Wall",
     suburb: "Melbourne",
     service: "Feature Wall",
@@ -229,7 +237,7 @@ export const GALLERY = [
     after: "/feature-wall-lilac.jpg",
   },
   {
-    id: 5,
+    id: 6,
     title: "Water Damage Wall Repair",
     suburb: "Melbourne",
     service: "Repairs",
@@ -237,7 +245,7 @@ export const GALLERY = [
     after: "/wall-repair-after.jpg",
   },
   {
-    id: 6,
+    id: 7,
     title: "Ceiling Repair & Patch",
     suburb: "Melbourne",
     service: "Plaster Repair",
