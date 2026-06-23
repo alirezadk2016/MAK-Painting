@@ -53,7 +53,7 @@ export default async function HomePage({
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      <Hero />
+      <Hero heroImage={siteConfig?.hero} />
       <Services cards={serviceCards} />
       <HowItWorks />
       <Pricing tiers={pricingTiers} />

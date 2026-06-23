@@ -6,7 +6,11 @@ import { useQuoteWizard } from "./QuoteWizardProvider";
 
 const MAPS_URL = "https://maps.app.goo.gl/eyYsR4ViUKb8RQrF9";
 
-export function Hero() {
+interface Props {
+  heroImage?: string;
+}
+
+export function Hero({ heroImage }: Props) {
   const { open } = useQuoteWizard();
   const [postcode, setPostcode] = useState("");
   const t = useTranslations("Hero");
@@ -95,7 +99,7 @@ export function Hero() {
           <div className="relative hidden lg:block">
             <div className="relative rounded-3xl overflow-hidden shadow-card-hover aspect-[4/5]">
               <Image
-                src="/1.png"
+                src={heroImage || "/1.png"}
                 alt="MAK Painting Group — Melbourne painting services van"
                 fill
                 className="object-cover"
