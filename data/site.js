@@ -57,7 +57,7 @@ export const SERVICES = [
     id: "commercial",
     title: "Commercial & Strata",
     slug: "commercial",
-    image: "/hallway-after.jpg",
+    image: "/interior-timber-ceiling.jpg",
     short: "Minimal disruption, maximum results for offices & strata.",
     description: "We work around your schedule — nights, weekends and staged works — to deliver commercial-grade finishes for offices, retail, strata complexes and industrial facilities.",
     priceFrom: "POA",

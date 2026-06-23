@@ -85,7 +85,7 @@ export default async function AboutPage({
           {/* Project photos */}
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {[
-              { src: "/car.png", alt: "MAK Painting Group van" },
+              { src: "/1.png", alt: "MAK Painting Group van" },
               { src: "/living-room-after.jpg", alt: "Interior painting Melbourne" },
               { src: "/kitchen-after.jpg", alt: "Kitchen cabinet painting Melbourne" },
               { src: "/bedroom-pink-after.jpg", alt: "Bedroom painting Melbourne" },
