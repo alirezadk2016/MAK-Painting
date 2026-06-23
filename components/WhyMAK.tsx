@@ -3,6 +3,8 @@ import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { STATS } from "@/data/site";
 
+const MAPS_URL = "https://www.google.com/maps/place/MAK+Painting+Group/@-37.9725665,145.0531353,17z";
+
 function Counter({ target, suffix }: { target: number; suffix: string }) {
   const [val, setVal] = useState(0);
   const ref = useRef<HTMLSpanElement>(null);
@@ -49,29 +51,39 @@ export function WhyMAK() {
           <p className="text-xs font-bold uppercase tracking-widest text-terra mb-2">Why choose us</p>
           <h2 className="text-4xl lg:text-5xl font-black text-charcoal mb-4">Why Melbourne chooses MAK</h2>
           <p className="text-gray-500 text-lg max-w-xl mx-auto">
-            Trusted by homeowners, builders and strata managers across Melbourne for over 15 years.
+            5.0★ rated on Google. Trusted by homeowners and strata managers across Melbourne.
           </p>
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-          {STATS.map((stat, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              className="bg-canvas rounded-2xl p-8 text-center border border-gray-100"
-            >
-              <div className="w-14 h-14 bg-blue-muted rounded-2xl flex items-center justify-center mx-auto mb-5 text-blue-brand">
-                {ICONS[i]}
-              </div>
-              <p className="text-4xl font-black text-charcoal mb-1">
-                <Counter target={stat.num} suffix={stat.suffix} />
-              </p>
-              <p className="text-sm font-semibold text-gray-500">{stat.label}</p>
-            </motion.div>
-          ))}
+          {STATS.map((stat, i) => {
+            const isRating = i < 2;
+            const Wrapper = isRating ? "a" : "div";
+            const wrapperProps = isRating ? { href: MAPS_URL, target: "_blank", rel: "noopener noreferrer" } : {};
+            return (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+              >
+                <Wrapper
+                  {...(wrapperProps as Record<string, string>)}
+                  className={`bg-canvas rounded-2xl p-8 text-center border border-gray-100 block ${isRating ? "hover:border-blue-brand/30 hover:shadow-card transition-shadow" : ""}`}
+                >
+                  <div className="w-14 h-14 bg-blue-muted rounded-2xl flex items-center justify-center mx-auto mb-5 text-gold-deep">
+                    {ICONS[i]}
+                  </div>
+                  <p className="text-4xl font-black text-charcoal mb-1">
+                    <Counter target={stat.num} suffix={stat.suffix} />
+                  </p>
+                  <p className="text-sm font-semibold text-gray-500">{stat.label}</p>
+                  {isRating && <p className="text-xs text-gold-deep mt-1">View on Google →</p>}
+                </Wrapper>
+              </motion.div>
+            );
+          })}
         </div>
 
         {/* Feature grid */}

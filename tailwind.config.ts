@@ -9,16 +9,26 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        blue: {
-          brand: "#1E5AA8",
-          light: "#2D72D2",
-          dark: "#163E7A",
-          muted: "#EAF1FB",
+        // Luxury gold/black brand palette (matches MAK business card)
+        gold: {
+          DEFAULT: "#C9A24B",
+          light: "#E4C56E",
+          dark: "#A07E2E",
+          deep: "#856420",
+          soft: "#F5EDD8",
         },
-        canvas: "#F6F1EA",
-        charcoal: "#141821",
-        terra: "#E5572B",
-        "terra-dark": "#C4431B",
+        // Legacy tokens remapped to the gold palette so existing classes stay consistent
+        blue: {
+          brand: "#C9A24B",
+          light: "#E4C56E",
+          dark: "#A07E2E",
+          muted: "#F5EDD8",
+        },
+        ink: "#0D0C0A",
+        canvas: "#F8F4EC",
+        charcoal: "#15130E",
+        terra: "#C9A24B",
+        "terra-dark": "#A07E2E",
       },
       fontFamily: {
         sans: ["var(--font-manrope)", "Inter", "system-ui", "sans-serif"],

@@ -80,11 +80,11 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
             <div className="bg-white rounded-3xl border border-gray-100 shadow-card-lg p-6 sticky top-24">
               <h3 className="font-black text-xl text-charcoal mb-2">Ready to get started?</h3>
               <p className="text-sm text-gray-500 mb-5">Get a free, no-obligation on-site quote. We respond within one business day.</p>
-              <Link href="/#contact" className="block w-full bg-terra hover:bg-terra-dark text-white font-bold rounded-xl py-4 text-center text-sm transition-colors mb-3">
+              <Link href="/#contact" className="block w-full bg-terra hover:bg-terra-dark text-ink font-bold rounded-xl py-4 text-center text-sm transition-colors mb-3">
                 Get a free quote for {service.title.toLowerCase()}
               </Link>
-              <a href="tel:0411234567" className="block w-full border-2 border-blue-brand text-blue-brand font-bold rounded-xl py-3.5 text-center text-sm hover:bg-blue-muted transition-colors">
-                Call us: 0411 234 567
+              <a href="tel:0404000772" className="block w-full border-2 border-blue-brand text-gold-deep font-bold rounded-xl py-3.5 text-center text-sm hover:bg-blue-muted transition-colors">
+                Call us: 0404 000 772
               </a>
               <p className="text-xs text-gray-400 text-center mt-3">7-year workmanship warranty on all work</p>
             </div>

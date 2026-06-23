@@ -9,6 +9,10 @@
   body {
     @apply text-charcoal bg-white antialiased;
   }
+  ::selection {
+    background-color: #C9A24B;
+    color: #0D0C0A;
+  }
 }
 
 @layer utilities {
