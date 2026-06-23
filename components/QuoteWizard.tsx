@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { EXTRAS } from "@/data/site";
 
 const STEPS_WIZARD = [
   "Postcode",
@@ -14,11 +15,6 @@ const STEPS_WIZARD = [
 
 const PROPERTY_TYPES = ["House", "Apartment", "Townhouse", "Commercial"];
 const SCOPE_OPTIONS = ["Interior only", "Exterior only", "Both interior & exterior"];
-const EXTRAS_OPTIONS = [
-  "Wall repairs & patching", "Plastering", "Feature walls",
-  "Ceiling repaint", "Cornice & trim", "Anti-mould coating",
-  "Colour consultation", "Pressure washing",
-];
 
 export function QuoteWizard({ onClose }: { onClose: () => void }) {
   const [step, setStep] = useState(0);
@@ -55,9 +51,9 @@ export function QuoteWizard({ onClose }: { onClose: () => void }) {
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="bg-blue-brand px-6 py-5 flex items-center justify-between">
+        <div className="bg-charcoal px-6 py-5 flex items-center justify-between">
           <div>
-            <p className="text-blue-200 text-xs font-bold uppercase tracking-widest mb-0.5">Free quote wizard</p>
+            <p className="text-gold-light text-xs font-bold uppercase tracking-widest mb-0.5">Free quote wizard</p>
             <h2 className="text-white font-black text-xl">
               {sent ? "Request received!" : STEPS_WIZARD[step]}
             </h2>
@@ -97,7 +93,7 @@ export function QuoteWizard({ onClose }: { onClose: () => void }) {
                   <p><strong>Scope:</strong> {data.scope}</p>
                   {data.extras.length > 0 && <p><strong>Extras:</strong> {data.extras.join(", ")}</p>}
                 </div>
-                <button onClick={onClose} className="mt-6 bg-blue-brand text-white font-bold rounded-xl px-6 py-3 text-sm">Close</button>
+                <button onClick={onClose} className="mt-6 bg-gold text-ink font-bold rounded-xl px-6 py-3 text-sm">Close</button>
               </motion.div>
             ) : (
               <motion.div key={step} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.2 }}>
@@ -120,9 +116,9 @@ export function QuoteWizard({ onClose }: { onClose: () => void }) {
                       <button
                         key={pt}
                         onClick={() => { update("propertyType", pt); next(); }}
-                        className={`w-full flex items-center gap-3 rounded-xl border-2 px-4 py-3.5 text-sm font-bold transition-all ${data.propertyType === pt ? "border-blue-brand bg-blue-muted text-blue-brand" : "border-gray-200 text-charcoal hover:border-blue-brand"}`}
+                        className={`w-full flex items-center gap-3 rounded-xl border-2 px-4 py-3.5 text-sm font-bold transition-all ${data.propertyType === pt ? "border-gold bg-gold-soft text-gold-deep" : "border-gray-200 text-charcoal hover:border-gold"}`}
                       >
-                        <span className={`w-5 h-5 rounded-full border-2 flex-shrink-0 ${data.propertyType === pt ? "border-blue-brand bg-blue-brand" : "border-gray-300"}`} />
+                        <span className={`w-5 h-5 rounded-full border-2 flex-shrink-0 ${data.propertyType === pt ? "border-gold bg-gold" : "border-gray-300"}`} />
                         {pt}
                       </button>
                     ))}
@@ -135,9 +131,9 @@ export function QuoteWizard({ onClose }: { onClose: () => void }) {
                       <button
                         key={s}
                         onClick={() => { update("scope", s); next(); }}
-                        className={`w-full flex items-center gap-3 rounded-xl border-2 px-4 py-3.5 text-sm font-bold transition-all ${data.scope === s ? "border-blue-brand bg-blue-muted text-blue-brand" : "border-gray-200 text-charcoal hover:border-blue-brand"}`}
+                        className={`w-full flex items-center gap-3 rounded-xl border-2 px-4 py-3.5 text-sm font-bold transition-all ${data.scope === s ? "border-gold bg-gold-soft text-gold-deep" : "border-gray-200 text-charcoal hover:border-gold"}`}
                       >
-                        <span className={`w-5 h-5 rounded-full border-2 flex-shrink-0 ${data.scope === s ? "border-blue-brand bg-blue-brand" : "border-gray-300"}`} />
+                        <span className={`w-5 h-5 rounded-full border-2 flex-shrink-0 ${data.scope === s ? "border-gold bg-gold" : "border-gray-300"}`} />
                         {s}
                       </button>
                     ))}
@@ -165,12 +161,12 @@ export function QuoteWizard({ onClose }: { onClose: () => void }) {
                 {step === 4 && (
                   <div className="space-y-3">
                     <p className="text-gray-500 text-sm mb-2">Any add-ons? (Select all that apply)</p>
-                    <div className="grid grid-cols-2 gap-2">
-                      {EXTRAS_OPTIONS.map((ex) => (
+                    <div className="grid grid-cols-2 gap-2 max-h-56 overflow-y-auto pr-1">
+                      {EXTRAS.map((ex) => (
                         <button
                           key={ex}
                           onClick={() => toggleExtra(ex)}
-                          className={`text-left text-xs font-semibold rounded-xl border-2 px-3 py-2.5 transition-all ${data.extras.includes(ex) ? "border-blue-brand bg-blue-muted text-blue-brand" : "border-gray-200 text-charcoal hover:border-blue-brand"}`}
+                          className={`text-left text-xs font-semibold rounded-xl border-2 px-3 py-2.5 transition-all ${data.extras.includes(ex) ? "border-gold bg-gold-soft text-gold-deep" : "border-gray-200 text-charcoal hover:border-gold"}`}
                         >
                           {ex}
                         </button>
@@ -233,20 +229,20 @@ export function QuoteWizard({ onClose }: { onClose: () => void }) {
             </button>
             <div className="flex gap-1.5">
               {STEPS_WIZARD.map((_, i) => (
-                <div key={i} className={`h-1.5 rounded-full transition-all ${i === step ? "w-6 bg-blue-brand" : i < step ? "w-3 bg-blue-brand/40" : "w-3 bg-gray-200"}`} />
+                <div key={i} className={`h-1.5 rounded-full transition-all ${i === step ? "w-6 bg-gold" : i < step ? "w-3 bg-gold/40" : "w-3 bg-gray-200"}`} />
               ))}
             </div>
             {step < STEPS_WIZARD.length - 1 ? (
               <button
                 onClick={next}
-                className="bg-blue-brand text-white font-bold rounded-xl px-5 py-2.5 text-sm hover:bg-blue-dark transition-colors"
+                className="bg-gold text-ink font-bold rounded-xl px-5 py-2.5 text-sm hover:bg-gold-dark transition-colors"
               >
                 Next →
               </button>
             ) : (
               <button
                 onClick={handleSubmit}
-                className="bg-terra text-white font-bold rounded-xl px-5 py-2.5 text-sm hover:bg-terra-dark transition-colors"
+                className="bg-terra text-ink font-bold rounded-xl px-5 py-2.5 text-sm hover:bg-terra-dark transition-colors"
               >
                 Submit request
               </button>

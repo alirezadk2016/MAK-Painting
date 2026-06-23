@@ -1,5 +1,6 @@
 "use client";
 import { createContext, useContext, useState } from "react";
+import { AnimatePresence } from "framer-motion";
 import { QuoteWizard } from "./QuoteWizard";
 
 interface WizardCtx {
@@ -14,7 +15,9 @@ export function QuoteWizardProvider({ children }: { children: React.ReactNode })
   return (
     <Ctx.Provider value={{ open: () => setVisible(true), close: () => setVisible(false) }}>
       {children}
-      {visible && <QuoteWizard onClose={() => setVisible(false)} />}
+      <AnimatePresence>
+        {visible && <QuoteWizard onClose={() => setVisible(false)} />}
+      </AnimatePresence>
     </Ctx.Provider>
   );
 }
