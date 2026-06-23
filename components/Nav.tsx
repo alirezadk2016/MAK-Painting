@@ -82,7 +82,7 @@ export function Nav() {
                 </svg>
               </Link>
               {servicesOpen && (
-                <div className="absolute top-full left-0 mt-2 w-56 bg-white rounded-2xl shadow-card-lg border border-gray-100 py-2 z-50">
+                <div className="absolute top-full start-0 mt-2 w-56 bg-white rounded-2xl shadow-card-lg border border-gray-100 py-2 z-[60]">
                   {SERVICES.map((s) => (
                     <Link
                       key={s.id}

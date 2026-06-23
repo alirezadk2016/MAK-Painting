@@ -1,22 +1,19 @@
 "use client";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslations } from "next-intl";
 import { EXTRAS } from "@/data/site";
 
-const STEPS_WIZARD = [
-  "Postcode",
-  "Property type",
-  "Scope",
-  "Rooms / m²",
-  "Extras",
-  "Date",
-  "Contact",
-];
-
-const PROPERTY_TYPES = ["House", "Apartment", "Townhouse", "Commercial"];
-const SCOPE_OPTIONS = ["Interior only", "Exterior only", "Both interior & exterior"];
-
 export function QuoteWizard({ onClose }: { onClose: () => void }) {
+  const t = useTranslations("QuoteWizard");
+
+  const STEPS_WIZARD = [
+    t("step0"), t("step1"), t("step2"), t("step3"),
+    t("step4"), t("step5"), t("step6"),
+  ];
+  const PROPERTY_TYPES = [t("prop0"), t("prop1"), t("prop2"), t("prop3")];
+  const SCOPE_OPTIONS = [t("scope0"), t("scope1"), t("scope2")];
+
   const [step, setStep] = useState(0);
   const [data, setData] = useState({
     postcode: "", propertyType: "", scope: "",
@@ -34,10 +31,6 @@ export function QuoteWizard({ onClose }: { onClose: () => void }) {
       extras: d.extras.includes(e) ? d.extras.filter((x) => x !== e) : [...d.extras, e],
     }));
 
-  function handleSubmit() {
-    setSent(true);
-  }
-
   return (
     <div
       className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-charcoal/80 backdrop-blur-sm"
@@ -53,9 +46,9 @@ export function QuoteWizard({ onClose }: { onClose: () => void }) {
         {/* Header */}
         <div className="bg-charcoal px-6 py-5 flex items-center justify-between">
           <div>
-            <p className="text-gold-light text-xs font-bold uppercase tracking-widest mb-0.5">Free quote wizard</p>
+            <p className="text-gold-light text-xs font-bold uppercase tracking-widest mb-0.5">{t("eyebrow")}</p>
             <h2 className="text-white font-black text-xl">
-              {sent ? "Request received!" : STEPS_WIZARD[step]}
+              {sent ? t("doneTitle") : STEPS_WIZARD[step]}
             </h2>
           </div>
           <button onClick={onClose} className="text-white/60 hover:text-white p-1" aria-label="Close">
@@ -85,33 +78,33 @@ export function QuoteWizard({ onClose }: { onClose: () => void }) {
                     <path d="M20 6L9 17l-5-5" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
                 </div>
-                <h3 className="font-black text-xl text-charcoal mb-2">We&apos;ll be in touch soon!</h3>
-                <p className="text-gray-500 text-sm mb-6">Our team will call you within one business day to confirm your free on-site quote.</p>
-                <div className="bg-canvas rounded-2xl p-4 text-left text-sm space-y-1">
-                  <p><strong>Suburb:</strong> {data.postcode}</p>
-                  <p><strong>Property:</strong> {data.propertyType}</p>
-                  <p><strong>Scope:</strong> {data.scope}</p>
-                  {data.extras.length > 0 && <p><strong>Extras:</strong> {data.extras.join(", ")}</p>}
+                <h3 className="font-black text-xl text-charcoal mb-2">{t("doneTitle")}</h3>
+                <p className="text-gray-500 text-sm mb-6">{t("doneBody")}</p>
+                <div className="bg-canvas rounded-2xl p-4 text-start text-sm space-y-1">
+                  <p><strong>{t("labelSuburb")}:</strong> {data.postcode}</p>
+                  <p><strong>{t("labelProperty")}:</strong> {data.propertyType}</p>
+                  <p><strong>{t("labelScope")}:</strong> {data.scope}</p>
+                  {data.extras.length > 0 && <p><strong>{t("labelExtras")}:</strong> {data.extras.join(", ")}</p>}
                 </div>
-                <button onClick={onClose} className="mt-6 bg-gold text-ink font-bold rounded-xl px-6 py-3 text-sm">Close</button>
+                <button onClick={onClose} className="mt-6 bg-gold text-ink font-bold rounded-xl px-6 py-3 text-sm">{t("close")}</button>
               </motion.div>
             ) : (
               <motion.div key={step} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.2 }}>
                 {step === 0 && (
                   <div className="space-y-4">
-                    <p className="text-gray-500 text-sm">Where is the property to be painted?</p>
+                    <p className="text-gray-500 text-sm">{t("q0")}</p>
                     <input
                       type="text"
-                      placeholder="Suburb or postcode"
+                      placeholder={t("ph0")}
                       value={data.postcode}
                       onChange={(e) => update("postcode", e.target.value)}
-                      className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:border-blue-brand"
+                      className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:border-gold"
                     />
                   </div>
                 )}
                 {step === 1 && (
                   <div className="space-y-3">
-                    <p className="text-gray-500 text-sm mb-4">What type of property is it?</p>
+                    <p className="text-gray-500 text-sm mb-4">{t("q1")}</p>
                     {PROPERTY_TYPES.map((pt) => (
                       <button
                         key={pt}
@@ -126,7 +119,7 @@ export function QuoteWizard({ onClose }: { onClose: () => void }) {
                 )}
                 {step === 2 && (
                   <div className="space-y-3">
-                    <p className="text-gray-500 text-sm mb-4">What would you like painted?</p>
+                    <p className="text-gray-500 text-sm mb-4">{t("q2")}</p>
                     {SCOPE_OPTIONS.map((s) => (
                       <button
                         key={s}
@@ -141,32 +134,32 @@ export function QuoteWizard({ onClose }: { onClose: () => void }) {
                 )}
                 {step === 3 && (
                   <div className="space-y-4">
-                    <p className="text-gray-500 text-sm">Approximate size — helps us give an accurate estimate.</p>
+                    <p className="text-gray-500 text-sm">{t("q3")}</p>
                     <input
                       type="number"
-                      placeholder="Number of rooms (e.g. 4)"
+                      placeholder={t("ph3rooms")}
                       value={data.rooms}
                       onChange={(e) => update("rooms", e.target.value)}
-                      className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:border-blue-brand"
+                      className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:border-gold"
                     />
                     <input
                       type="number"
-                      placeholder="Approx. m² (optional)"
+                      placeholder={t("ph3sqm")}
                       value={data.sqm}
                       onChange={(e) => update("sqm", e.target.value)}
-                      className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:border-blue-brand"
+                      className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:border-gold"
                     />
                   </div>
                 )}
                 {step === 4 && (
                   <div className="space-y-3">
-                    <p className="text-gray-500 text-sm mb-2">Any add-ons? (Select all that apply)</p>
+                    <p className="text-gray-500 text-sm mb-2">{t("q4")}</p>
                     <div className="grid grid-cols-2 gap-2 max-h-56 overflow-y-auto pr-1">
                       {EXTRAS.map((ex) => (
                         <button
                           key={ex}
                           onClick={() => toggleExtra(ex)}
-                          className={`text-left text-xs font-semibold rounded-xl border-2 px-3 py-2.5 transition-all ${data.extras.includes(ex) ? "border-gold bg-gold-soft text-gold-deep" : "border-gray-200 text-charcoal hover:border-gold"}`}
+                          className={`text-start text-xs font-semibold rounded-xl border-2 px-3 py-2.5 transition-all ${data.extras.includes(ex) ? "border-gold bg-gold-soft text-gold-deep" : "border-gray-200 text-charcoal hover:border-gold"}`}
                         >
                           {ex}
                         </button>
@@ -176,39 +169,41 @@ export function QuoteWizard({ onClose }: { onClose: () => void }) {
                 )}
                 {step === 5 && (
                   <div className="space-y-4">
-                    <p className="text-gray-500 text-sm">When would you like the work done?</p>
+                    <p className="text-gray-500 text-sm">{t("q5")}</p>
                     <input
                       type="date"
                       value={data.date}
                       onChange={(e) => update("date", e.target.value)}
-                      className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:border-blue-brand"
+                      className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:border-gold"
                     />
-                    <p className="text-xs text-gray-400">This is a preferred date — we&apos;ll confirm availability when we call.</p>
+                    <p className="text-xs text-gray-400">{t("note5")}</p>
                   </div>
                 )}
                 {step === 6 && (
                   <div className="space-y-3">
-                    <p className="text-gray-500 text-sm mb-2">Almost done! Where can we reach you?</p>
+                    <p className="text-gray-500 text-sm mb-2">{t("q6")}</p>
                     <input
                       type="text"
-                      placeholder="Full name"
+                      placeholder={t("phName")}
                       value={data.name}
                       onChange={(e) => update("name", e.target.value)}
-                      className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:border-blue-brand"
+                      className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:border-gold"
                     />
                     <input
                       type="tel"
-                      placeholder="Phone number (04xx xxx xxx)"
+                      placeholder={t("phPhone")}
                       value={data.phone}
                       onChange={(e) => update("phone", e.target.value)}
-                      className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:border-blue-brand"
+                      className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:border-gold"
+                      dir="ltr"
                     />
                     <input
                       type="email"
-                      placeholder="Email address"
+                      placeholder={t("phEmail")}
                       value={data.email}
                       onChange={(e) => update("email", e.target.value)}
-                      className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:border-blue-brand"
+                      className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:border-gold"
+                      dir="ltr"
                     />
                   </div>
                 )}
@@ -225,7 +220,7 @@ export function QuoteWizard({ onClose }: { onClose: () => void }) {
               disabled={step === 0}
               className="text-sm font-bold text-gray-400 hover:text-charcoal disabled:opacity-0 transition-colors px-2"
             >
-              ← Back
+              {t("back")}
             </button>
             <div className="flex gap-1.5">
               {STEPS_WIZARD.map((_, i) => (
@@ -237,14 +232,14 @@ export function QuoteWizard({ onClose }: { onClose: () => void }) {
                 onClick={next}
                 className="bg-gold text-ink font-bold rounded-xl px-5 py-2.5 text-sm hover:bg-gold-dark transition-colors"
               >
-                Next →
+                {t("next")}
               </button>
             ) : (
               <button
-                onClick={handleSubmit}
+                onClick={() => setSent(true)}
                 className="bg-terra text-ink font-bold rounded-xl px-5 py-2.5 text-sm hover:bg-terra-dark transition-colors"
               >
-                Submit request
+                {t("submit")}
               </button>
             )}
           </div>
