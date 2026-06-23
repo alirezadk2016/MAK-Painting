@@ -346,9 +346,22 @@ export function DashboardClient({ bookings, config: initialConfig, hasBlobToken 
             <p className="text-[#6b7280] text-xs">Admin Dashboard</p>
           </div>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           {isPending && <span className="text-[#c9a24b] text-xs flex items-center gap-1.5"><svg className="w-3 h-3 animate-spin" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeDasharray="40" strokeDashoffset="10"/></svg>Saving…</span>}
           {saved && !isPending && <span className="text-green-400 text-xs flex items-center gap-1.5"><svg className="w-3.5 h-3.5" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>Saved</span>}
+          {dirty && !isPending && (
+            <div className="flex items-center gap-2">
+              <button onClick={() => { setCfg(initialConfig); setDirty(false); }}
+                className="text-xs font-bold text-gray-400 hover:text-white transition-colors px-3 py-1.5 rounded-lg hover:bg-white/10">
+                Discard
+              </button>
+              <button onClick={handleSave}
+                className="flex items-center gap-1.5 bg-[#c9a24b] hover:bg-[#b8913a] text-[#1a1a1a] font-black text-xs px-4 py-1.5 rounded-lg transition-colors">
+                <svg className="w-3.5 h-3.5" viewBox="0 0 16 16" fill="none"><path d="M2 8l4 4 8-8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                Save Changes
+              </button>
+            </div>
+          )}
           <form action={logoutAction}>
             <button className="text-[#6b7280] hover:text-white text-xs font-semibold transition-colors px-3 py-1.5 rounded-lg hover:bg-white/5">Sign out</button>
           </form>
@@ -777,26 +790,6 @@ export function DashboardClient({ bookings, config: initialConfig, hasBlobToken 
                 {gModal.mode === "add" ? "Add Pair" : "Save Changes"}
               </button>
             </div>
-          </div>
-        </div>
-      )}
-
-      {/* ── Sticky save bar ── */}
-      {dirty && (
-        <div className="fixed bottom-0 inset-x-0 z-50 flex items-center justify-between gap-4 bg-[#1a1a1a] border-t border-[#c9a24b]/30 px-6 py-4 shadow-2xl">
-          <p className="text-sm text-gray-300 font-medium">You have unsaved changes.</p>
-          <div className="flex items-center gap-3">
-            <button onClick={() => { setCfg(initialConfig); setDirty(false); }}
-              className="text-sm font-bold text-gray-400 hover:text-white transition-colors px-4 py-2 rounded-xl hover:bg-white/5">
-              Discard
-            </button>
-            <button onClick={handleSave} disabled={isPending}
-              className="flex items-center gap-2 bg-[#c9a24b] hover:bg-[#b8913a] disabled:opacity-60 text-[#1a1a1a] font-black text-sm px-6 py-2.5 rounded-xl transition-colors">
-              {isPending
-                ? <><svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeDasharray="40" strokeDashoffset="10"/></svg>Saving…</>
-                : <><svg className="w-4 h-4" viewBox="0 0 16 16" fill="none"><path d="M2 8l4 4 8-8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>Save Changes</>
-              }
-            </button>
           </div>
         </div>
       )}
