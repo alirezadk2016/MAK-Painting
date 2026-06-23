@@ -23,8 +23,15 @@ export interface ServiceCard {
   slug?: string; // links to /services/[slug] if set
 }
 
+export interface HeroPosition {
+  x: number;   // 0–100, object-position x%
+  y: number;   // 0–100, object-position y%
+  scale: number; // 1.0–2.0 zoom
+}
+
 export interface SiteConfig {
   hero: string;
+  heroPosition?: HeroPosition;
   services: Record<string, string>; // legacy image overrides
   serviceCards?: ServiceCard[];      // admin-managed service card list
   gallery: GalleryPair[];

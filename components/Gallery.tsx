@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { GALLERY } from "@/data/site";
+import type { GalleryPair } from "@/lib/site-config";
 
 const INITIAL_ROWS = 2;
 const COLS = 3;
@@ -78,16 +79,19 @@ interface GalleryItem {
 interface Props {
   hideHeading?: boolean;
   showAll?: boolean; // gallery page passes true
+  pairs?: GalleryPair[];
 }
 
-export function Gallery({ hideHeading = false, showAll: forceShowAll = false }: Props) {
+export function Gallery({ hideHeading = false, showAll: forceShowAll = false, pairs }: Props) {
   const [expanded, setExpanded] = useState(false);
   const [lightbox, setLightbox] = useState<GalleryItem | null>(null);
   const t = useTranslations("Gallery");
   const beforeLabel = t("before");
   const afterLabel  = t("after");
 
-  const items: GalleryItem[] = GALLERY;
+  const items: GalleryItem[] = pairs?.length
+    ? pairs.map(p => ({ id: p.id, title: p.title, suburb: "", service: "", before: p.before, after: p.after }))
+    : GALLERY;
   const showMore = forceShowAll || expanded;
   const visible = showMore ? items : items.slice(0, INITIAL_VISIBLE);
   const hasMore = items.length > INITIAL_VISIBLE;

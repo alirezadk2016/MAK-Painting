@@ -3,14 +3,16 @@ import { useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useQuoteWizard } from "./QuoteWizardProvider";
+import type { HeroPosition } from "@/lib/site-config";
 
 const MAPS_URL = "https://maps.app.goo.gl/eyYsR4ViUKb8RQrF9";
 
 interface Props {
   heroImage?: string;
+  heroPosition?: HeroPosition;
 }
 
-export function Hero({ heroImage }: Props) {
+export function Hero({ heroImage, heroPosition }: Props) {
   const { open } = useQuoteWizard();
   const [postcode, setPostcode] = useState("");
   const t = useTranslations("Hero");
@@ -105,6 +107,11 @@ export function Hero({ heroImage }: Props) {
                 className="object-cover"
                 priority
                 sizes="(max-width: 1200px) 50vw, 600px"
+                style={{
+                  objectPosition: heroPosition ? `${heroPosition.x}% ${heroPosition.y}%` : "center center",
+                  transform: heroPosition?.scale && heroPosition.scale !== 1 ? `scale(${heroPosition.scale})` : undefined,
+                  transformOrigin: "center center",
+                }}
               />
               {/* Floating badge */}
               <div className="absolute bottom-6 start-6 end-6 bg-white/95 backdrop-blur-sm rounded-2xl p-4 shadow-card-lg">

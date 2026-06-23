@@ -50,16 +50,17 @@ export default async function HomePage({
   const siteConfig = await getSiteConfig();
   const pricingTiers = siteConfig?.pricing?.length ? siteConfig.pricing : DEFAULT_PRICING;
   const serviceCards = siteConfig?.serviceCards;
+  const galleryPairs = siteConfig?.gallery?.length ? siteConfig.gallery : undefined;
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      <Hero heroImage={siteConfig?.hero} />
+      <Hero heroImage={siteConfig?.hero} heroPosition={siteConfig?.heroPosition} />
       <Services cards={serviceCards} />
       <HowItWorks />
       <Pricing tiers={pricingTiers} />
       <Extras />
       <WhyMAK />
-      <Gallery />
+      <Gallery pairs={galleryPairs} />
       <ColorInspiration />
       <Reviews />
       <ServiceAreas />

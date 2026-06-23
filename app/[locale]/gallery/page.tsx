@@ -5,6 +5,7 @@ import { ColorInspiration } from "@/components/ColorInspiration";
 import { Reviews } from "@/components/Reviews";
 import { PageHeader } from "@/components/PageHeader";
 import { canonicalAlternates, pageOG, pageTwitter } from "@/lib/seo";
+import { getSiteConfig } from "@/lib/site-config";
 
 const galleryJsonLd = {
   "@context": "https://schema.org",
@@ -40,11 +41,13 @@ export default async function GalleryPage({
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations("GalleryPage");
+  const siteConfig = await getSiteConfig();
+  const galleryPairs = siteConfig?.gallery?.length ? siteConfig.gallery : undefined;
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(galleryJsonLd) }} />
       <PageHeader eyebrow={t("eyebrow")} title={t("title")} subtitle={t("subtitle")} />
-      <Gallery hideHeading showAll />
+      <Gallery hideHeading showAll pairs={galleryPairs} />
       <ColorInspiration />
       <Reviews />
     </>
