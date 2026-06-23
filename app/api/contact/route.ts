@@ -1,36 +1,52 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createBooking } from "@/lib/db";
+import { sendCustomerConfirmation, sendOwnerNotification } from "@/lib/email";
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { firstName, lastName, email, phone, suburb, service, message } = body;
+    const {
+      postcode, propertyType, scope, rooms, sqm, extras,
+      date, name, phone, email,
+      // legacy contact form fields
+      firstName, lastName, suburb, service, message,
+    } = body;
 
-    // Log to server (visible in Vercel Function logs)
-    console.log("[Contact Form Submission]", {
-      name: `${firstName} ${lastName}`,
-      email,
-      phone,
-      suburb,
-      service,
-      messageLength: message?.length,
-      timestamp: new Date().toISOString(),
-    });
+    // Support both QuoteWizard and ContactSection submissions
+    const resolvedName = name || `${firstName ?? ""} ${lastName ?? ""}`.trim();
+    const resolvedEmail = email ?? "";
+    const resolvedPhone = phone ?? "";
 
-    // Forward to Formspree if configured, otherwise just accept the submission
-    const formspreeId = process.env.FORMSPREE_ID;
-    if (formspreeId) {
-      const res = await fetch(`https://formspree.io/f/${formspreeId}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({ firstName, lastName, email, phone, suburb, service, message }),
-      });
-      if (!res.ok) {
-        return NextResponse.json({ ok: false, error: "Failed to forward" }, { status: 500 });
-      }
+    if (!resolvedEmail || !resolvedName) {
+      return NextResponse.json({ ok: false, error: "Name and email are required" }, { status: 400 });
     }
 
-    return NextResponse.json({ ok: true });
-  } catch {
-    return NextResponse.json({ ok: false, error: "Invalid request" }, { status: 400 });
+    const booking = await createBooking({
+      postcode: postcode ?? suburb ?? "",
+      propertyType: propertyType ?? "",
+      scope: scope ?? "",
+      rooms: rooms ?? "",
+      sqm: sqm ?? "",
+      extras: extras ?? [],
+      date: date ?? "",
+      name: resolvedName,
+      phone: resolvedPhone,
+      email: resolvedEmail,
+      service,
+      message,
+    });
+
+    // Fire emails in parallel (don't fail the request if email is misconfigured)
+    if (process.env.RESEND_API_KEY) {
+      await Promise.allSettled([
+        resolvedEmail ? sendCustomerConfirmation(booking) : Promise.resolve(),
+        sendOwnerNotification(booking),
+      ]);
+    }
+
+    return NextResponse.json({ ok: true, id: booking.id });
+  } catch (err) {
+    console.error("[contact/route] error:", err);
+    return NextResponse.json({ ok: false, error: "Internal error" }, { status: 500 });
   }
 }

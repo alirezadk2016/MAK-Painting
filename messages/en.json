@@ -253,6 +253,8 @@
     "labelExtras": "Extras",
     "close": "Close",
     "suburbError": "We don't service that area yet. Call us on 0404 000 772 — we may be able to help!",
-    "suburbHint": "e.g. Ferntree Gully, Ringwood, Glen Waverley…"
+    "suburbHint": "e.g. Ferntree Gully, Ringwood, Glen Waverley…",
+    "other": "Other",
+    "submitError": "Something went wrong. Please call us on 0404 000 772."
   }
 }

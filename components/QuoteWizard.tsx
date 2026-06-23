@@ -27,8 +27,8 @@ export function QuoteWizard({ onClose }: { onClose: () => void }) {
     t("step0"), t("step1"), t("step2"), t("step3"),
     t("step4"), t("step5"), t("step6"),
   ];
-  const PROPERTY_TYPES = [t("prop0"), t("prop1"), t("prop2"), t("prop3")];
-  const SCOPE_OPTIONS = [t("scope0"), t("scope1"), t("scope2")];
+  const PROPERTY_TYPES = [t("prop0"), t("prop1"), t("prop2"), t("prop3"), t("other")];
+  const SCOPE_OPTIONS = [t("scope0"), t("scope1"), t("scope2"), t("other")];
 
   const [step, setStep] = useState(0);
   const [suburbError, setSuburbError] = useState("");
@@ -38,6 +38,8 @@ export function QuoteWizard({ onClose }: { onClose: () => void }) {
     date: "", name: "", phone: "", email: "",
   });
   const [sent, setSent] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   function tryNext() {
     if (step === 0) {
@@ -253,7 +255,9 @@ export function QuoteWizard({ onClose }: { onClose: () => void }) {
 
         {/* Nav buttons */}
         {!sent && (
-          <div className="px-6 pb-6 flex items-center justify-between gap-3" dir="ltr">
+          <div className="px-6 pb-6 space-y-3">
+          {submitError && <p className="text-sm text-red-500 text-center">{submitError}</p>}
+          <div className="flex items-center justify-between gap-3" dir="ltr">
             <button
               onClick={back}
               disabled={step === 0}
@@ -275,12 +279,33 @@ export function QuoteWizard({ onClose }: { onClose: () => void }) {
               </button>
             ) : (
               <button
-                onClick={() => setSent(true)}
-                className="bg-terra text-ink font-bold rounded-xl px-5 py-2.5 text-sm hover:bg-terra-dark transition-colors"
+                onClick={async () => {
+                  setSubmitting(true);
+                  setSubmitError("");
+                  try {
+                    const res = await fetch("/api/contact", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify(data),
+                    });
+                    if (res.ok) {
+                      setSent(true);
+                    } else {
+                      setSubmitError(t("submitError"));
+                    }
+                  } catch {
+                    setSubmitError(t("submitError"));
+                  } finally {
+                    setSubmitting(false);
+                  }
+                }}
+                disabled={submitting}
+                className="bg-terra disabled:opacity-70 text-ink font-bold rounded-xl px-5 py-2.5 text-sm hover:bg-terra-dark transition-colors"
               >
-                {t("submit")}
+                {submitting ? "…" : t("submit")}
               </button>
             )}
+          </div>
           </div>
         )}
       </motion.div>
