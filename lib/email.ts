@@ -7,7 +7,7 @@ function getResend() {
   return new Resend(process.env.RESEND_API_KEY);
 }
 const FROM = "MAK Painting Group <no-reply@makvandi.info>";
-const OWNER_EMAIL = process.env.OWNER_EMAIL ?? "mak.painting.group@gmail.com";
+const OWNER_EMAIL = process.env.OWNER_EMAIL ?? "alirezadk2020@gmail.com";
 
 function formatDate(d: string) {
   if (!d) return "To be confirmed";
