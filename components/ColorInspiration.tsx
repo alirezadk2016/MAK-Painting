@@ -1,14 +1,16 @@
+import { useTranslations } from "next-intl";
 import { PALETTES } from "@/data/site";
 
 export function ColorInspiration() {
+  const t = useTranslations("Colors");
   return (
     <section className="py-16 bg-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-10">
         <div className="text-center">
-          <p className="text-xs font-bold uppercase tracking-widest text-terra mb-2">Colour ideas</p>
-          <h2 className="text-3xl lg:text-4xl font-black text-charcoal mb-3">Colour inspiration</h2>
+          <p className="text-xs font-bold uppercase tracking-widest text-terra mb-2">{t("eyebrow")}</p>
+          <h2 className="text-3xl lg:text-4xl font-black text-charcoal mb-3">{t("title")}</h2>
           <p className="text-gray-500 max-w-lg mx-auto">
-            Curated Dulux &amp; Taubmans palettes to help you visualise your space. Our colour consultant guides you every step of the way.
+            {t("subtitle")}
           </p>
         </div>
       </div>
@@ -26,7 +28,7 @@ export function ColorInspiration() {
               ))}
             </div>
             <p className="font-bold text-sm text-charcoal">{palette.name}</p>
-            <p className="text-xs text-gray-400 mt-1">Dulux / Taubmans</p>
+            <p className="text-xs text-gray-400 mt-1">{t("brand")}</p>
           </div>
         ))}
       </div>

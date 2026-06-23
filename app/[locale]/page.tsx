@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { setRequestLocale } from "next-intl/server";
 import { Hero } from "@/components/Hero";
 import { Services } from "@/components/Services";
 import { HowItWorks } from "@/components/HowItWorks";
@@ -13,18 +13,6 @@ import { FAQ } from "@/components/FAQ";
 import { ContactSection } from "@/components/ContactSection";
 import { FAQS } from "@/data/site";
 
-export const metadata: Metadata = {
-  title: "MAK Painting Group | Painters Melbourne – 5★ Rated",
-  description:
-    "MAK Painting Group – Melbourne's 5-star rated painters. Interior, exterior, roof & commercial painting. Free on-site quote. 7-year warranty. Call 0404 000 772.",
-  alternates: { canonical: "https://www.makpainting.com.au" },
-  openGraph: {
-    title: "MAK Painting Group | 5★ Painters Melbourne",
-    description: "Melbourne's trusted painting specialists. Interior, exterior, roof & commercial. Free on-site quote. 5.0★ on Google.",
-    url: "https://www.makpainting.com.au",
-  },
-};
-
 const faqSchema = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
@@ -35,7 +23,13 @@ const faqSchema = {
   })),
 };
 
-export default function HomePage() {
+export default async function HomePage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  setRequestLocale(locale);
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />

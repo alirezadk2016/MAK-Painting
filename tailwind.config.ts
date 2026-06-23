@@ -31,7 +31,8 @@ const config: Config = {
         "terra-dark": "#A07E2E",
       },
       fontFamily: {
-        sans: ["var(--font-manrope)", "Inter", "system-ui", "sans-serif"],
+        sans: ["var(--font-manrope)", "var(--font-vazirmatn)", "Inter", "system-ui", "sans-serif"],
+        fa: ["var(--font-vazirmatn)", "var(--font-manrope)", "system-ui", "sans-serif"],
       },
       borderRadius: {
         "2xl": "1rem",

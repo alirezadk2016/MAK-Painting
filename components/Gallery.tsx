@@ -2,9 +2,10 @@
 import { useState, useRef, useCallback } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslations } from "next-intl";
 import { GALLERY } from "@/data/site";
 
-function BeforeAfterSlider({ before, after, title }: { before: string; after: string; title: string }) {
+function BeforeAfterSlider({ before, after, title, beforeLabel, afterLabel }: { before: string; after: string; title: string; beforeLabel: string; afterLabel: string }) {
   const [pos, setPos] = useState(50);
   const containerRef = useRef<HTMLDivElement>(null);
   const dragging = useRef(false);
@@ -47,23 +48,26 @@ function BeforeAfterSlider({ before, after, title }: { before: string; after: st
         </div>
       </div>
       {/* Labels */}
-      <span className="absolute top-3 left-3 bg-charcoal/70 text-white text-xs font-bold px-2.5 py-1 rounded-full">Before</span>
-      <span className="absolute top-3 right-3 bg-blue-brand/90 text-ink text-xs font-bold px-2.5 py-1 rounded-full">After</span>
+      <span className="absolute top-3 left-3 bg-charcoal/70 text-white text-xs font-bold px-2.5 py-1 rounded-full">{beforeLabel}</span>
+      <span className="absolute top-3 right-3 bg-blue-brand/90 text-ink text-xs font-bold px-2.5 py-1 rounded-full">{afterLabel}</span>
     </div>
   );
 }
 
 export function Gallery() {
   const [lightbox, setLightbox] = useState<(typeof GALLERY)[0] | null>(null);
+  const t = useTranslations("Gallery");
+  const beforeLabel = t("before");
+  const afterLabel = t("after");
 
   return (
     <section id="gallery" className="py-20 bg-canvas">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <p className="text-xs font-bold uppercase tracking-widest text-terra mb-2">Portfolio</p>
-          <h2 className="text-4xl lg:text-5xl font-black text-charcoal mb-4">Our work</h2>
+          <p className="text-xs font-bold uppercase tracking-widest text-terra mb-2">{t("eyebrow")}</p>
+          <h2 className="text-4xl lg:text-5xl font-black text-charcoal mb-4">{t("title")}</h2>
           <p className="text-gray-500 text-lg max-w-xl mx-auto">
-            Drag the slider to reveal the before &amp; after transformation. Click to view in full.
+            {t("subtitle")}
           </p>
         </div>
 
@@ -79,7 +83,7 @@ export function Gallery() {
               onClick={() => setLightbox(item)}
             >
               <div className="group relative overflow-hidden rounded-2xl shadow-card hover:shadow-card-hover transition-shadow">
-                <BeforeAfterSlider before={item.before} after={item.after} title={item.title} />
+                <BeforeAfterSlider before={item.before} after={item.after} title={item.title} beforeLabel={beforeLabel} afterLabel={afterLabel} />
                 <div className="p-4 bg-white">
                   <p className="font-bold text-charcoal text-sm">{item.title}</p>
                   <div className="flex items-center gap-2 mt-1">
@@ -111,7 +115,7 @@ export function Gallery() {
               className="w-full max-w-2xl"
               onClick={(e) => e.stopPropagation()}
             >
-              <BeforeAfterSlider before={lightbox.before} after={lightbox.after} title={lightbox.title} />
+              <BeforeAfterSlider before={lightbox.before} after={lightbox.after} title={lightbox.title} beforeLabel={beforeLabel} afterLabel={afterLabel} />
               <div className="mt-4 flex items-center justify-between">
                 <div>
                   <p className="text-white font-bold">{lightbox.title}</p>

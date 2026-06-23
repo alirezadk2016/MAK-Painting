@@ -1,19 +1,21 @@
 "use client";
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 import { useQuoteWizard } from "./QuoteWizardProvider";
 import { PACKAGES } from "@/data/site";
 import clsx from "clsx";
 
 export function Pricing() {
   const { open } = useQuoteWizard();
+  const t = useTranslations("Pricing");
   return (
     <section id="pricing" className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <p className="text-xs font-bold uppercase tracking-widest text-terra mb-2">Transparent pricing</p>
-          <h2 className="text-4xl lg:text-5xl font-black text-charcoal mb-4">Packages &amp; pricing</h2>
+          <p className="text-xs font-bold uppercase tracking-widest text-terra mb-2">{t("eyebrow")}</p>
+          <h2 className="text-4xl lg:text-5xl font-black text-charcoal mb-4">{t("title")}</h2>
           <p className="text-gray-500 text-lg max-w-xl mx-auto">
-            Indicative pricing to help you plan. Every quote is free, itemised and obligation-free.
+            {t("subtitle")}
           </p>
         </div>
 
@@ -35,7 +37,7 @@ export function Pricing() {
               {pkg.popular && (
                 <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
                   <span className="bg-terra text-ink text-xs font-bold rounded-full px-4 py-1.5 whitespace-nowrap shadow-md">
-                    ★ Most popular
+                    {t("popular")}
                   </span>
                 </div>
               )}
@@ -88,8 +90,7 @@ export function Pricing() {
         </div>
 
         <p className="text-center text-xs text-gray-400 mt-6">
-          All prices are indicative. Final price depends on property size, surface condition and paint selected.
-          Free on-site assessment before any commitment.
+          {t("footnote")}
         </p>
       </div>
     </section>

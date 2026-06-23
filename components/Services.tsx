@@ -1,18 +1,20 @@
 "use client";
 import Image from "next/image";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { motion } from "framer-motion";
 import { SERVICES } from "@/data/site";
 
 export function Services() {
+  const t = useTranslations("Services");
   return (
     <section id="services" className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <p className="text-xs font-bold uppercase tracking-widest text-terra mb-2">What we do</p>
-          <h2 className="text-4xl lg:text-5xl font-black text-charcoal mb-4">Our services</h2>
+          <p className="text-xs font-bold uppercase tracking-widest text-terra mb-2">{t("eyebrow")}</p>
+          <h2 className="text-4xl lg:text-5xl font-black text-charcoal mb-4">{t("title")}</h2>
           <p className="text-gray-500 text-lg max-w-xl mx-auto">
-            Every service delivered with thorough prep, premium paints and a clean finish — guaranteed.
+            {t("subtitle")}
           </p>
         </div>
 
@@ -52,8 +54,8 @@ export function Services() {
                       {s.priceFrom}
                     </span>
                     <span className="text-sm font-bold text-charcoal flex items-center gap-1.5 group-hover:text-gold-deep transition-colors">
-                      Book a quote
-                      <svg className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" viewBox="0 0 14 14" fill="none">
+                      {t("viewService")}
+                      <svg className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1 rtl-flip" viewBox="0 0 14 14" fill="none">
                         <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
                       </svg>
                     </span>

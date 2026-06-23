@@ -1,11 +1,15 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { useQuoteWizard } from "./QuoteWizardProvider";
+
+const MAPS_URL = "https://www.google.com/maps/place/MAK+Painting+Group/@-37.9725665,145.0531353,17z";
 
 export function Hero() {
   const { open } = useQuoteWizard();
   const [postcode, setPostcode] = useState("");
+  const t = useTranslations("Hero");
 
   return (
     <section className="relative min-h-screen bg-canvas overflow-hidden flex items-center pt-16">
@@ -21,30 +25,19 @@ export function Hero() {
           <div>
             <div className="inline-flex items-center gap-2 bg-blue-muted text-gold-deep rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-wider mb-6">
               <span className="w-2 h-2 bg-blue-brand rounded-full animate-pulse" />
-              Melbourne&apos;s #1 rated painters
+              {t("badge")}
             </div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-charcoal leading-[1.05] tracking-tight mb-5 text-balance">
-              Stress-free painting{" "}
-              <span className="text-gold-deep relative">
-                you can
-                <svg className="absolute -bottom-2 left-0 w-full" viewBox="0 0 200 12" fill="none" preserveAspectRatio="none">
-                  <path d="M2 10 C50 2, 150 2, 198 10" stroke="#C9A24B" strokeWidth="3.5" strokeLinecap="round"/>
-                </svg>
-              </span>{" "}
-              depend on.
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-charcoal leading-[1.1] tracking-tight mb-5 text-balance">
+              {t("title")}
             </h1>
 
             <p className="text-gray-500 text-lg leading-relaxed mb-6 max-w-xl">
-              Relax — your home&apos;s in expert hands. Premium prep, flawless finish, fully insured Melbourne painters.
+              {t("subtitle")}
             </p>
 
             <ul className="space-y-2.5 mb-8">
-              {[
-                "Free on-site quote — no obligation",
-                "7-year workmanship warranty",
-                "5.0★ rated on Google — 7 verified reviews",
-              ].map((item) => (
+              {[t("trust1"), t("trust2"), t("trust3")].map((item) => (
                 <li key={item} className="flex items-center gap-2.5 text-sm font-semibold text-charcoal">
                   <span className="w-5 h-5 bg-blue-brand rounded-full flex items-center justify-center flex-shrink-0">
                     <svg className="w-3 h-3 text-ink" viewBox="0 0 12 12" fill="none">
@@ -67,16 +60,16 @@ export function Hero() {
                   type="text"
                   value={postcode}
                   onChange={(e) => setPostcode(e.target.value)}
-                  placeholder="Enter your postcode or suburb"
+                  placeholder={t("postcodePlaceholder")}
                   className="flex-1 text-sm font-medium text-charcoal placeholder:text-gray-400 bg-transparent outline-none py-2"
-                  aria-label="Postcode or suburb"
+                  aria-label={t("postcodePlaceholder")}
                 />
               </div>
               <button
                 onClick={open}
                 className="bg-terra hover:bg-terra-dark text-ink text-sm font-bold rounded-xl px-5 py-2.5 transition-all hover:shadow-md whitespace-nowrap"
               >
-                Get my free quote
+                {t("getMyQuote")}
               </button>
             </div>
 
@@ -93,7 +86,7 @@ export function Hero() {
                 <div className="flex items-center gap-1 text-amber-400 text-sm">
                   {"★★★★★"}
                 </div>
-                <a href="https://www.google.com/maps/place/MAK+Painting+Group/@-37.9725665,145.0531353,17z" target="_blank" rel="noopener noreferrer" className="text-xs text-gray-500 font-medium hover:text-gold-deep transition-colors">7 verified Google reviews →</a>
+                <a href={MAPS_URL} target="_blank" rel="noopener noreferrer" className="text-xs text-gray-500 font-medium hover:text-gold-deep transition-colors">{t("socialProof")}</a>
               </div>
             </div>
           </div>
@@ -118,21 +111,21 @@ export function Hero() {
                     </svg>
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-charcoal">7-Year Workmanship Warranty</p>
-                    <p className="text-xs text-gray-500">On every residential &amp; commercial job</p>
+                    <p className="text-xs font-bold text-charcoal">{t("warrantyTitle")}</p>
+                    <p className="text-xs text-gray-500">{t("warrantySub")}</p>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Floating stats */}
-            <a href="https://www.google.com/maps/place/MAK+Painting+Group/@-37.9725665,145.0531353,17z" target="_blank" rel="noopener noreferrer" className="absolute -left-6 top-12 bg-white rounded-2xl shadow-card-lg px-4 py-3 border border-gray-50 hover:shadow-card-hover transition-shadow block">
+            <a href={MAPS_URL} target="_blank" rel="noopener noreferrer" className="absolute -left-6 top-12 bg-white rounded-2xl shadow-card-lg px-4 py-3 border border-gray-50 hover:shadow-card-hover transition-shadow block">
               <p className="text-2xl font-black text-charcoal">7</p>
-              <p className="text-xs text-gray-500 font-medium">Google reviews</p>
+              <p className="text-xs text-gray-500 font-medium">{t("googleReviews")}</p>
             </a>
-            <a href="https://www.google.com/maps/place/MAK+Painting+Group/@-37.9725665,145.0531353,17z" target="_blank" rel="noopener noreferrer" className="absolute -right-4 top-1/3 bg-terra rounded-2xl shadow-card-lg px-4 py-3 hover:bg-terra-dark transition-colors">
+            <a href={MAPS_URL} target="_blank" rel="noopener noreferrer" className="absolute -right-4 top-1/3 bg-terra rounded-2xl shadow-card-lg px-4 py-3 hover:bg-terra-dark transition-colors">
               <p className="text-2xl font-black text-ink">5.0★</p>
-              <p className="text-xs text-ink/70 font-medium">Google rating</p>
+              <p className="text-xs text-ink/70 font-medium">{t("googleRating")}</p>
             </a>
           </div>
         </div>

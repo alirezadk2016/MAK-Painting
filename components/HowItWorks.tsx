@@ -1,10 +1,12 @@
 "use client";
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 import { useQuoteWizard } from "./QuoteWizardProvider";
 import { STEPS } from "@/data/site";
 
 export function HowItWorks() {
   const { open } = useQuoteWizard();
+  const t = useTranslations("HowItWorks");
 
   return (
     <section id="how-it-works" className="relative py-20 overflow-hidden">
@@ -23,12 +25,12 @@ export function HowItWorks() {
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-8">
         <div className="text-center mb-14">
-          <p className="text-xs font-bold uppercase tracking-widest text-gold-light mb-2">Simple process</p>
+          <p className="text-xs font-bold uppercase tracking-widest text-gold-light mb-2">{t("eyebrow")}</p>
           <h2 className="text-4xl lg:text-5xl font-black text-white mb-4">
-            Getting started is easy<br />as 1 2 3…
+            {t("title")}
           </h2>
           <p className="text-gray-300 text-lg max-w-xl mx-auto">
-            Who knew arranging a premium paint job could be this simple?
+            {t("subtitle")}
           </p>
         </div>
 
@@ -60,7 +62,7 @@ export function HowItWorks() {
             onClick={open}
             className="bg-terra hover:bg-terra-dark text-ink font-bold rounded-full px-8 py-4 text-base transition-all hover:shadow-lg hover:-translate-y-px"
           >
-            Get my free quote — takes 60 seconds
+            {t("cta")}
           </button>
         </div>
       </div>
