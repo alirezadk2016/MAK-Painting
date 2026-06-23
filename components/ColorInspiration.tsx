@@ -4,7 +4,7 @@ import { PALETTES } from "@/data/site";
 export function ColorInspiration() {
   const t = useTranslations("Colors");
   return (
-    <section className="py-16 bg-white overflow-hidden">
+    <section className="py-16 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-10">
         <div className="text-center">
           <p className="text-xs font-bold uppercase tracking-widest text-terra mb-2">{t("eyebrow")}</p>
@@ -15,8 +15,8 @@ export function ColorInspiration() {
         </div>
       </div>
 
-      {/* Auto-scroll row */}
-      <div className="flex overflow-x-auto scrollbar-hide gap-5 px-6 pb-4">
+      {/* Scroll row — overflow-x-auto with enough padding so last card isn't clipped */}
+      <div className="flex overflow-x-auto scrollbar-hide gap-5 px-6 pb-4" style={{ WebkitOverflowScrolling: "touch" }}>
         {[...PALETTES, ...PALETTES].map((palette, i) => (
           <div
             key={i}
@@ -31,6 +31,8 @@ export function ColorInspiration() {
             <p className="text-xs text-gray-400 mt-1">{t("brand")}</p>
           </div>
         ))}
+        {/* Trailing spacer so the last card isn't clipped */}
+        <div className="flex-shrink-0 w-6" />
       </div>
     </section>
   );

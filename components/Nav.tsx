@@ -41,6 +41,7 @@ export function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
+  const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
   const { open } = useQuoteWizard();
   const t = useTranslations("Nav");
   const tSvc = useTranslations("ServicesData");
@@ -145,42 +146,56 @@ export function Nav() {
       {/* Mobile menu */}
       {menuOpen && (
         <div className="lg:hidden bg-white border-t border-gray-100 px-4 py-4 space-y-1">
-          {[
-            { href: "/about", label: t("about") },
-            { href: "/services", label: t("services") },
-            { href: "/gallery", label: t("gallery") },
-            { href: "/contact", label: t("contact") },
-          ].map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={() => setMenuOpen(false)}
-              className="block py-3 px-3 text-sm font-semibold text-charcoal hover:bg-blue-muted rounded-xl transition-colors"
-            >
-              {item.label}
-            </Link>
-          ))}
-          <div className="border-t border-gray-100 pt-3 mt-3">
-            <p className="text-xs font-bold text-gray-400 uppercase tracking-wider px-3 mb-2">{t("services")}</p>
-            {SERVICES.map((s) => {
-              const k = SVC_KEY[s.id];
-              const title = k ? (tSvc as (k: string) => string)(`${k}.title`) : s.title;
-              return (
-              <Link
-                key={s.id}
-                href={`/services/${s.slug}`}
-                onClick={() => setMenuOpen(false)}
-                className="block py-2 px-3 text-sm font-medium text-gray-600 hover:bg-blue-muted rounded-xl transition-colors"
-              >
-                {title}
-              </Link>
-            )})}
-          </div>
-          <div className="pt-3 border-t border-gray-100">
+          <Link href="/about" onClick={() => setMenuOpen(false)}
+            className="block py-3 px-3 text-sm font-semibold text-charcoal hover:bg-blue-muted rounded-xl transition-colors">
+            {t("about")}
+          </Link>
+
+          {/* Services — collapsible */}
+          <div>
             <button
-              onClick={() => { open(); setMenuOpen(false); }}
-              className="w-full bg-terra text-ink font-bold rounded-2xl py-3 text-sm"
+              onClick={() => setMobileServicesOpen(o => !o)}
+              className="w-full flex items-center justify-between py-3 px-3 text-sm font-semibold text-charcoal hover:bg-blue-muted rounded-xl transition-colors"
             >
+              {t("services")}
+              <svg className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${mobileServicesOpen ? "rotate-180" : ""}`}
+                viewBox="0 0 16 16" fill="none">
+                <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+            {mobileServicesOpen && (
+              <div className="mt-1 ml-3 space-y-0.5 border-l-2 border-gold/30 pl-3">
+                <Link href="/services" onClick={() => { setMenuOpen(false); setMobileServicesOpen(false); }}
+                  className="block py-2 px-3 text-sm font-bold text-gold-deep hover:bg-blue-muted rounded-xl transition-colors">
+                  All Services →
+                </Link>
+                {SERVICES.map((s) => {
+                  const k = SVC_KEY[s.id];
+                  const title = k ? (tSvc as (k: string) => string)(`${k}.title`) : s.title;
+                  return (
+                    <Link key={s.id} href={`/services/${s.slug}`}
+                      onClick={() => { setMenuOpen(false); setMobileServicesOpen(false); }}
+                      className="block py-2 px-3 text-sm font-medium text-gray-600 hover:bg-blue-muted rounded-xl transition-colors">
+                      {title}
+                    </Link>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          <Link href="/gallery" onClick={() => setMenuOpen(false)}
+            className="block py-3 px-3 text-sm font-semibold text-charcoal hover:bg-blue-muted rounded-xl transition-colors">
+            {t("gallery")}
+          </Link>
+          <Link href="/contact" onClick={() => setMenuOpen(false)}
+            className="block py-3 px-3 text-sm font-semibold text-charcoal hover:bg-blue-muted rounded-xl transition-colors">
+            {t("contact")}
+          </Link>
+
+          <div className="pt-3 border-t border-gray-100">
+            <button onClick={() => { open(); setMenuOpen(false); }}
+              className="w-full bg-terra text-ink font-bold rounded-2xl py-3 text-sm">
               {t("getQuote")}
             </button>
           </div>
