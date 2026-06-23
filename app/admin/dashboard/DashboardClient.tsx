@@ -1,6 +1,6 @@
 "use client";
 
-import { useTransition, useOptimistic, useState, useRef } from "react";
+import { useTransition, useOptimistic, useState, useRef, useCallback } from "react";
 import Image from "next/image";
 import { logoutAction, updateBookingAction, saveSiteConfigAction, uploadImageAction } from "../actions";
 import type { Booking, BookingStatus } from "@/lib/db";
@@ -135,6 +135,54 @@ function Img({ src, className = "" }: { src: string; className?: string }) {
   return (
     <div className={`relative overflow-hidden bg-gray-100 ${className}`}>
       <Image src={src} alt="" fill className="object-cover" onError={() => setFailed(true)} sizes="300px" unoptimized={src.startsWith("http")} />
+    </div>
+  );
+}
+
+// ─── 2D Position Picker ───────────────────────────────────────────────────────
+function PositionPicker({ x, y, onChange }: { x: number; y: number; onChange: (x: number, y: number) => void }) {
+  const padRef = useRef<HTMLDivElement>(null);
+  const dragging = useRef(false);
+
+  const updateFromEvent = useCallback((clientX: number, clientY: number) => {
+    const el = padRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const nx = Math.round(Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100)));
+    const ny = Math.round(Math.max(0, Math.min(100, ((clientY - rect.top) / rect.height) * 100)));
+    onChange(nx, ny);
+  }, [onChange]);
+
+  return (
+    <div
+      ref={padRef}
+      className="relative w-full aspect-square rounded-xl cursor-crosshair select-none"
+      style={{ background: "linear-gradient(135deg, #1a1c22 0%, #2d3142 50%, #1a1c22 100%)" }}
+      onMouseDown={e => { dragging.current = true; updateFromEvent(e.clientX, e.clientY); }}
+      onMouseMove={e => { if (dragging.current) updateFromEvent(e.clientX, e.clientY); }}
+      onMouseUp={() => { dragging.current = false; }}
+      onMouseLeave={() => { dragging.current = false; }}
+      onTouchStart={e => { dragging.current = true; updateFromEvent(e.touches[0].clientX, e.touches[0].clientY); }}
+      onTouchMove={e => { e.preventDefault(); if (dragging.current) updateFromEvent(e.touches[0].clientX, e.touches[0].clientY); }}
+      onTouchEnd={() => { dragging.current = false; }}
+    >
+      {/* Grid lines */}
+      <div className="absolute inset-0 opacity-20" style={{ backgroundImage: "linear-gradient(rgba(255,255,255,.3) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.3) 1px, transparent 1px)", backgroundSize: "33.33% 33.33%" }} />
+      {/* Labels */}
+      <span className="absolute top-1.5 left-2 text-[9px] text-white/40 font-bold select-none">TL</span>
+      <span className="absolute top-1.5 right-2 text-[9px] text-white/40 font-bold select-none">TR</span>
+      <span className="absolute bottom-1.5 left-2 text-[9px] text-white/40 font-bold select-none">BL</span>
+      <span className="absolute bottom-1.5 right-2 text-[9px] text-white/40 font-bold select-none">BR</span>
+      {/* Crosshair lines */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-0 bottom-0 w-px bg-white/15" style={{ left: `${x}%` }} />
+        <div className="absolute left-0 right-0 h-px bg-white/15" style={{ top: `${y}%` }} />
+      </div>
+      {/* Handle */}
+      <div
+        className="absolute w-5 h-5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-[#c9a24b] bg-white shadow-lg pointer-events-none"
+        style={{ left: `${x}%`, top: `${y}%`, boxShadow: "0 0 0 3px rgba(201,162,75,0.3), 0 2px 8px rgba(0,0,0,0.4)" }}
+      />
     </div>
   );
 }
@@ -507,106 +555,82 @@ export function DashboardClient({ bookings, config: initialConfig, hasBlobToken 
             {/* Hero */}
             <section className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
               <SectionHead letter="H" title="Hero Image" sub="Main banner at top of homepage" />
-              <div className="p-6 space-y-6">
-                {/* Preview with position overlay */}
-                <div className="flex flex-col sm:flex-row gap-6 items-start">
-                  <div className="relative w-full sm:w-72 h-48 flex-shrink-0 rounded-xl overflow-hidden bg-gray-100 border border-gray-200">
-                    {cfg.hero && (
+              <div className="p-5">
+                <div className="flex gap-4 items-start">
+
+                  {/* Live preview */}
+                  <div className="relative w-48 h-32 flex-shrink-0 rounded-xl overflow-hidden bg-gray-100 border border-gray-200">
+                    {cfg.hero ? (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={cfg.hero}
-                        alt="Hero preview"
-                        className="absolute inset-0 w-full h-full"
-                        style={{
-                          objectFit: "cover",
-                          objectPosition: `${heroPos.x}% ${heroPos.y}%`,
-                          transform: heroPos.scale !== 1 ? `scale(${heroPos.scale})` : undefined,
-                          transformOrigin: "center center",
-                        }}
-                      />
-                    )}
-                    {!cfg.hero && (
+                      <img src={cfg.hero} alt="" className="absolute inset-0 w-full h-full"
+                        style={{ objectFit: "cover", objectPosition: `${heroPos.x}% ${heroPos.y}%`,
+                          transform: heroPos.scale !== 1 ? `scale(${heroPos.scale})` : undefined, transformOrigin: "center center" }} />
+                    ) : (
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <svg className="w-10 h-10 text-gray-300" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" strokeWidth="1.5"/><path d="M3 15l5-5 4 4 3-3 6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                        <svg className="w-8 h-8 text-gray-300" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" strokeWidth="1.5"/><path d="M3 15l5-5 4 4 3-3 6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
                       </div>
                     )}
-                    {/* crosshair */}
-                    <div className="absolute inset-0 pointer-events-none">
-                      <div className="absolute top-1/2 left-0 right-0 h-px bg-white/30" />
-                      <div className="absolute left-1/2 top-0 bottom-0 w-px bg-white/30" />
+                    <div className="absolute bottom-2 right-2">
+                      <span className="text-[10px] font-bold bg-black/60 text-white px-1.5 py-0.5 rounded-md backdrop-blur-sm">Preview</span>
                     </div>
                   </div>
-                  <div className="space-y-3 flex-1 pt-1">
-                    <UploadBtn label="Upload New Hero Image" onDone={setHero} />
-                    <p className="text-xs text-gray-400">Use the controls below to adjust position and zoom.</p>
-                  </div>
-                </div>
 
-                {/* Position & zoom controls */}
-                <div className="bg-gray-50 rounded-2xl border border-gray-100 p-5 space-y-5">
-                  <p className="text-xs font-black text-gray-700 uppercase tracking-widest">Image Position & Zoom</p>
+                  {/* Right side: upload + position + zoom */}
+                  <div className="flex-1 space-y-4">
+                    <UploadBtn label="Replace Image" onDone={setHero} small />
 
-                  {/* X position */}
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <label className="text-xs font-bold text-gray-600">Horizontal Position</label>
-                      <div className="flex items-center gap-2">
-                        {[["Left","0"],["Center","50"],["Right","100"]].map(([lbl, val]) => (
-                          <button key={val} onClick={() => setHeroPosition({ ...heroPos, x: Number(val) })}
-                            className={`text-xs px-2.5 py-1 rounded-lg font-bold transition-colors ${heroPos.x === Number(val) ? "bg-[#c9a24b] text-[#1a1a1a]" : "bg-white border border-gray-200 text-gray-600 hover:border-gray-400"}`}>
-                            {lbl}
+                    {/* Position + Zoom in one compact row */}
+                    <div className="flex gap-3 items-start">
+
+                      {/* 2D position pad */}
+                      <div className="flex flex-col items-center gap-1">
+                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Focus Point</span>
+                        <div className="w-20 h-20">
+                          <PositionPicker x={heroPos.x} y={heroPos.y}
+                            onChange={(x, y) => setHeroPosition({ ...heroPos, x, y })} />
+                        </div>
+                        <span className="text-[10px] text-gray-400">{heroPos.x}% · {heroPos.y}%</span>
+                      </div>
+
+                      {/* Zoom slider vertical */}
+                      <div className="flex flex-col items-center gap-1 h-full">
+                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Zoom</span>
+                        <div className="flex flex-col items-center gap-1.5 flex-1 justify-center">
+                          <span className="text-[10px] text-gray-400">2×</span>
+                          <input type="range" min="100" max="200" step="5"
+                            value={Math.round(heroPos.scale * 100)}
+                            onChange={e => setHeroPosition({ ...heroPos, scale: Number(e.target.value) / 100 })}
+                            className="accent-[#c9a24b]"
+                            style={{ writingMode: "vertical-lr", direction: "rtl", width: "20px", height: "60px" }} />
+                          <span className="text-[10px] text-gray-400">1×</span>
+                        </div>
+                        <span className="text-[10px] font-bold text-[#c9a24b]">{heroPos.scale.toFixed(2)}×</span>
+                      </div>
+
+                      {/* Quick presets */}
+                      <div className="flex flex-col gap-1.5">
+                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Presets</span>
+                        {[
+                          { label: "Center", x: 50, y: 50 },
+                          { label: "Top",    x: 50, y: 20 },
+                          { label: "Bottom", x: 50, y: 80 },
+                          { label: "Left",   x: 20, y: 50 },
+                          { label: "Right",  x: 80, y: 50 },
+                        ].map(p => (
+                          <button key={p.label}
+                            onClick={() => setHeroPosition({ ...heroPos, x: p.x, y: p.y })}
+                            className={`text-[10px] font-bold px-2.5 py-1 rounded-lg transition-colors ${heroPos.x === p.x && heroPos.y === p.y ? "bg-[#c9a24b] text-[#1a1a1a]" : "bg-gray-100 text-gray-500 hover:bg-gray-200"}`}>
+                            {p.label}
                           </button>
                         ))}
                       </div>
                     </div>
-                    <input type="range" min="0" max="100" value={heroPos.x}
-                      onChange={e => setHeroPosition({ ...heroPos, x: Number(e.target.value) })}
-                      className="w-full accent-[#c9a24b] h-2 rounded-full" />
-                    <div className="flex justify-between text-xs text-gray-400 mt-1"><span>Left</span><span>{heroPos.x}%</span><span>Right</span></div>
-                  </div>
 
-                  {/* Y position */}
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <label className="text-xs font-bold text-gray-600">Vertical Position</label>
-                      <div className="flex items-center gap-2">
-                        {[["Top","0"],["Center","50"],["Bottom","100"]].map(([lbl, val]) => (
-                          <button key={val} onClick={() => setHeroPosition({ ...heroPos, y: Number(val) })}
-                            className={`text-xs px-2.5 py-1 rounded-lg font-bold transition-colors ${heroPos.y === Number(val) ? "bg-[#c9a24b] text-[#1a1a1a]" : "bg-white border border-gray-200 text-gray-600 hover:border-gray-400"}`}>
-                            {lbl}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                    <input type="range" min="0" max="100" value={heroPos.y}
-                      onChange={e => setHeroPosition({ ...heroPos, y: Number(e.target.value) })}
-                      className="w-full accent-[#c9a24b] h-2 rounded-full" />
-                    <div className="flex justify-between text-xs text-gray-400 mt-1"><span>Top</span><span>{heroPos.y}%</span><span>Bottom</span></div>
+                    <button onClick={() => setHeroPosition({ x: 50, y: 50, scale: 1 })}
+                      className="text-[10px] text-gray-400 hover:text-gray-600 font-bold transition-colors">
+                      ↺ Reset
+                    </button>
                   </div>
-
-                  {/* Zoom */}
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <label className="text-xs font-bold text-gray-600">Zoom</label>
-                      <div className="flex items-center gap-2">
-                        {[["1×","1"],["1.25×","1.25"],["1.5×","1.5"],["2×","2"]].map(([lbl, val]) => (
-                          <button key={val} onClick={() => setHeroPosition({ ...heroPos, scale: Number(val) })}
-                            className={`text-xs px-2.5 py-1 rounded-lg font-bold transition-colors ${heroPos.scale === Number(val) ? "bg-[#c9a24b] text-[#1a1a1a]" : "bg-white border border-gray-200 text-gray-600 hover:border-gray-400"}`}>
-                            {lbl}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                    <input type="range" min="100" max="200" step="5" value={Math.round(heroPos.scale * 100)}
-                      onChange={e => setHeroPosition({ ...heroPos, scale: Number(e.target.value) / 100 })}
-                      className="w-full accent-[#c9a24b] h-2 rounded-full" />
-                    <div className="flex justify-between text-xs text-gray-400 mt-1"><span>Normal</span><span>{heroPos.scale.toFixed(2)}×</span><span>2× Zoom</span></div>
-                  </div>
-
-                  <button onClick={() => setHeroPosition({ x: 50, y: 50, scale: 1 })}
-                    className="text-xs text-gray-500 hover:text-gray-700 font-bold underline">
-                    Reset to defaults
-                  </button>
                 </div>
               </div>
             </section>
