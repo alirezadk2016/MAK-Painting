@@ -16,9 +16,17 @@ export interface PricingTier {
   features: string[];
 }
 
+export interface ServiceCard {
+  id: string;
+  label: string;
+  img: string;
+  slug?: string; // links to /services/[slug] if set
+}
+
 export interface SiteConfig {
   hero: string;
-  services: Record<string, string>;
+  services: Record<string, string>; // legacy image overrides
+  serviceCards?: ServiceCard[];      // admin-managed service card list
   gallery: GalleryPair[];
   pricing: PricingTier[];
 }

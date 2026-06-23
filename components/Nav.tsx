@@ -26,7 +26,7 @@ function LanguageSwitcher() {
         className={`px-2 py-1 rounded-md transition-colors ${locale === "fa" ? "bg-charcoal text-gold" : "text-gray-500 hover:text-charcoal"}`}
         aria-label="فارسی"
       >
-        فا
+        fa
       </Link>
     </div>
   );

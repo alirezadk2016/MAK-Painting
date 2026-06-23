@@ -257,7 +257,7 @@ export function QuoteWizard({ onClose }: { onClose: () => void }) {
         {!sent && (
           <div className="px-6 pb-6 space-y-3">
           {submitError && <p className="text-sm text-red-500 text-center">{submitError}</p>}
-          <div className="flex items-center justify-between gap-3" dir="ltr">
+          <div className="flex items-center justify-between gap-3">
             <button
               onClick={back}
               disabled={step === 0}

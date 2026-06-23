@@ -4,7 +4,7 @@ import { useTransition, useOptimistic, useState, useRef } from "react";
 import Image from "next/image";
 import { logoutAction, updateBookingAction, saveSiteConfigAction, uploadImageAction } from "../actions";
 import type { Booking, BookingStatus } from "@/lib/db";
-import type { SiteConfig, GalleryPair, PricingTier } from "@/lib/site-config";
+import type { SiteConfig, GalleryPair, PricingTier, ServiceCard } from "@/lib/site-config";
 
 // ─── Static defaults ──────────────────────────────────────────────────────────
 const DEFAULT_SERVICES = [
@@ -132,6 +132,45 @@ export function DashboardClient({ bookings, config: initialConfig }: Props) {
   // Site config state
   const [cfg, setCfg] = useState<SiteConfig>(initialConfig);
 
+  // Service cards derived from config (fall back to DEFAULT_SERVICES)
+  const defaultServiceCards: ServiceCard[] = DEFAULT_SERVICES.map(s => ({
+    id: s.id, label: s.label, img: cfg.services[s.id] ?? s.defaultImg, slug: s.id,
+  }));
+  const serviceCards: ServiceCard[] = cfg.serviceCards ?? defaultServiceCards;
+
+  // Service card modal
+  const [svcModal, setSvcModal] = useState<{ mode: "add" | "edit"; idx?: number } | null>(null);
+  const [svcForm, setSvcForm] = useState<ServiceCard>({ id: "", label: "", img: "", slug: "" });
+
+  function openAddService() {
+    setSvcForm({ id: `custom-${Date.now()}`, label: "", img: "", slug: "" });
+    setSvcModal({ mode: "add" });
+  }
+  function openEditService(card: ServiceCard, idx: number) {
+    setSvcForm({ ...card });
+    setSvcModal({ mode: "edit", idx });
+  }
+  function deleteService(idx: number) {
+    if (!confirm("Remove this service card?")) return;
+    const next = serviceCards.filter((_, i) => i !== idx);
+    persist({ ...cfg, serviceCards: next });
+  }
+  function moveService(idx: number, dir: -1 | 1) {
+    const arr = [...serviceCards];
+    const swap = idx + dir;
+    if (swap < 0 || swap >= arr.length) return;
+    [arr[idx], arr[swap]] = [arr[swap], arr[idx]];
+    persist({ ...cfg, serviceCards: arr });
+  }
+  function saveService() {
+    if (!svcForm.label || !svcForm.img) return;
+    const next = svcModal?.mode === "add"
+      ? [...serviceCards, svcForm]
+      : serviceCards.map((c, i) => i === svcModal!.idx ? svcForm : c);
+    persist({ ...cfg, serviceCards: next });
+    setSvcModal(null);
+  }
+
   // Gallery modal
   const [gModal, setGModal] = useState<{ mode: "add" | "edit"; id?: number } | null>(null);
   const [gForm, setGForm]   = useState({ title: "", before: "", after: "" });
@@ -160,8 +199,7 @@ export function DashboardClient({ bookings, config: initialConfig }: Props) {
   }
 
   // ── Media ──
-  function setHero(url: string)                    { persist({ ...cfg, hero: url }); }
-  function setService(id: string, url: string)     { persist({ ...cfg, services: { ...cfg.services, [id]: url } }); }
+  function setHero(url: string) { persist({ ...cfg, hero: url }); }
 
   // ── Gallery ──
   function moveGallery(id: number, dir: -1 | 1) {
@@ -402,21 +440,44 @@ export function DashboardClient({ bookings, config: initialConfig }: Props) {
 
             {/* Services */}
             <section className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
-              <SectionHead letter="S" title="Service Images" sub="One image per service card on homepage" />
-              <div className="p-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {DEFAULT_SERVICES.map(svc => {
-                  const cur = cfg.services[svc.id] ?? svc.defaultImg;
-                  return (
-                    <div key={svc.id} className="border border-gray-100 rounded-xl overflow-hidden hover:border-[#c9a24b]/30 transition-colors">
-                      <Img src={cur} className="w-full h-40" />
-                      <div className="p-3 bg-gray-50">
-                        <p className="text-xs font-bold text-[#1a1a1a] mb-0.5">{svc.label}</p>
-                        <p className="text-xs text-gray-400 truncate mb-2">{cur.split("/").pop()}</p>
-                        <UploadBtn small label="Replace" onDone={url => setService(svc.id, url)} />
+              <SectionHead
+                letter="S" title="Service Images" sub={`${serviceCards.length} service cards on homepage`}
+                action={
+                  <button onClick={openAddService}
+                    className="flex items-center gap-1.5 bg-[#c9a24b] hover:bg-[#b8913a] text-[#1a1a1a] text-xs font-bold px-4 py-2 rounded-xl transition-colors">
+                    <svg className="w-3.5 h-3.5" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
+                    Add Service
+                  </button>
+                }
+              />
+              <div className="divide-y divide-gray-50">
+                {serviceCards.length === 0
+                  ? <p className="text-center text-gray-400 text-sm py-12">No service cards.</p>
+                  : serviceCards.map((card, idx) => (
+                    <div key={card.id} className="p-4 hover:bg-gray-50/50 transition-colors">
+                      <div className="flex items-center gap-4">
+                        <Img src={card.img} className="w-20 h-16 rounded-xl flex-shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-bold text-[#1a1a1a] truncate">{card.label}</p>
+                          <p className="text-xs text-gray-400 truncate">{card.img.split("/").pop()}</p>
+                          {card.slug && <p className="text-xs text-[#c9a24b] mt-0.5">/services/{card.slug}</p>}
+                        </div>
+                        <div className="flex items-center gap-1.5 flex-shrink-0">
+                          <button onClick={() => moveService(idx, -1)} disabled={idx === 0}
+                            className="w-7 h-7 flex items-center justify-center rounded-lg border border-gray-200 hover:border-gray-400 disabled:opacity-30 transition-colors text-gray-500">
+                            <svg className="w-3.5 h-3.5" viewBox="0 0 16 16" fill="none"><path d="M4 10l4-4 4 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                          </button>
+                          <button onClick={() => moveService(idx, 1)} disabled={idx === serviceCards.length - 1}
+                            className="w-7 h-7 flex items-center justify-center rounded-lg border border-gray-200 hover:border-gray-400 disabled:opacity-30 transition-colors text-gray-500">
+                            <svg className="w-3.5 h-3.5" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                          </button>
+                          <button onClick={() => openEditService(card, idx)} className="text-xs font-bold text-[#c9a24b] bg-[#c9a24b]/10 hover:bg-[#c9a24b]/20 px-3 py-1.5 rounded-lg transition-colors">Edit</button>
+                          <button onClick={() => deleteService(idx)} className="text-xs font-bold text-red-500 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg transition-colors">Delete</button>
+                        </div>
                       </div>
                     </div>
-                  );
-                })}
+                  ))
+                }
               </div>
             </section>
 
@@ -572,6 +633,44 @@ export function DashboardClient({ bookings, config: initialConfig }: Props) {
                 </button>
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* ── Service modal ── */}
+      {svcModal && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setSvcModal(null)}>
+          <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden" onClick={e => e.stopPropagation()}>
+            <div className="bg-[#1a1a1a] px-6 py-5 flex items-center justify-between">
+              <p className="text-white font-black">{svcModal.mode === "add" ? "Add Service Card" : "Edit Service Card"}</p>
+              <button onClick={() => setSvcModal(null)} className="text-white/60 hover:text-white"><svg className="w-5 h-5" viewBox="0 0 20 20" fill="none"><path d="M15 5L5 15M5 5l10 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg></button>
+            </div>
+            <div className="p-6 space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-gray-600 mb-1.5 uppercase tracking-wide">Label</label>
+                <input value={svcForm.label} onChange={e => setSvcForm(f => ({ ...f, label: e.target.value }))}
+                  placeholder="e.g. Roof Painting"
+                  className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#c9a24b]" />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-gray-600 mb-1.5 uppercase tracking-wide">Service Page Slug (optional)</label>
+                <input value={svcForm.slug ?? ""} onChange={e => setSvcForm(f => ({ ...f, slug: e.target.value || undefined }))}
+                  placeholder="e.g. roof (links to /services/roof)"
+                  className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#c9a24b]" />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-gray-600 mb-1.5 uppercase tracking-wide">Image</label>
+                {svcForm.img && <Img src={svcForm.img} className="w-full h-36 rounded-xl mb-2" />}
+                <UploadBtn small label="Upload Image" onDone={url => setSvcForm(f => ({ ...f, img: url }))} />
+              </div>
+            </div>
+            <div className="px-6 pb-6 flex gap-3">
+              <button onClick={() => setSvcModal(null)} className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl py-3 text-sm">Cancel</button>
+              <button onClick={saveService} disabled={!svcForm.label || !svcForm.img || isPending}
+                className="flex-1 bg-[#c9a24b] hover:bg-[#b8913a] disabled:opacity-50 text-[#1a1a1a] font-bold rounded-xl py-3 text-sm transition-colors">
+                {svcModal.mode === "add" ? "Add Card" : "Save Changes"}
+              </button>
+            </div>
           </div>
         </div>
       )}

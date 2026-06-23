@@ -49,11 +49,12 @@ export default async function HomePage({
   setRequestLocale(locale);
   const siteConfig = await getSiteConfig();
   const pricingTiers = siteConfig?.pricing?.length ? siteConfig.pricing : DEFAULT_PRICING;
+  const serviceCards = siteConfig?.serviceCards;
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <Hero />
-      <Services />
+      <Services cards={serviceCards} />
       <HowItWorks />
       <Pricing tiers={pricingTiers} />
       <Extras />
