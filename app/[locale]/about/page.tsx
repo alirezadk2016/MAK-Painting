@@ -85,12 +85,12 @@ export default async function AboutPage({
           {/* Project photos */}
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {[
+              { src: "/car.jpg", alt: "MAK Painting Group van" },
+              { src: "/living-room-after.jpg", alt: "Interior painting Melbourne" },
+              { src: "/kitchen-after.jpg", alt: "Kitchen cabinet painting Melbourne" },
+              { src: "/bedroom-pink-after.jpg", alt: "Bedroom painting Melbourne" },
+              { src: "/deck-after.jpg", alt: "Deck painting Melbourne" },
               { src: "/exterior-terrace.jpg", alt: "Exterior painting Melbourne" },
-              { src: "/hero-living-room.jpg", alt: "Interior painting Melbourne" },
-              { src: "/interior-timber-ceiling.jpg", alt: "Timber ceiling painting" },
-              { src: "/feature-wall-lilac.jpg", alt: "Feature wall painting" },
-              { src: "/commercial-prep.jpg", alt: "Commercial painting Melbourne" },
-              { src: "/exterior-render.jpg", alt: "Exterior render painting" },
             ].map((img) => (
               <div key={img.src} className="relative aspect-square rounded-2xl overflow-hidden">
                 <Image src={img.src} alt={img.alt} fill className="object-cover hover:scale-105 transition-transform duration-500" sizes="(max-width: 640px) 50vw, 33vw" />
