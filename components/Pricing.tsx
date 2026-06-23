@@ -56,10 +56,16 @@ export function Pricing({ tiers = DEFAULT_PRICING }: Props) {
                     ? "bg-white/10 border-white/20 text-white"
                     : "bg-blue-muted border-blue-brand/20 text-charcoal"
                 }`}>
-                  {(!tier.priceLabel || tier.priceLabel.toLowerCase().includes("soon") || tier.priceLabel.toLowerCase().includes("coming")) && (
+                  {(!tier.priceLabel || tier.priceLabel.toLowerCase().includes("soon") || tier.priceLabel.toLowerCase().includes("coming")) ? (
+                    /* Clock icon — coming soon */
                     <svg className="w-3.5 h-3.5 opacity-60" viewBox="0 0 16 16" fill="none">
                       <circle cx="8" cy="8" r="6.5" stroke="currentColor" strokeWidth="1.2"/>
                       <path d="M8 5v3.5L10 10" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+                    </svg>
+                  ) : (
+                    /* Dollar tag icon — real price */
+                    <svg className="w-3.5 h-3.5 opacity-75" viewBox="0 0 16 16" fill="none">
+                      <path d="M8 2v1.5M8 12.5V14M5.5 4.5C5.5 3.67 6.17 3 7 3h2a1.5 1.5 0 010 3H7a1.5 1.5 0 000 3h2a1.5 1.5 0 010 3H7c-.83 0-1.5-.67-1.5-1.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
                     </svg>
                   )}
                   <span className="text-sm font-bold">{tier.priceLabel || "Pricing coming soon"}</span>

@@ -298,9 +298,11 @@ export function DashboardClient({ bookings, config: initialConfig, hasBlobToken 
   const [gForm, setGForm]   = useState({ title: "", before: "", after: "" });
 
   // Pricing modal
-  const [pModal, setPModal] = useState<{ tier: PricingTier; idx: number } | null>(null);
-  const [pForm, setPForm]   = useState<PricingTier | null>(null);
+  const [pModal, setPModal]         = useState<{ tier: PricingTier; idx: number } | null>(null);
+  const [pForm, setPForm]           = useState<PricingTier | null>(null);
   const [newFeature, setNewFeature] = useState("");
+  const [editingFeatureIdx, setEditingFeatureIdx] = useState<number | null>(null);
+  const [editingFeatureVal, setEditingFeatureVal] = useState("");
 
   function persist(next: SiteConfig) {
     setCfg(next);
@@ -390,6 +392,21 @@ export function DashboardClient({ bookings, config: initialConfig, hasBlobToken 
     if (swap < 0 || swap >= arr.length) return;
     [arr[fi], arr[swap]] = [arr[swap], arr[fi]];
     setPForm({ ...pForm, features: arr });
+  }
+  function startEditFeature(fi: number, val: string) {
+    setEditingFeatureIdx(fi);
+    setEditingFeatureVal(val);
+  }
+  function commitEditFeature() {
+    if (!pForm || editingFeatureIdx === null) return;
+    const trimmed = editingFeatureVal.trim();
+    if (trimmed) {
+      const arr = [...pForm.features];
+      arr[editingFeatureIdx] = trimmed;
+      setPForm({ ...pForm, features: arr });
+    }
+    setEditingFeatureIdx(null);
+    setEditingFeatureVal("");
   }
 
   // ── Calendar ──
@@ -934,7 +951,10 @@ export function DashboardClient({ bookings, config: initialConfig, hasBlobToken 
                 <label className="block text-xs font-bold text-gray-600 mb-3 uppercase tracking-wide">Features ({pForm.features.length})</label>
                 <div className="space-y-2 mb-3">
                   {pForm.features.map((f, fi) => (
-                    <div key={fi} className="flex items-center gap-2 bg-gray-50 rounded-xl px-3 py-2 border border-gray-100">
+                    <div key={fi} className={`flex items-center gap-2 rounded-xl px-3 py-2 border transition-colors ${
+                      editingFeatureIdx === fi ? "bg-white border-[#c9a24b] shadow-sm" : "bg-gray-50 border-gray-100 hover:border-gray-200"
+                    }`}>
+                      {/* Reorder arrows */}
                       <div className="flex flex-col gap-0.5 flex-shrink-0">
                         <button onClick={() => moveFeature(fi, -1)} disabled={fi === 0} className="disabled:opacity-30 text-gray-400 hover:text-gray-600">
                           <svg className="w-3 h-3" viewBox="0 0 12 12" fill="none"><path d="M2 8l4-4 4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
@@ -943,8 +963,38 @@ export function DashboardClient({ bookings, config: initialConfig, hasBlobToken 
                           <svg className="w-3 h-3" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
                         </button>
                       </div>
-                      <span className="text-sm text-gray-700 flex-1">{f}</span>
-                      <button onClick={() => removeFeature(fi)} className="text-red-400 hover:text-red-600 flex-shrink-0">
+
+                      {/* Inline text edit */}
+                      {editingFeatureIdx === fi ? (
+                        <input
+                          autoFocus
+                          value={editingFeatureVal}
+                          onChange={e => setEditingFeatureVal(e.target.value)}
+                          onKeyDown={e => { if (e.key === "Enter") { e.preventDefault(); commitEditFeature(); } if (e.key === "Escape") { setEditingFeatureIdx(null); } }}
+                          onBlur={commitEditFeature}
+                          className="flex-1 text-sm bg-transparent outline-none text-gray-800 font-medium"
+                        />
+                      ) : (
+                        <span
+                          className="text-sm text-gray-700 flex-1 cursor-text hover:text-[#1a1a1a] transition-colors"
+                          onClick={() => startEditFeature(fi, f)}
+                          title="Click to edit"
+                        >{f}</span>
+                      )}
+
+                      {/* Edit / confirm button */}
+                      {editingFeatureIdx === fi ? (
+                        <button onClick={commitEditFeature} className="text-[#c9a24b] hover:text-[#b8913a] flex-shrink-0" title="Save">
+                          <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                        </button>
+                      ) : (
+                        <button onClick={() => startEditFeature(fi, f)} className="text-gray-300 hover:text-[#c9a24b] flex-shrink-0 transition-colors" title="Edit text">
+                          <svg className="w-3.5 h-3.5" viewBox="0 0 16 16" fill="none"><path d="M11 2.5l2.5 2.5L5 13.5H2.5V11L11 2.5z" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                        </button>
+                      )}
+
+                      {/* Delete */}
+                      <button onClick={() => removeFeature(fi)} className="text-red-300 hover:text-red-500 flex-shrink-0 transition-colors" title="Remove">
                         <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>
                       </button>
                     </div>
