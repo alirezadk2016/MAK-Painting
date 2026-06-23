@@ -139,50 +139,77 @@ function Img({ src, className = "" }: { src: string; className?: string }) {
   );
 }
 
-// ─── 2D Position Picker ───────────────────────────────────────────────────────
-function PositionPicker({ x, y, onChange }: { x: number; y: number; onChange: (x: number, y: number) => void }) {
-  const padRef = useRef<HTMLDivElement>(null);
+// ─── Hero Image Editor (drag-on-image focal point) ────────────────────────────
+function HeroImageEditor({ src, pos, onPosChange }: {
+  src: string;
+  pos: HeroPosition;
+  onPosChange: (p: HeroPosition) => void;
+}) {
+  const imgRef = useRef<HTMLDivElement>(null);
   const dragging = useRef(false);
 
-  const updateFromEvent = useCallback((clientX: number, clientY: number) => {
-    const el = padRef.current;
+  const updateFocal = useCallback((clientX: number, clientY: number) => {
+    const el = imgRef.current;
     if (!el) return;
     const rect = el.getBoundingClientRect();
-    const nx = Math.round(Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100)));
-    const ny = Math.round(Math.max(0, Math.min(100, ((clientY - rect.top) / rect.height) * 100)));
-    onChange(nx, ny);
-  }, [onChange]);
+    const x = Math.round(Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100)));
+    const y = Math.round(Math.max(0, Math.min(100, ((clientY - rect.top) / rect.height) * 100)));
+    onPosChange({ ...pos, x, y });
+  }, [pos, onPosChange]);
 
   return (
-    <div
-      ref={padRef}
-      className="relative w-full aspect-square rounded-xl cursor-crosshair select-none"
-      style={{ background: "linear-gradient(135deg, #1a1c22 0%, #2d3142 50%, #1a1c22 100%)" }}
-      onMouseDown={e => { dragging.current = true; updateFromEvent(e.clientX, e.clientY); }}
-      onMouseMove={e => { if (dragging.current) updateFromEvent(e.clientX, e.clientY); }}
-      onMouseUp={() => { dragging.current = false; }}
-      onMouseLeave={() => { dragging.current = false; }}
-      onTouchStart={e => { dragging.current = true; updateFromEvent(e.touches[0].clientX, e.touches[0].clientY); }}
-      onTouchMove={e => { e.preventDefault(); if (dragging.current) updateFromEvent(e.touches[0].clientX, e.touches[0].clientY); }}
-      onTouchEnd={() => { dragging.current = false; }}
-    >
-      {/* Grid lines */}
-      <div className="absolute inset-0 opacity-20" style={{ backgroundImage: "linear-gradient(rgba(255,255,255,.3) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.3) 1px, transparent 1px)", backgroundSize: "33.33% 33.33%" }} />
-      {/* Labels */}
-      <span className="absolute top-1.5 left-2 text-[9px] text-white/40 font-bold select-none">TL</span>
-      <span className="absolute top-1.5 right-2 text-[9px] text-white/40 font-bold select-none">TR</span>
-      <span className="absolute bottom-1.5 left-2 text-[9px] text-white/40 font-bold select-none">BL</span>
-      <span className="absolute bottom-1.5 right-2 text-[9px] text-white/40 font-bold select-none">BR</span>
-      {/* Crosshair lines */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 bottom-0 w-px bg-white/15" style={{ left: `${x}%` }} />
-        <div className="absolute left-0 right-0 h-px bg-white/15" style={{ top: `${y}%` }} />
-      </div>
-      {/* Handle */}
+    <div className="space-y-3">
+      {/* Image with focal point drag */}
       <div
-        className="absolute w-5 h-5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-[#c9a24b] bg-white shadow-lg pointer-events-none"
-        style={{ left: `${x}%`, top: `${y}%`, boxShadow: "0 0 0 3px rgba(201,162,75,0.3), 0 2px 8px rgba(0,0,0,0.4)" }}
-      />
+        ref={imgRef}
+        className="relative rounded-xl overflow-hidden cursor-crosshair select-none bg-gray-100"
+        style={{ aspectRatio: "4/5" }}
+        onMouseDown={e => { dragging.current = true; updateFocal(e.clientX, e.clientY); }}
+        onMouseMove={e => { if (dragging.current) updateFocal(e.clientX, e.clientY); }}
+        onMouseUp={() => { dragging.current = false; }}
+        onMouseLeave={() => { dragging.current = false; }}
+        onTouchStart={e => { dragging.current = true; updateFocal(e.touches[0].clientX, e.touches[0].clientY); }}
+        onTouchMove={e => { e.preventDefault(); if (dragging.current) updateFocal(e.touches[0].clientX, e.touches[0].clientY); }}
+        onTouchEnd={() => { dragging.current = false; }}
+      >
+        {src ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={src} alt="" className="absolute inset-0 w-full h-full pointer-events-none"
+            style={{ objectFit: "cover", objectPosition: `${pos.x}% ${pos.y}%`,
+              transform: pos.scale !== 1 ? `scale(${pos.scale})` : undefined, transformOrigin: "center center" }} />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <svg className="w-10 h-10 text-gray-300" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" strokeWidth="1.5"/><path d="M3 15l5-5 4 4 3-3 6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          </div>
+        )}
+        {/* Focal point crosshair */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 bottom-0 w-px bg-white/40" style={{ left: `${pos.x}%` }} />
+          <div className="absolute left-0 right-0 h-px bg-white/40" style={{ top: `${pos.y}%` }} />
+          <div className="absolute w-6 h-6 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-[#c9a24b] bg-white/20 backdrop-blur-sm"
+            style={{ left: `${pos.x}%`, top: `${pos.y}%`, boxShadow: "0 0 0 3px rgba(201,162,75,0.4)" }} />
+        </div>
+        {/* Hint */}
+        <div className="absolute bottom-2 left-0 right-0 flex justify-center pointer-events-none">
+          <span className="text-[10px] bg-black/60 text-white px-2 py-1 rounded-full backdrop-blur-sm font-medium">
+            Drag to set focal point
+          </span>
+        </div>
+      </div>
+
+      {/* Zoom */}
+      <div className="flex items-center gap-3 bg-gray-50 rounded-xl px-4 py-3 border border-gray-100">
+        <span className="text-xs font-bold text-gray-500 w-10 flex-shrink-0">Zoom</span>
+        <input type="range" min="100" max="200" step="5"
+          value={Math.round(pos.scale * 100)}
+          onChange={e => onPosChange({ ...pos, scale: Number(e.target.value) / 100 })}
+          className="flex-1 accent-[#c9a24b] h-1.5" />
+        <span className="text-xs font-bold text-[#c9a24b] w-8 text-right">{pos.scale.toFixed(2)}×</span>
+        {pos.scale !== 1 && (
+          <button onClick={() => onPosChange({ ...pos, scale: 1 })}
+            className="text-[10px] text-gray-400 hover:text-gray-600 font-bold">↺</button>
+        )}
+      </div>
     </div>
   );
 }
@@ -554,81 +581,24 @@ export function DashboardClient({ bookings, config: initialConfig, hasBlobToken 
           <div className="space-y-8">
             {/* Hero */}
             <section className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
-              <SectionHead letter="H" title="Hero Image" sub="Main banner at top of homepage" />
+              <SectionHead letter="H" title="Hero Image" sub="Main banner at top of homepage"
+                action={<UploadBtn label="Replace Image" onDone={setHero} small />} />
               <div className="p-5">
-                <div className="flex gap-4 items-start">
-
-                  {/* Live preview */}
-                  <div className="relative w-48 h-32 flex-shrink-0 rounded-xl overflow-hidden bg-gray-100 border border-gray-200">
-                    {cfg.hero ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={cfg.hero} alt="" className="absolute inset-0 w-full h-full"
-                        style={{ objectFit: "cover", objectPosition: `${heroPos.x}% ${heroPos.y}%`,
-                          transform: heroPos.scale !== 1 ? `scale(${heroPos.scale})` : undefined, transformOrigin: "center center" }} />
-                    ) : (
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <svg className="w-8 h-8 text-gray-300" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" strokeWidth="1.5"/><path d="M3 15l5-5 4 4 3-3 6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                      </div>
-                    )}
-                    <div className="absolute bottom-2 right-2">
-                      <span className="text-[10px] font-bold bg-black/60 text-white px-1.5 py-0.5 rounded-md backdrop-blur-sm">Preview</span>
-                    </div>
+                <div className="flex gap-5 items-start">
+                  {/* Drag-on-image editor — same 4/5 ratio as the live site */}
+                  <div className="w-44 flex-shrink-0">
+                    <HeroImageEditor src={cfg.hero} pos={heroPos} onPosChange={setHeroPosition} />
                   </div>
-
-                  {/* Right side: upload + position + zoom */}
-                  <div className="flex-1 space-y-4">
-                    <UploadBtn label="Replace Image" onDone={setHero} small />
-
-                    {/* Position + Zoom in one compact row */}
-                    <div className="flex gap-3 items-start">
-
-                      {/* 2D position pad */}
-                      <div className="flex flex-col items-center gap-1">
-                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Focus Point</span>
-                        <div className="w-20 h-20">
-                          <PositionPicker x={heroPos.x} y={heroPos.y}
-                            onChange={(x, y) => setHeroPosition({ ...heroPos, x, y })} />
-                        </div>
-                        <span className="text-[10px] text-gray-400">{heroPos.x}% · {heroPos.y}%</span>
-                      </div>
-
-                      {/* Zoom slider vertical */}
-                      <div className="flex flex-col items-center gap-1 h-full">
-                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Zoom</span>
-                        <div className="flex flex-col items-center gap-1.5 flex-1 justify-center">
-                          <span className="text-[10px] text-gray-400">2×</span>
-                          <input type="range" min="100" max="200" step="5"
-                            value={Math.round(heroPos.scale * 100)}
-                            onChange={e => setHeroPosition({ ...heroPos, scale: Number(e.target.value) / 100 })}
-                            className="accent-[#c9a24b]"
-                            style={{ writingMode: "vertical-lr", direction: "rtl", width: "20px", height: "60px" }} />
-                          <span className="text-[10px] text-gray-400">1×</span>
-                        </div>
-                        <span className="text-[10px] font-bold text-[#c9a24b]">{heroPos.scale.toFixed(2)}×</span>
-                      </div>
-
-                      {/* Quick presets */}
-                      <div className="flex flex-col gap-1.5">
-                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Presets</span>
-                        {[
-                          { label: "Center", x: 50, y: 50 },
-                          { label: "Top",    x: 50, y: 20 },
-                          { label: "Bottom", x: 50, y: 80 },
-                          { label: "Left",   x: 20, y: 50 },
-                          { label: "Right",  x: 80, y: 50 },
-                        ].map(p => (
-                          <button key={p.label}
-                            onClick={() => setHeroPosition({ ...heroPos, x: p.x, y: p.y })}
-                            className={`text-[10px] font-bold px-2.5 py-1 rounded-lg transition-colors ${heroPos.x === p.x && heroPos.y === p.y ? "bg-[#c9a24b] text-[#1a1a1a]" : "bg-gray-100 text-gray-500 hover:bg-gray-200"}`}>
-                            {p.label}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
+                  <div className="flex-1 pt-1 space-y-3">
+                    <p className="text-xs font-bold text-gray-700">How to adjust</p>
+                    <ul className="space-y-1.5 text-xs text-gray-500">
+                      <li className="flex items-start gap-2"><span className="text-[#c9a24b] font-bold mt-0.5">→</span>Drag the crosshair on the image to set which part stays visible</li>
+                      <li className="flex items-start gap-2"><span className="text-[#c9a24b] font-bold mt-0.5">→</span>Use the Zoom slider to zoom in/out</li>
+                      <li className="flex items-start gap-2"><span className="text-[#c9a24b] font-bold mt-0.5">→</span>The preview matches the exact shape shown on your site</li>
+                    </ul>
                     <button onClick={() => setHeroPosition({ x: 50, y: 50, scale: 1 })}
-                      className="text-[10px] text-gray-400 hover:text-gray-600 font-bold transition-colors">
-                      ↺ Reset
+                      className="text-xs text-gray-400 hover:text-gray-700 font-bold transition-colors border border-gray-200 rounded-lg px-3 py-1.5 hover:border-gray-400">
+                      ↺ Reset to default
                     </button>
                   </div>
                 </div>

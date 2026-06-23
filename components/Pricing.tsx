@@ -56,10 +56,12 @@ export function Pricing({ tiers = DEFAULT_PRICING }: Props) {
                     ? "bg-white/10 border-white/20 text-white"
                     : "bg-blue-muted border-blue-brand/20 text-charcoal"
                 }`}>
-                  <svg className="w-3.5 h-3.5 opacity-60" viewBox="0 0 16 16" fill="none">
-                    <circle cx="8" cy="8" r="6.5" stroke="currentColor" strokeWidth="1.2"/>
-                    <path d="M8 5v3.5L10 10" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
-                  </svg>
+                  {(!tier.priceLabel || tier.priceLabel.toLowerCase().includes("soon") || tier.priceLabel.toLowerCase().includes("coming")) && (
+                    <svg className="w-3.5 h-3.5 opacity-60" viewBox="0 0 16 16" fill="none">
+                      <circle cx="8" cy="8" r="6.5" stroke="currentColor" strokeWidth="1.2"/>
+                      <path d="M8 5v3.5L10 10" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+                    </svg>
+                  )}
                   <span className="text-sm font-bold">{tier.priceLabel || "Pricing coming soon"}</span>
                 </div>
               </div>
