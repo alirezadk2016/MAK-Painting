@@ -4,7 +4,7 @@ import { useTransition, useOptimistic, useState, useRef, useCallback } from "rea
 import Image from "next/image";
 import { logoutAction, updateBookingAction, saveSiteConfigAction, uploadImageAction } from "../actions";
 import type { Booking, BookingStatus } from "@/lib/db";
-import type { SiteConfig, GalleryPair, PricingTier, ServiceCard, HeroPosition, ServicesSection } from "@/lib/site-config";
+import type { SiteConfig, GalleryPair, PricingTier, ServiceCard, HeroPosition, ServicesSection, FaqItem } from "@/lib/site-config";
 
 // ─── Static defaults ──────────────────────────────────────────────────────────
 const DEFAULT_SERVICES = [
@@ -234,7 +234,7 @@ function SectionHead({ letter, title, sub, action }: { letter: string; title: st
 interface Props { bookings: Booking[]; config: SiteConfig; hasBlobToken: boolean; }
 
 export function DashboardClient({ bookings, config: initialConfig, hasBlobToken }: Props) {
-  const [tab, setTab]           = useState<"bookings" | "media" | "pricing">("bookings");
+  const [tab, setTab]           = useState<"bookings" | "media" | "pricing" | "faq">("bookings");
   const [view, setView]         = useState<"calendar" | "list">("calendar");
   const [filter, setFilter]     = useState<"all" | BookingStatus>("all");
   const [calYear, setCalYear]   = useState(new Date().getFullYear());
@@ -436,6 +436,40 @@ export function DashboardClient({ bookings, config: initialConfig, hasBlobToken 
     setEditingFeatureVal("");
   }
 
+  // ── FAQ ──
+  const faqItems: FaqItem[] = cfg.faqs ?? [];
+  const [faqModal, setFaqModal] = useState<{ mode: "add" | "edit"; idx?: number } | null>(null);
+  const [faqForm, setFaqForm]   = useState<FaqItem>({ q: "", a: "" });
+
+  function openAddFaq() {
+    setFaqForm({ q: "", a: "" });
+    setFaqModal({ mode: "add" });
+  }
+  function openEditFaq(item: FaqItem, idx: number) {
+    setFaqForm({ ...item });
+    setFaqModal({ mode: "edit", idx });
+  }
+  function deleteFaq(idx: number) {
+    if (!confirm("Remove this FAQ?")) return;
+    persist({ ...cfg, faqs: faqItems.filter((_, i) => i !== idx) });
+  }
+  function moveFaq(idx: number, dir: -1 | 1) {
+    const arr = [...faqItems];
+    const swap = idx + dir;
+    if (swap < 0 || swap >= arr.length) return;
+    [arr[idx], arr[swap]] = [arr[swap], arr[idx]];
+    persist({ ...cfg, faqs: arr });
+  }
+  function saveFaq() {
+    if (!faqForm.q.trim() || !faqForm.a.trim()) return;
+    const item: FaqItem = { q: faqForm.q.trim(), a: faqForm.a.trim() };
+    const next = faqModal?.mode === "add"
+      ? [...faqItems, item]
+      : faqItems.map((f, i) => i === faqModal!.idx ? item : f);
+    persist({ ...cfg, faqs: next });
+    setFaqModal(null);
+  }
+
   // ── Calendar ──
   const days  = daysInMonth(calYear, calMonth);
   const first = firstDayOfMonth(calYear, calMonth);
@@ -496,6 +530,7 @@ export function DashboardClient({ bookings, config: initialConfig, hasBlobToken 
             { key: "bookings", label: "Bookings",       icon: "📅" },
             { key: "media",    label: "Media",          icon: "🖼" },
             { key: "pricing",  label: "Pricing",        icon: "💰" },
+            { key: "faq",      label: "FAQ",            icon: "❓" },
           ] as const).map(t => (
             <button key={t.key} onClick={() => setTab(t.key)}
               className={`flex items-center gap-2 px-5 py-3.5 text-sm font-bold border-b-2 transition-colors ${
@@ -939,6 +974,57 @@ export function DashboardClient({ bookings, config: initialConfig, hasBlobToken 
             </div>
           </div>
         )}
+
+        {/* ── FAQ ── */}
+        {tab === "faq" && (
+          <div className="space-y-6">
+            <div className="bg-blue-50 border border-blue-200 rounded-2xl px-5 py-4 flex gap-3 items-start">
+              <svg className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8.5" stroke="currentColor" strokeWidth="1.5"/><path d="M10 9v5M10 7v.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
+              <p className="text-sm text-blue-700">Add, edit, reorder or remove FAQ items. Changes go live on the homepage immediately after saving.</p>
+            </div>
+
+            <section className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
+              <SectionHead
+                letter="Q" title="Frequently Asked Questions" sub={`${faqItems.length} items`}
+                action={
+                  <button onClick={openAddFaq}
+                    className="flex items-center gap-1.5 bg-[#c9a24b] hover:bg-[#b8913a] text-[#1a1a1a] text-xs font-bold px-4 py-2 rounded-xl transition-colors">
+                    <svg className="w-3.5 h-3.5" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
+                    Add Question
+                  </button>
+                }
+              />
+              <div className="divide-y divide-gray-50">
+                {faqItems.length === 0
+                  ? <p className="text-center text-gray-400 text-sm py-12">No FAQ items. Click &ldquo;Add Question&rdquo; to add one.</p>
+                  : faqItems.map((item, idx) => (
+                    <div key={idx} className="p-5 hover:bg-gray-50/50 transition-colors">
+                      <div className="flex items-start gap-3">
+                        <span className="w-7 h-7 bg-[#1a1a1a] text-[#c9a24b] rounded-lg flex items-center justify-center text-xs font-black flex-shrink-0 mt-0.5">{idx + 1}</span>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-bold text-[#1a1a1a]">{item.q}</p>
+                          <p className="text-xs text-gray-500 mt-1 line-clamp-2">{item.a}</p>
+                        </div>
+                        <div className="flex items-center gap-1.5 flex-shrink-0">
+                          <button onClick={() => moveFaq(idx, -1)} disabled={idx === 0}
+                            className="w-7 h-7 flex items-center justify-center rounded-lg border border-gray-200 hover:border-gray-400 disabled:opacity-30 transition-colors text-gray-500">
+                            <svg className="w-3.5 h-3.5" viewBox="0 0 16 16" fill="none"><path d="M4 10l4-4 4 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                          </button>
+                          <button onClick={() => moveFaq(idx, 1)} disabled={idx === faqItems.length - 1}
+                            className="w-7 h-7 flex items-center justify-center rounded-lg border border-gray-200 hover:border-gray-400 disabled:opacity-30 transition-colors text-gray-500">
+                            <svg className="w-3.5 h-3.5" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                          </button>
+                          <button onClick={() => openEditFaq(item, idx)} className="text-xs font-bold text-[#c9a24b] bg-[#c9a24b]/10 hover:bg-[#c9a24b]/20 px-3 py-1.5 rounded-lg transition-colors">Edit</button>
+                          <button onClick={() => deleteFaq(idx)} className="text-xs font-bold text-red-500 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg transition-colors">Delete</button>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                }
+              </div>
+            </section>
+          </div>
+        )}
       </main>
 
       {/* ── Booking modal ── */}
@@ -1074,6 +1160,46 @@ export function DashboardClient({ bookings, config: initialConfig, hasBlobToken 
               <button onClick={saveGallery} disabled={!gForm.title || !gForm.before || !gForm.after || isPending}
                 className="flex-1 bg-[#c9a24b] hover:bg-[#b8913a] disabled:opacity-50 text-[#1a1a1a] font-bold rounded-xl py-3 text-sm transition-colors">
                 {gModal.mode === "add" ? "Add Pair" : "Save Changes"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── FAQ modal ── */}
+      {faqModal && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setFaqModal(null)}>
+          <div className="w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden" onClick={e => e.stopPropagation()}>
+            <div className="bg-[#1a1a1a] px-6 py-5 flex items-center justify-between">
+              <p className="text-white font-black">{faqModal.mode === "add" ? "Add FAQ" : "Edit FAQ"}</p>
+              <button onClick={() => setFaqModal(null)} className="text-white/60 hover:text-white"><svg className="w-5 h-5" viewBox="0 0 20 20" fill="none"><path d="M15 5L5 15M5 5l10 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg></button>
+            </div>
+            <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+              <div>
+                <label className="block text-xs font-bold text-gray-600 mb-1.5 uppercase tracking-wide">Question</label>
+                <input
+                  value={faqForm.q}
+                  onChange={e => setFaqForm(f => ({ ...f, q: e.target.value }))}
+                  placeholder="e.g. How quickly can you provide a quote?"
+                  className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#c9a24b] transition-colors"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-gray-600 mb-1.5 uppercase tracking-wide">Answer</label>
+                <textarea
+                  value={faqForm.a}
+                  onChange={e => setFaqForm(f => ({ ...f, a: e.target.value }))}
+                  placeholder="Type the answer here…"
+                  rows={5}
+                  className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#c9a24b] transition-colors resize-none"
+                />
+              </div>
+            </div>
+            <div className="px-6 pb-6 flex gap-3">
+              <button onClick={() => setFaqModal(null)} className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl py-3 text-sm">Cancel</button>
+              <button onClick={saveFaq} disabled={!faqForm.q.trim() || !faqForm.a.trim() || isPending}
+                className="flex-1 bg-[#c9a24b] hover:bg-[#b8913a] disabled:opacity-50 text-[#1a1a1a] font-bold rounded-xl py-3 text-sm transition-colors">
+                {faqModal.mode === "add" ? "Add Question" : "Save Changes"}
               </button>
             </div>
           </div>

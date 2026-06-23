@@ -12,9 +12,8 @@ import { Reviews } from "@/components/Reviews";
 import { ServiceAreas } from "@/components/ServiceAreas";
 import { FAQ } from "@/components/FAQ";
 import { ContactSection } from "@/components/ContactSection";
-import { FAQS } from "@/data/site";
 import { canonicalAlternates, pageOG, pageTwitter } from "@/lib/seo";
-import { getSiteConfig, DEFAULT_PRICING } from "@/lib/site-config";
+import { getSiteConfig, DEFAULT_PRICING, DEFAULT_FAQS } from "@/lib/site-config";
 
 export async function generateMetadata({
   params,
@@ -30,15 +29,7 @@ export async function generateMetadata({
   };
 }
 
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: FAQS.map((f) => ({
-    "@type": "Question",
-    name: f.q,
-    acceptedAnswer: { "@type": "Answer", text: f.a },
-  })),
-};
+// faqSchema is built dynamically after siteConfig loads
 
 export default async function HomePage({
   params,
@@ -52,6 +43,16 @@ export default async function HomePage({
   const serviceCards = siteConfig?.serviceCards;
   const servicesSection = siteConfig?.servicesSection;
   const galleryPairs = siteConfig?.gallery?.length ? siteConfig.gallery : undefined;
+  const faqItems = siteConfig?.faqs?.length ? siteConfig.faqs : DEFAULT_FAQS;
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqItems.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
@@ -65,7 +66,7 @@ export default async function HomePage({
       <ColorInspiration />
       <Reviews />
       <ServiceAreas />
-      <FAQ />
+      <FAQ faqs={faqItems} />
       <ContactSection />
     </>
   );

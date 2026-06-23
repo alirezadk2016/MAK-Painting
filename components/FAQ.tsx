@@ -4,8 +4,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { FAQS } from "@/data/site";
+import type { FaqItem } from "@/lib/site-config";
 
-export function FAQ() {
+interface Props { faqs?: FaqItem[]; }
+
+export function FAQ({ faqs }: Props) {
+  const items = faqs ?? FAQS;
   const [open, setOpen] = useState<number | null>(null);
   const t = useTranslations("FAQ");
 
@@ -42,7 +46,7 @@ export function FAQ() {
           </div>
 
           <div className="space-y-0 divide-y divide-gray-100">
-            {FAQS.map((faq, i) => (
+            {items.map((faq, i) => (
               <div key={i}>
                 <button
                   onClick={() => setOpen(open === i ? null : i)}

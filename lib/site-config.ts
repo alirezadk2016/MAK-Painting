@@ -31,6 +31,11 @@ export interface ServicesSection {
   subtitle?: string;
 }
 
+export interface FaqItem {
+  q: string;
+  a: string;
+}
+
 export interface HeroPosition {
   x: number;   // 0–100, object-position x%
   y: number;   // 0–100, object-position y%
@@ -45,6 +50,7 @@ export interface SiteConfig {
   servicesSection?: ServicesSection; // section heading overrides
   gallery: GalleryPair[];
   pricing: PricingTier[];
+  faqs?: FaqItem[];
 }
 
 // Keep old type alias so existing imports don't break
@@ -96,6 +102,19 @@ export const DEFAULT_PRICING: PricingTier[] = [
       "Certificate of insurance on request",
     ],
   },
+];
+
+export const DEFAULT_FAQS: FaqItem[] = [
+  { q: "How quickly can you provide a quote?",       a: "We typically provide a free on-site quote within 24–48 hours of your enquiry. For commercial or large projects, allow up to 72 hours for a full itemised quote." },
+  { q: "What paint brands do you use?",              a: "We are certified Dulux Accredited painters and also work with Taubmans, Haymes and Wattyl. We always recommend the best product for your specific surface, conditions and budget." },
+  { q: "How long does interior paint take to dry?",  a: "Most premium paints are touch-dry in 2–4 hours and ready for a second coat in 4–6 hours. We recommend waiting 24 hours before placing furniture back. Full curing takes around 4 weeks." },
+  { q: "What happens if it rains during an exterior job?", a: "We monitor the weather closely and won't apply paint in unsuitable conditions. If unexpected rain interrupts a job, we pause, protect the work and return as soon as conditions allow — at no extra cost to you." },
+  { q: "Is surface preparation included in your quote?", a: "Yes, always. Every MAK quote includes full prep: washing, sanding, filling holes and cracks, and priming bare surfaces. We never skip prep — it's what separates a lasting finish from a cheap job." },
+  { q: "What does your 7-year warranty cover?",      a: "Our 7-year workmanship warranty covers peeling, flaking, blistering and any other defect caused by application errors. It does not cover damage from impact, flooding or structural movement. If anything isn't right, we return and fix it free of charge." },
+  { q: "What are your payment terms?",               a: "We require a 20% deposit upon acceptance of the quote to schedule your job. The remaining balance is due upon completion and your satisfaction. We accept EFT, credit card and cash." },
+  { q: "Are you insured and police checked?",        a: "Yes. MAK Painting Group holds a current $20M public liability policy and all team members hold a valid Working With Children Check and police clearance. Certificates are available on request." },
+  { q: "Do you do weekend work?",                    a: "Yes. We offer Saturday work at standard rates for residential projects. Sunday and public holiday work is available for commercial clients at a small surcharge. Just let us know your preference when booking." },
+  { q: "How do you keep the job site clean?",        a: "We use dust sheets, drop cloths and masking to protect all surfaces. At the end of each day we tidy up, and on completion we do a full clean-up including removing all materials, rubbish and touch-up any accidental marks." },
 ];
 
 function hasKV(): boolean {
