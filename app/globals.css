@@ -38,4 +38,8 @@
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
+  /* Flip icon horizontally in RTL layouts */
+  [dir="rtl"] .rtl-flip {
+    transform: scaleX(-1);
+  }
 }

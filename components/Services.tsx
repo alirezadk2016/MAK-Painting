@@ -41,7 +41,7 @@ export function Services() {
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-charcoal/75 via-charcoal/20 to-transparent" />
-                  <div className="absolute bottom-0 left-0 right-0 p-4">
+                  <div className="absolute bottom-0 inset-x-0 p-4">
                     <h3 className="text-white font-black text-xl leading-tight">{s.title}</h3>
                   </div>
                 </div>

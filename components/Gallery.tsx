@@ -48,8 +48,8 @@ function BeforeAfterSlider({ before, after, title, beforeLabel, afterLabel }: { 
         </div>
       </div>
       {/* Labels */}
-      <span className="absolute top-3 left-3 bg-charcoal/70 text-white text-xs font-bold px-2.5 py-1 rounded-full">{beforeLabel}</span>
-      <span className="absolute top-3 right-3 bg-blue-brand/90 text-ink text-xs font-bold px-2.5 py-1 rounded-full">{afterLabel}</span>
+      <span className="absolute top-3 start-3 bg-charcoal/70 text-white text-xs font-bold px-2.5 py-1 rounded-full">{beforeLabel}</span>
+      <span className="absolute top-3 end-3 bg-blue-brand/90 text-ink text-xs font-bold px-2.5 py-1 rounded-full">{afterLabel}</span>
     </div>
   );
 }

@@ -165,7 +165,9 @@
     "submit": "Send my free quote request",
     "respondNote": "We respond within one business day. No obligation — ever.",
     "successTitle": "Enquiry received!",
-    "successBody": "We'll be in touch within one business day to arrange your free on-site quote."
+    "successBody": "We'll be in touch within one business day to arrange your free on-site quote.",
+    "errorGeneric": "Something went wrong. Please call us on 0404 000 772.",
+    "errorNetwork": "Network error. Please call us on 0404 000 772."
   },
   "Footer": {
     "tagline": "{types} painting specialists based in {suburb}, serving all of Melbourne.",
@@ -256,5 +258,19 @@
     "suburbHint": "e.g. Ferntree Gully, Ringwood, Glen Waverley…",
     "other": "Other",
     "submitError": "Something went wrong. Please call us on 0404 000 772."
+  },
+  "CookieBanner": {
+    "text": "We use cookies to improve your experience and analyse site traffic. See our",
+    "privacyLink": "Privacy Policy",
+    "accept": "Got it"
+  },
+  "ServiceSlugPage": {
+    "back": "Back to services",
+    "included": "What's included",
+    "ready": "Ready to get started?",
+    "readyBody": "Get a free, no-obligation on-site quote. We respond within one business day.",
+    "quoteFor": "Get a free quote for {service}",
+    "call": "Call us: 0404 000 772",
+    "warranty": "7-year workmanship warranty on all work"
   }
 }

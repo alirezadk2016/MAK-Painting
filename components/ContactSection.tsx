@@ -34,10 +34,10 @@ export function ContactSection() {
       if (res.ok) {
         setSent(true);
       } else {
-        setError("Something went wrong. Please call us directly.");
+        setError(t("errorGeneric"));
       }
     } catch {
-      setError("Network error. Please call us directly.");
+      setError(t("errorNetwork"));
     } finally {
       setLoading(false);
     }
