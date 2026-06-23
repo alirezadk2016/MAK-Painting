@@ -59,7 +59,7 @@ export function HowItWorks() {
 
         <div className="text-center">
           <button
-            onClick={open}
+            onClick={() => open()}
             className="bg-terra hover:bg-terra-dark text-ink font-bold rounded-full px-8 py-4 text-base transition-all hover:shadow-lg hover:-translate-y-px"
           >
             {t("cta")}

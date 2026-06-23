@@ -20,7 +20,7 @@ export function MobileStickyBar() {
           {t("callUs")}
         </a>
         <button
-          onClick={open}
+          onClick={() => open()}
           className="flex-[2] bg-terra text-ink font-bold rounded-xl py-3 text-sm shadow-md"
         >
           {tc("getQuote")}

@@ -4,23 +4,38 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { EXTRAS, SUBURBS } from "@/data/site";
 
-// Melbourne postcode range + known suburbs
-const MELBOURNE_POSTCODES = /^3[0-9]{3}$/;
-const SUBURB_SET = new Set(SUBURBS.map((s) => s.toLowerCase()));
+// Only accept suburbs in the service list or their known postcodes
+const SUBURB_SET = new Set(SUBURBS.map((s: string) => s.toLowerCase()));
+
+// Known postcodes for the service area suburbs
+const SERVICE_POSTCODES = new Set([
+  "3156","3180","3152","3178","3179","3155","3153","3154",
+  "3134","3135","3136","3137","3138","3140","3150","3149",
+  "3133","3132","3131","3128","3108","3109","3124","3122",
+  "3101","3103","3104","3130","3151","3106","3107",
+  "3175","3806","3805","3804","3802","3803","3168","3166",
+  "3127","3126","3123","3125","3129","3102","3105",
+  "3000","3001","3002","3003","3004","3005","3006","3008",
+]);
 
 function isInServiceArea(input: string): boolean {
   const v = input.trim();
   if (!v) return false;
-  if (MELBOURNE_POSTCODES.test(v)) return true;
-  // match any word in the input against the suburb list
-  const words = v.toLowerCase();
+  if (/^\d{4}$/.test(v)) return SERVICE_POSTCODES.has(v);
+  const lower = v.toLowerCase();
   for (const suburb of SUBURB_SET) {
-    if (words.includes(suburb)) return true;
+    if (lower.includes(suburb)) return true;
   }
   return false;
 }
 
-export function QuoteWizard({ onClose }: { onClose: () => void }) {
+export function QuoteWizard({
+  onClose,
+  initialPostcode = "",
+}: {
+  onClose: () => void;
+  initialPostcode?: string;
+}) {
   const t = useTranslations("QuoteWizard");
 
   const STEPS_WIZARD = [
@@ -28,32 +43,52 @@ export function QuoteWizard({ onClose }: { onClose: () => void }) {
     t("step4"), t("step5"), t("step6"),
   ];
   const PROPERTY_TYPES = [t("prop0"), t("prop1"), t("prop2"), t("prop3"), t("other")];
-  const SCOPE_OPTIONS = [t("scope0"), t("scope1"), t("scope2"), t("other")];
+  const SCOPE_OPTIONS  = [t("scope0"), t("scope1"), t("scope2"), t("other")];
 
-  const [step, setStep] = useState(0);
+  const [step, setStep]           = useState(0);
   const [suburbError, setSuburbError] = useState("");
+  const [stepError, setStepError]  = useState("");
   const [data, setData] = useState({
-    postcode: "", propertyType: "", scope: "",
+    postcode: initialPostcode, propertyType: "", scope: "",
     rooms: "", sqm: "", extras: [] as string[],
     date: "", name: "", phone: "", email: "",
   });
-  const [sent, setSent] = useState(false);
+  const [sent, setSent]           = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
 
   function tryNext() {
+    setStepError("");
+    setSuburbError("");
+
     if (step === 0) {
+      if (!data.postcode.trim()) {
+        setSuburbError(t("suburbHint"));
+        return;
+      }
       if (!isInServiceArea(data.postcode)) {
         setSuburbError(t("suburbError"));
         return;
       }
-      setSuburbError("");
+    }
+    if (step === 3 && !data.rooms.trim()) {
+      setStepError("Please enter the number of rooms.");
+      return;
+    }
+    if (step === 5 && !data.date) {
+      setStepError("Please select a preferred date.");
+      return;
+    }
+    if (step === 6) {
+      if (!data.name.trim())  { setStepError("Please enter your full name.");  return; }
+      if (!data.phone.trim()) { setStepError("Please enter your phone number."); return; }
+      if (!data.email.trim()) { setStepError("Please enter your email address."); return; }
     }
     setStep((s) => Math.min(s + 1, STEPS_WIZARD.length - 1));
   }
 
-  const back = () => { setSuburbError(""); setStep((s) => Math.max(s - 1, 0)); };
-  const update = (k: string, v: string) => setData((d) => ({ ...d, [k]: v }));
+  const back = () => { setSuburbError(""); setStepError(""); setStep((s) => Math.max(s - 1, 0)); };
+  const update = (k: string, v: string) => { setData((d) => ({ ...d, [k]: v })); setStepError(""); };
   const toggleExtra = (e: string) =>
     setData((d) => ({
       ...d,
@@ -128,6 +163,7 @@ export function QuoteWizard({ onClose }: { onClose: () => void }) {
                       value={data.postcode}
                       onChange={(e) => { update("postcode", e.target.value); setSuburbError(""); }}
                       onKeyDown={(e) => e.key === "Enter" && tryNext()}
+                      autoFocus
                       className={`w-full bg-gray-50 border rounded-xl px-4 py-3 text-sm font-medium focus:outline-none transition-colors ${suburbError ? "border-red-400 focus:border-red-400" : "border-gray-200 focus:border-gold"}`}
                     />
                     <p className="text-xs text-gray-400">{t("suburbHint")}</p>
@@ -148,7 +184,7 @@ export function QuoteWizard({ onClose }: { onClose: () => void }) {
                     {PROPERTY_TYPES.map((pt) => (
                       <button
                         key={pt}
-                        onClick={() => { update("propertyType", pt); tryNext(); }}
+                        onClick={() => { update("propertyType", pt); setStep(s => s + 1); }}
                         className={`w-full flex items-center gap-3 rounded-xl border-2 px-4 py-3.5 text-sm font-bold transition-all ${data.propertyType === pt ? "border-gold bg-gold-soft text-gold-deep" : "border-gray-200 text-charcoal hover:border-gold"}`}
                       >
                         <span className={`w-5 h-5 rounded-full border-2 flex-shrink-0 ${data.propertyType === pt ? "border-gold bg-gold" : "border-gray-300"}`} />
@@ -163,7 +199,7 @@ export function QuoteWizard({ onClose }: { onClose: () => void }) {
                     {SCOPE_OPTIONS.map((s) => (
                       <button
                         key={s}
-                        onClick={() => { update("scope", s); tryNext(); }}
+                        onClick={() => { update("scope", s); setStep(st => st + 1); }}
                         className={`w-full flex items-center gap-3 rounded-xl border-2 px-4 py-3.5 text-sm font-bold transition-all ${data.scope === s ? "border-gold bg-gold-soft text-gold-deep" : "border-gray-200 text-charcoal hover:border-gold"}`}
                       >
                         <span className={`w-5 h-5 rounded-full border-2 flex-shrink-0 ${data.scope === s ? "border-gold bg-gold" : "border-gray-300"}`} />
@@ -180,7 +216,8 @@ export function QuoteWizard({ onClose }: { onClose: () => void }) {
                       placeholder={t("ph3rooms")}
                       value={data.rooms}
                       onChange={(e) => update("rooms", e.target.value)}
-                      className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:border-gold"
+                      min="1"
+                      className={`w-full bg-gray-50 border rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:border-gold ${stepError && !data.rooms ? "border-red-400" : "border-gray-200"}`}
                     />
                     <input
                       type="number"
@@ -189,13 +226,16 @@ export function QuoteWizard({ onClose }: { onClose: () => void }) {
                       onChange={(e) => update("sqm", e.target.value)}
                       className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:border-gold"
                     />
+                    {stepError && (
+                      <p className="text-sm text-red-500">{stepError}</p>
+                    )}
                   </div>
                 )}
                 {step === 4 && (
                   <div className="space-y-3">
                     <p className="text-gray-500 text-sm mb-2">{t("q4")}</p>
                     <div className="grid grid-cols-2 gap-2 max-h-56 overflow-y-auto pr-1">
-                      {EXTRAS.map((ex) => (
+                      {EXTRAS.map((ex: string) => (
                         <button
                           key={ex}
                           onClick={() => toggleExtra(ex)}
@@ -215,9 +255,10 @@ export function QuoteWizard({ onClose }: { onClose: () => void }) {
                       value={data.date}
                       onChange={(e) => update("date", e.target.value)}
                       min={new Date().toISOString().split("T")[0]}
-                      className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:border-gold"
+                      className={`w-full bg-gray-50 border rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:border-gold ${stepError ? "border-red-400" : "border-gray-200"}`}
                     />
                     <p className="text-xs text-gray-400">{t("note5")}</p>
+                    {stepError && <p className="text-sm text-red-500">{stepError}</p>}
                   </div>
                 )}
                 {step === 6 && (
@@ -228,14 +269,14 @@ export function QuoteWizard({ onClose }: { onClose: () => void }) {
                       placeholder={t("phName")}
                       value={data.name}
                       onChange={(e) => update("name", e.target.value)}
-                      className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:border-gold"
+                      className={`w-full bg-gray-50 border rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:border-gold ${stepError && !data.name.trim() ? "border-red-400" : "border-gray-200"}`}
                     />
                     <input
                       type="tel"
                       placeholder={t("phPhone")}
                       value={data.phone}
                       onChange={(e) => update("phone", e.target.value)}
-                      className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:border-gold"
+                      className={`w-full bg-gray-50 border rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:border-gold ${stepError && !data.phone.trim() ? "border-red-400" : "border-gray-200"}`}
                       dir="ltr"
                     />
                     <input
@@ -243,9 +284,10 @@ export function QuoteWizard({ onClose }: { onClose: () => void }) {
                       placeholder={t("phEmail")}
                       value={data.email}
                       onChange={(e) => update("email", e.target.value)}
-                      className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:border-gold"
+                      className={`w-full bg-gray-50 border rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:border-gold ${stepError && !data.email.trim() ? "border-red-400" : "border-gray-200"}`}
                       dir="ltr"
                     />
+                    {stepError && <p className="text-sm text-red-500">{stepError}</p>}
                   </div>
                 )}
               </motion.div>
@@ -256,56 +298,60 @@ export function QuoteWizard({ onClose }: { onClose: () => void }) {
         {/* Nav buttons */}
         {!sent && (
           <div className="px-6 pb-6 space-y-3">
-          {submitError && <p className="text-sm text-red-500 text-center">{submitError}</p>}
-          <div className="flex items-center justify-between gap-3">
-            <button
-              onClick={back}
-              disabled={step === 0}
-              className="text-sm font-bold text-gray-400 hover:text-charcoal disabled:opacity-0 transition-colors px-2"
-            >
-              {t("back")}
-            </button>
-            <div className="flex gap-1.5">
-              {STEPS_WIZARD.map((_, i) => (
-                <div key={i} className={`h-1.5 rounded-full transition-all ${i === step ? "w-6 bg-gold" : i < step ? "w-3 bg-gold/40" : "w-3 bg-gray-200"}`} />
-              ))}
-            </div>
-            {step < STEPS_WIZARD.length - 1 ? (
+            {submitError && <p className="text-sm text-red-500 text-center">{submitError}</p>}
+            <div className="flex items-center justify-between gap-3">
               <button
-                onClick={tryNext}
-                className="bg-gold text-ink font-bold rounded-xl px-5 py-2.5 text-sm hover:bg-gold-dark transition-colors"
+                onClick={back}
+                disabled={step === 0}
+                className="text-sm font-bold text-gray-400 hover:text-charcoal disabled:opacity-0 transition-colors px-2"
               >
-                {t("next")}
+                {t("back")}
               </button>
-            ) : (
-              <button
-                onClick={async () => {
-                  setSubmitting(true);
-                  setSubmitError("");
-                  try {
-                    const res = await fetch("/api/contact", {
-                      method: "POST",
-                      headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify(data),
-                    });
-                    if (res.ok) {
-                      setSent(true);
-                    } else {
-                      setSubmitError(t("submitError"));
+              <div className="flex gap-1.5">
+                {STEPS_WIZARD.map((_, i) => (
+                  <div key={i} className={`h-1.5 rounded-full transition-all ${i === step ? "w-6 bg-gold" : i < step ? "w-3 bg-gold/40" : "w-3 bg-gray-200"}`} />
+                ))}
+              </div>
+              {step < STEPS_WIZARD.length - 1 ? (
+                <button
+                  onClick={tryNext}
+                  className="bg-gold text-ink font-bold rounded-xl px-5 py-2.5 text-sm hover:bg-gold-dark transition-colors"
+                >
+                  {t("next")}
+                </button>
+              ) : (
+                <button
+                  onClick={async () => {
+                    if (!data.name.trim() || !data.phone.trim() || !data.email.trim()) {
+                      setStepError(!data.name.trim() ? "Please enter your full name." : !data.phone.trim() ? "Please enter your phone number." : "Please enter your email address.");
+                      return;
                     }
-                  } catch {
-                    setSubmitError(t("submitError"));
-                  } finally {
-                    setSubmitting(false);
-                  }
-                }}
-                disabled={submitting}
-                className="bg-terra disabled:opacity-70 text-ink font-bold rounded-xl px-5 py-2.5 text-sm hover:bg-terra-dark transition-colors"
-              >
-                {submitting ? "…" : t("submit")}
-              </button>
-            )}
-          </div>
+                    setSubmitting(true);
+                    setSubmitError("");
+                    try {
+                      const res = await fetch("/api/contact", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(data),
+                      });
+                      if (res.ok) {
+                        setSent(true);
+                      } else {
+                        setSubmitError(t("submitError"));
+                      }
+                    } catch {
+                      setSubmitError(t("submitError"));
+                    } finally {
+                      setSubmitting(false);
+                    }
+                  }}
+                  disabled={submitting}
+                  className="bg-terra disabled:opacity-70 text-ink font-bold rounded-xl px-5 py-2.5 text-sm hover:bg-terra-dark transition-colors"
+                >
+                  {submitting ? "…" : t("submit")}
+                </button>
+              )}
+            </div>
           </div>
         )}
       </motion.div>

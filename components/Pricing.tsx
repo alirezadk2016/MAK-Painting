@@ -77,7 +77,7 @@ export function Pricing({ tiers = DEFAULT_PRICING }: Props) {
               </ul>
 
               <button
-                onClick={open}
+                onClick={() => open()}
                 className={`w-full rounded-xl py-3 text-sm font-bold transition-all ${
                   tier.popular
                     ? "bg-gold text-ink hover:bg-gold-light"

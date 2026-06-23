@@ -66,7 +66,7 @@ export function Hero() {
                 />
               </div>
               <button
-                onClick={open}
+                onClick={() => open(postcode.trim())}
                 className="bg-terra hover:bg-terra-dark text-ink text-sm font-bold rounded-xl px-5 py-2.5 transition-all hover:shadow-md whitespace-nowrap"
               >
                 {t("getMyQuote")}

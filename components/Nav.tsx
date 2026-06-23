@@ -107,7 +107,7 @@ export function Nav() {
               0404 000 772
             </a>
             <button
-              onClick={open}
+              onClick={() => open()}
               className="bg-terra hover:bg-terra-dark text-ink text-sm font-bold rounded-full px-5 py-2 transition-all hover:shadow-md hover:-translate-y-px active:translate-y-0 whitespace-nowrap"
             >
               {t("getQuote")}
