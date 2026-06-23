@@ -7,7 +7,7 @@ import { STATS } from "@/data/site";
 const MAPS_URL = "https://maps.app.goo.gl/eyYsR4ViUKb8RQrF9";
 
 function Counter({ target, suffix }: { target: number; suffix: string }) {
-  const [val, setVal] = useState(0);
+  const [val, setVal] = useState(target);
   const ref = useRef<HTMLSpanElement>(null);
   const started = useRef(false);
 
@@ -17,8 +17,9 @@ function Counter({ target, suffix }: { target: number; suffix: string }) {
     const io = new IntersectionObserver(([e]) => {
       if (e.isIntersecting && !started.current) {
         started.current = true;
+        setVal(0);
         const start = performance.now();
-        const dur = 1600;
+        const dur = 1400;
         const step = (now: number) => {
           const t = Math.min((now - start) / dur, 1);
           const ease = 1 - Math.pow(1 - t, 3);
@@ -29,7 +30,7 @@ function Counter({ target, suffix }: { target: number; suffix: string }) {
         requestAnimationFrame(step);
         io.disconnect();
       }
-    }, { threshold: 0.5 });
+    }, { threshold: 0.1 });
     io.observe(el);
     return () => io.disconnect();
   }, [target]);
