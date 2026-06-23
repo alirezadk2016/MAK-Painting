@@ -54,7 +54,7 @@ function BeforeAfterSlider({ before, after, title, beforeLabel, afterLabel }: { 
   );
 }
 
-export function Gallery() {
+export function Gallery({ hideHeading = false }: { hideHeading?: boolean }) {
   const [lightbox, setLightbox] = useState<(typeof GALLERY)[0] | null>(null);
   const t = useTranslations("Gallery");
   const beforeLabel = t("before");
@@ -63,13 +63,13 @@ export function Gallery() {
   return (
     <section id="gallery" className="py-20 bg-canvas">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <p className="text-xs font-bold uppercase tracking-widest text-terra mb-2">{t("eyebrow")}</p>
-          <h2 className="text-4xl lg:text-5xl font-black text-charcoal mb-4">{t("title")}</h2>
-          <p className="text-gray-500 text-lg max-w-xl mx-auto">
-            {t("subtitle")}
-          </p>
-        </div>
+        {!hideHeading && (
+          <div className="text-center mb-12">
+            <p className="text-xs font-bold uppercase tracking-widest text-terra mb-2">{t("eyebrow")}</p>
+            <h2 className="text-4xl lg:text-5xl font-black text-charcoal mb-4">{t("title")}</h2>
+            <p className="text-gray-500 text-lg max-w-xl mx-auto">{t("subtitle")}</p>
+          </div>
+        )}
 
         <div className="columns-1 sm:columns-2 lg:columns-3 gap-5 space-y-5">
           {GALLERY.map((item, i) => (

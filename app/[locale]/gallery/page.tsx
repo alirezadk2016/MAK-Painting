@@ -30,7 +30,7 @@ export default async function GalleryPage({
   return (
     <>
       <PageHeader eyebrow={t("eyebrow")} title={t("title")} subtitle={t("subtitle")} />
-      <Gallery />
+      <Gallery hideHeading />
       <ColorInspiration />
       <Reviews />
     </>

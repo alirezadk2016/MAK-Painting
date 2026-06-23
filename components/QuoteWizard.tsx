@@ -214,7 +214,7 @@ export function QuoteWizard({ onClose }: { onClose: () => void }) {
 
         {/* Nav buttons */}
         {!sent && (
-          <div className="px-6 pb-6 flex items-center justify-between gap-3">
+          <div className="px-6 pb-6 flex items-center justify-between gap-3" dir="ltr">
             <button
               onClick={back}
               disabled={step === 0}

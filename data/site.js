@@ -45,7 +45,7 @@ export const SERVICES = [
     id: "roof",
     title: "Roof Painting",
     slug: "roof",
-    image: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=85",
+    image: "/exterior-render.jpg",
     short: "Restore and protect your roof with specialist coatings.",
     description: "High-pressure cleaning, moss and lichen treatment, crack repair and specialist roof-grade coatings. Extends roof life and dramatically improves curb appeal.",
     priceFrom: "from $25/m²",

@@ -1,17 +1,46 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { BRAND, SERVICES } from "@/data/site";
 
 export function ContactSection() {
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [fileNames, setFileNames] = useState<string[]>([]);
+  const fileRef = useRef<HTMLInputElement>(null);
   const t = useTranslations("Contact");
 
-  function handleSubmit(e: React.FormEvent) {
+  const [form, setForm] = useState({
+    firstName: "", lastName: "", email: "", phone: "",
+    suburb: "", service: "", message: "",
+  });
+
+  function set(k: keyof typeof form) {
+    return (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
+      setForm((f) => ({ ...f, [k]: e.target.value }));
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => { setLoading(false); setSent(true); }, 1200);
+    setError("");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      if (res.ok) {
+        setSent(true);
+      } else {
+        setError("Something went wrong. Please call us directly.");
+      }
+    } catch {
+      setError("Network error. Please call us directly.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -31,7 +60,7 @@ export function ContactSection() {
 
             <div className="space-y-5">
               {[
-                { icon: "phone", label: t("phone"), val: BRAND.phone, href: `tel:${BRAND.phone.replace(/\s/g,"")}`, ltr: true },
+                { icon: "phone", label: t("phone"), val: BRAND.phone, href: `tel:${BRAND.phone.replace(/\s/g, "")}`, ltr: true },
                 { icon: "whatsapp", label: t("whatsapp"), val: t("whatsappCta"), href: `https://wa.me/${BRAND.whatsapp}`, ltr: false },
                 { icon: "email", label: t("email"), val: BRAND.email, href: `mailto:${BRAND.email}`, ltr: true },
                 { icon: "pin", label: t("location"), val: BRAND.address, href: BRAND.googleMapsUrl, ltr: false },
@@ -53,11 +82,7 @@ export function ContactSection() {
                   </div>
                   <div>
                     <p className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-0.5">{item.label}</p>
-                    {item.href ? (
-                      <a href={item.href} dir={item.ltr ? "ltr" : undefined} className="font-semibold text-charcoal hover:text-gold-deep transition-colors inline-block">{item.val}</a>
-                    ) : (
-                      <p className="font-semibold text-charcoal">{item.val}</p>
-                    )}
+                    <a href={item.href} dir={item.ltr ? "ltr" : undefined} className="font-semibold text-charcoal hover:text-gold-deep transition-colors inline-block">{item.val}</a>
                   </div>
                 </div>
               ))}
@@ -87,14 +112,14 @@ export function ContactSection() {
                 <h3 className="text-xl font-black text-charcoal mb-6">{t("formTitle")}</h3>
 
                 <div className="grid sm:grid-cols-2 gap-4">
-                  <Field label={t("firstName")} id="fname" placeholder="John" required />
-                  <Field label={t("lastName")} id="lname" placeholder="Smith" required />
+                  <Field label={t("firstName")} id="fname" placeholder="John" value={form.firstName} onChange={set("firstName")} required />
+                  <Field label={t("lastName")} id="lname" placeholder="Smith" value={form.lastName} onChange={set("lastName")} required />
                 </div>
                 <div className="grid sm:grid-cols-2 gap-4">
-                  <Field label={t("emailLabel")} id="email" type="email" placeholder="john@email.com" required />
-                  <Field label={t("phoneLabel")} id="phone" type="tel" placeholder="04xx xxx xxx" required />
+                  <Field label={t("emailLabel")} id="email" type="email" placeholder="john@email.com" value={form.email} onChange={set("email")} required />
+                  <Field label={t("phoneLabel")} id="phone" type="tel" placeholder="04xx xxx xxx" value={form.phone} onChange={set("phone")} required />
                 </div>
-                <Field label={t("suburb")} id="suburb" placeholder="e.g. Brighton 3186" required />
+                <Field label={t("suburb")} id="suburb" placeholder="e.g. Brighton 3186" value={form.suburb} onChange={set("suburb")} required />
 
                 <div className="flex flex-col gap-1">
                   <label className="text-xs font-bold uppercase tracking-wide text-gray-500" htmlFor="service">
@@ -102,7 +127,9 @@ export function ContactSection() {
                   </label>
                   <select
                     id="service"
-                    className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium text-charcoal focus:outline-none focus:border-blue-brand transition-colors"
+                    value={form.service}
+                    onChange={set("service")}
+                    className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium text-charcoal focus:outline-none focus:border-gold transition-colors"
                   >
                     <option value="">{t("selectService")}</option>
                     {SERVICES.map((s) => <option key={s.id}>{s.title}</option>)}
@@ -117,7 +144,9 @@ export function ContactSection() {
                     id="msg"
                     rows={4}
                     placeholder={t("projectPlaceholder")}
-                    className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium text-charcoal focus:outline-none focus:border-blue-brand transition-colors resize-none"
+                    value={form.message}
+                    onChange={set("message")}
+                    className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium text-charcoal focus:outline-none focus:border-gold transition-colors resize-none"
                   />
                 </div>
 
@@ -125,15 +154,36 @@ export function ContactSection() {
                   <label className="text-xs font-bold uppercase tracking-wide text-gray-500">
                     {t("uploadPhotos")}
                   </label>
-                  <label className="flex flex-col items-center justify-center gap-2 bg-gray-50 border-2 border-dashed border-gray-200 rounded-xl p-6 cursor-pointer hover:border-blue-brand hover:bg-blue-muted/50 transition-all">
+                  <label
+                    htmlFor="file-upload"
+                    className="flex flex-col items-center justify-center gap-2 bg-gray-50 border-2 border-dashed border-gray-200 rounded-xl p-6 cursor-pointer hover:border-gold hover:bg-blue-muted/50 transition-all"
+                  >
                     <svg className="w-6 h-6 text-gray-400" viewBox="0 0 24 24" fill="none">
                       <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
-                    <span className="text-sm text-gray-400 font-medium">{t("uploadCta")}</span>
-                    <span className="text-xs text-gray-300">{t("uploadHint")}</span>
-                    <input type="file" accept="image/*" multiple className="hidden" />
+                    {fileNames.length > 0 ? (
+                      <span className="text-sm text-gold-deep font-semibold">{fileNames.length} file{fileNames.length > 1 ? "s" : ""} selected</span>
+                    ) : (
+                      <>
+                        <span className="text-sm text-gray-400 font-medium">{t("uploadCta")}</span>
+                        <span className="text-xs text-gray-300">{t("uploadHint")}</span>
+                      </>
+                    )}
+                    <input
+                      id="file-upload"
+                      ref={fileRef}
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      className="hidden"
+                      onChange={(e) => setFileNames(Array.from(e.target.files ?? []).map((f) => f.name))}
+                    />
                   </label>
                 </div>
+
+                {error && (
+                  <p className="text-sm text-red-500 text-center">{error}</p>
+                )}
 
                 <button
                   type="submit"
@@ -155,9 +205,10 @@ export function ContactSection() {
 }
 
 function Field({
-  label, id, type = "text", placeholder, required,
+  label, id, type = "text", placeholder, value, onChange, required,
 }: {
-  label: string; id: string; type?: string; placeholder: string; required?: boolean;
+  label: string; id: string; type?: string; placeholder: string;
+  value: string; onChange: React.ChangeEventHandler<HTMLInputElement>; required?: boolean;
 }) {
   return (
     <div className="flex flex-col gap-1">
@@ -168,8 +219,11 @@ function Field({
         id={id}
         type={type}
         placeholder={placeholder}
+        value={value}
+        onChange={onChange}
         required={required}
-        className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium text-charcoal focus:outline-none focus:border-blue-brand transition-colors"
+        dir={type === "email" || type === "tel" ? "ltr" : undefined}
+        className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium text-charcoal focus:outline-none focus:border-gold transition-colors"
       />
     </div>
   );
