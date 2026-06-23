@@ -26,12 +26,13 @@ export default async function AdminDashboard() {
   const hasBlobToken = !!process.env.BLOB_READ_WRITE_TOKEN;
 
   const config: SiteConfig = {
-    hero:         saved?.hero         ?? "/1.png",
-    heroPosition: saved?.heroPosition,
-    services:     saved?.services     ?? {},
-    serviceCards: saved?.serviceCards,
-    gallery:      saved?.gallery?.length  ? saved.gallery  : DEFAULT_GALLERY,
-    pricing:      saved?.pricing?.length  ? saved.pricing  : DEFAULT_PRICING,
+    hero:            saved?.hero            ?? "/1.png",
+    heroPosition:    saved?.heroPosition,
+    services:        saved?.services        ?? {},
+    serviceCards:    saved?.serviceCards,
+    servicesSection: saved?.servicesSection,
+    gallery:         saved?.gallery?.length  ? saved.gallery  : DEFAULT_GALLERY,
+    pricing:         saved?.pricing?.length  ? saved.pricing  : DEFAULT_PRICING,
   };
 
   return <DashboardClient bookings={bookings} config={config} hasBlobToken={hasBlobToken} />;

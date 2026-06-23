@@ -241,6 +241,7 @@ export function DashboardClient({ bookings, config: initialConfig, hasBlobToken 
   const [calMonth, setCalMonth] = useState(new Date().getMonth());
   const [selected, setSelected] = useState<Booking | null>(null);
   const [saved, setSaved]       = useState(false);
+  const [actionError, setActionError] = useState("");
   const [isPending, start]      = useTransition();
 
   // Optimistic booking statuses
@@ -328,19 +329,29 @@ export function DashboardClient({ bookings, config: initialConfig, hasBlobToken 
   function handleSave() {
     const snapshot = cfg;
     start(async () => {
-      await saveSiteConfigAction(snapshot);
-      setDirty(false);
-      setSaved(true);
-      setTimeout(() => setSaved(false), 2500);
+      try {
+        await saveSiteConfigAction(snapshot);
+        setDirty(false);
+        setSaved(true);
+        setActionError("");
+        setTimeout(() => setSaved(false), 2500);
+      } catch (e) {
+        setActionError(e instanceof Error ? e.message : "Failed to save. Please try again.");
+      }
     });
   }
 
   // ── Booking ──
   function changeStatus(id: string, status: BookingStatus) {
     start(async () => {
-      updateOptimistic({ id, status });
-      const updated = await updateBookingAction(id, status);
-      if (selected?.id === id) setSelected(updated);
+      try {
+        updateOptimistic({ id, status });
+        const updated = await updateBookingAction(id, status);
+        if (selected?.id === id) setSelected(updated);
+        setActionError("");
+      } catch (e) {
+        setActionError(e instanceof Error ? e.message : "Action failed. Please try again.");
+      }
     });
   }
 
@@ -495,6 +506,19 @@ export function DashboardClient({ bookings, config: initialConfig, hasBlobToken 
           ))}
         </div>
       </div>
+
+      {/* Action error banner */}
+      {actionError && (
+        <div className="bg-red-50 border-b border-red-200 px-6 py-3 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5">
+            <svg className="w-4 h-4 text-red-500 flex-shrink-0" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.4"/><path d="M8 5v3.5M8 11h.01" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/></svg>
+            <p className="text-xs text-red-700 font-medium">{actionError}</p>
+          </div>
+          <button onClick={() => setActionError("")} className="text-red-400 hover:text-red-600 flex-shrink-0">
+            <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none"><path d="M12 4L4 12M4 4l8 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>
+          </button>
+        </div>
+      )}
 
       {/* Blob warning */}
       {!hasBlobToken && tab === "media" && (
