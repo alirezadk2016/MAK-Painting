@@ -33,7 +33,7 @@ export const SERVICES = [
     id: "exterior",
     title: "Exterior Painting",
     slug: "exterior",
-    image: "/exterior-terrace.jpg",
+    image: "/pool-area.jpg",
     short: "Weather-resistant coatings that protect and refresh your home.",
     description: "Full exterior painting including prep, priming, and weather-resistant topcoats engineered for Melbourne's climate. We scrape, sand, fill and prime before every coat.",
     priceFrom: "from $22/m²",
