@@ -71,7 +71,7 @@ export function Pricing({ tiers = DEFAULT_PRICING }: Props) {
                       <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.2"/>
                       <path d="M5 8l2 2 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
-                    <span className={tier.popular ? "text-gray-300" : "text-gray-600"}>{f}</span>
+                    <span dir="ltr" className={tier.popular ? "text-gray-300" : "text-gray-600"}>{f}</span>
                   </li>
                 ))}
               </ul>
@@ -84,7 +84,7 @@ export function Pricing({ tiers = DEFAULT_PRICING }: Props) {
                     : "bg-blue-brand text-ink hover:bg-blue-dark"
                 }`}
               >
-                Get a Free Quote
+                {t("getQuote")}
               </button>
             </motion.div>
           ))}

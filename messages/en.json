@@ -73,14 +73,23 @@
     "eyebrow": "Simple process",
     "title": "Getting started is easy as 1 2 3…",
     "subtitle": "Who knew arranging a premium paint job could be this simple?",
-    "cta": "Get my free quote — takes 60 seconds"
+    "cta": "Get my free quote — takes 60 seconds",
+    "step0Title": "Enter your postcode",
+    "step0Desc": "Tell us your suburb and what you'd like painted — takes 60 seconds.",
+    "step1Title": "Free on-site quote",
+    "step1Desc": "We visit your property, assess the work and give you a transparent, itemised quote — completely free.",
+    "step2Title": "We paint, you relax",
+    "step2Desc": "Our expert team arrives on time, preps every surface and delivers a flawless, tidy result.",
+    "step3Title": "7-year warranty",
+    "step3Desc": "Every job is backed by our industry-leading 7-year workmanship guarantee. Any issues? We fix it free."
   },
   "Pricing": {
     "eyebrow": "Transparent pricing",
     "title": "Packages & pricing",
     "subtitle": "Indicative pricing to help you plan. Every quote is free, itemised and obligation-free.",
     "popular": "★ Most popular",
-    "footnote": "All prices are indicative. Final price depends on property size, surface condition and paint selected. Free on-site assessment before any commitment."
+    "footnote": "All prices are indicative. Final price depends on property size, surface condition and paint selected. Free on-site assessment before any commitment.",
+    "getQuote": "Get a Free Quote"
   },
   "Extras": {
     "eyebrow": "Customise your job",
@@ -272,5 +281,31 @@
     "quoteFor": "Get a free quote for {service}",
     "call": "Call us: 0404 000 772",
     "warranty": "7-year workmanship warranty on all work"
+  },
+  "ServicesData": {
+    "interior": {
+      "title": "Interior Painting",
+      "short": "Immaculate walls, ceilings & trims. Zero mess, zero hassle."
+    },
+    "exterior": {
+      "title": "Exterior Painting",
+      "short": "Weather-resistant coatings that protect and refresh your home."
+    },
+    "roof": {
+      "title": "Roof Painting",
+      "short": "Restore and protect your roof with specialist coatings."
+    },
+    "commercial": {
+      "title": "Commercial & Strata",
+      "short": "Minimal disruption, maximum results for offices & strata."
+    },
+    "specialFinishes": {
+      "title": "Special Finishes",
+      "short": "Venetian plaster, limewash, textured & feature walls."
+    },
+    "repaints": {
+      "title": "Repaints & Touch-ups",
+      "short": "Quick, clean refreshes for landlords, renovators & sale prep."
+    }
   }
 }

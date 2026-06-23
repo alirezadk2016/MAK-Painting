@@ -6,6 +6,11 @@ import { Link, usePathname } from "@/i18n/navigation";
 import { useQuoteWizard } from "./QuoteWizardProvider";
 import { SERVICES } from "@/data/site";
 
+const SVC_KEY: Record<string, string> = {
+  "interior": "interior", "exterior": "exterior", "roof": "roof",
+  "commercial": "commercial", "special-finishes": "specialFinishes", "repaints": "repaints",
+};
+
 function LanguageSwitcher() {
   const locale = useLocale();
   const pathname = usePathname();
@@ -38,6 +43,7 @@ export function Nav() {
   const [servicesOpen, setServicesOpen] = useState(false);
   const { open } = useQuoteWizard();
   const t = useTranslations("Nav");
+  const tSvc = useTranslations("ServicesData");
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 48);
@@ -84,15 +90,18 @@ export function Nav() {
               {servicesOpen && (
                 <div className="absolute top-full start-0 pt-2 w-56 z-[60]">
                 <div className="bg-white rounded-2xl shadow-card-lg border border-gray-100 py-2">
-                  {SERVICES.map((s) => (
+                  {SERVICES.map((s) => {
+                    const k = SVC_KEY[s.id];
+                    const title = k ? (tSvc as (k: string) => string)(`${k}.title`) : s.title;
+                    return (
                     <Link
                       key={s.id}
                       href={`/services/${s.slug}`}
                       className="block px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-blue-muted hover:text-gold-deep transition-colors rounded-xl mx-1"
                     >
-                      {s.title}
+                      {title}
                     </Link>
-                  ))}
+                  )})}
                 </div>
                 </div>
               )}
@@ -153,16 +162,19 @@ export function Nav() {
           ))}
           <div className="border-t border-gray-100 pt-3 mt-3">
             <p className="text-xs font-bold text-gray-400 uppercase tracking-wider px-3 mb-2">{t("services")}</p>
-            {SERVICES.map((s) => (
+            {SERVICES.map((s) => {
+              const k = SVC_KEY[s.id];
+              const title = k ? (tSvc as (k: string) => string)(`${k}.title`) : s.title;
+              return (
               <Link
                 key={s.id}
                 href={`/services/${s.slug}`}
                 onClick={() => setMenuOpen(false)}
                 className="block py-2 px-3 text-sm font-medium text-gray-600 hover:bg-blue-muted rounded-xl transition-colors"
               >
-                {s.title}
+                {title}
               </Link>
-            ))}
+            )})}
           </div>
           <div className="pt-3 border-t border-gray-100">
             <button

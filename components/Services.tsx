@@ -10,8 +10,23 @@ interface Props {
   cards?: ServiceCard[];
 }
 
+const SVC_KEY: Record<string, string> = {
+  "interior": "interior", "exterior": "exterior", "roof": "roof",
+  "commercial": "commercial", "special-finishes": "specialFinishes", "repaints": "repaints",
+};
+
 export function Services({ cards }: Props) {
   const t = useTranslations("Services");
+  const tData = useTranslations("ServicesData");
+
+  function svcTitle(id: string, fallback: string) {
+    const k = SVC_KEY[id];
+    return k ? (tData as (k: string) => string)(`${k}.title`) : fallback;
+  }
+  function svcShort(id: string, fallback: string) {
+    const k = SVC_KEY[id];
+    return k ? (tData as (k: string) => string)(`${k}.short`) : fallback;
+  }
 
   // Build render list: if admin cards exist use them, else use static SERVICES
   const items = cards?.length
@@ -19,14 +34,14 @@ export function Services({ cards }: Props) {
         const match = SERVICES.find(s => s.id === c.id);
         return {
           id: c.id,
-          title: c.label,
+          title: svcTitle(c.id, c.label),
           image: c.img,
           slug: c.slug ?? match?.slug,
-          short: match?.short ?? "",
+          short: svcShort(c.id, match?.short ?? ""),
           priceFrom: match?.priceFrom ?? "",
         };
       })
-    : SERVICES.map(s => ({ id: s.id, title: s.title, image: s.image, slug: s.slug, short: s.short, priceFrom: s.priceFrom }));
+    : SERVICES.map(s => ({ id: s.id, title: svcTitle(s.id, s.title), image: s.image, slug: s.slug, short: svcShort(s.id, s.short), priceFrom: s.priceFrom }));
 
   return (
     <section id="services" className="py-20 bg-white">

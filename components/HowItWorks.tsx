@@ -35,7 +35,10 @@ export function HowItWorks() {
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          {STEPS.map((step, i) => (
+          {STEPS.map((step, i) => {
+            const titleKey = `step${i}Title` as Parameters<typeof t>[0];
+            const descKey  = `step${i}Desc`  as Parameters<typeof t>[0];
+            return (
             <motion.div
               key={i}
               initial={{ opacity: 0, y: 20 }}
@@ -49,12 +52,12 @@ export function HowItWorks() {
                 <div className="hidden lg:block absolute top-10 -right-3 w-6 h-px bg-white/30 z-10" />
               )}
               <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center mb-4 shadow-md">
-                <span className="text-gold-deep font-black text-lg">{step.num}</span>
+                <span className="text-gold-deep font-black text-lg" dir="ltr">{step.num}</span>
               </div>
-              <h3 className="text-white font-bold text-lg mb-2">{step.title}</h3>
-              <p className="text-gray-300 text-sm leading-relaxed">{step.desc}</p>
+              <h3 className="text-white font-bold text-lg mb-2">{t(titleKey)}</h3>
+              <p className="text-gray-300 text-sm leading-relaxed">{t(descKey)}</p>
             </motion.div>
-          ))}
+          )})}
         </div>
 
         <div className="text-center">
