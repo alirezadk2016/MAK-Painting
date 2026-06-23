@@ -1,24 +1,24 @@
 {
   "Meta": {
     "home": {
-      "title": "MAK Painting Group | Painters Melbourne – 5★ Rated",
-      "description": "MAK Painting Group – Melbourne's 5-star rated painters. Interior, exterior, roof & commercial painting. Free on-site quote. 7-year warranty. Call 0404 000 772."
+      "title": "MAK Painting Group Melbourne | 5★ Painters — Interior, Exterior & Roof",
+      "description": "Melbourne's 5-star rated painting specialists. Interior, exterior, roof & commercial painting across Greater Melbourne. Free on-site quote, 7-year warranty, fully insured. Call 0404 000 772."
     },
     "services": {
-      "title": "Painting Services Melbourne | MAK Painting Group",
-      "description": "Interior, exterior, roof, commercial and decorative painting across Melbourne. Premium prep, 7-year warranty, free on-site quotes."
+      "title": "Painting Services Melbourne | Interior, Exterior, Roof & Commercial — MAK Painting",
+      "description": "Complete painting services for Melbourne homes and businesses. Interior, exterior, roof, commercial, special finishes and repaints. Free on-site quote. 7-year workmanship warranty."
     },
     "about": {
-      "title": "About Us | MAK Painting Group Melbourne",
-      "description": "Meet MAK Painting Group — Melbourne's 5-star rated, fully insured painting specialists led by Hossain. Quality prep, lasting finishes, honest service."
+      "title": "About MAK Painting Group | 5★ Melbourne Painters — Fully Insured & Dulux Accredited",
+      "description": "Meet the MAK Painting Group team — Dulux Accredited, fully insured Melbourne painters led by Hossain. 5-star Google rating, 7-year warranty, honest transparent pricing. Serving all of Melbourne."
     },
     "gallery": {
-      "title": "Our Work | MAK Painting Group Melbourne",
-      "description": "Browse before & after transformations from MAK Painting Group across Melbourne — interior, exterior, roof and decorative finishes."
+      "title": "Painting Gallery — Before & After Projects | MAK Painting Group Melbourne",
+      "description": "See real before and after painting transformations by MAK Painting Group across Melbourne — interior, exterior, feature walls, door resprays and ceiling repairs."
     },
     "contact": {
-      "title": "Contact & Free Quote | MAK Painting Group Melbourne",
-      "description": "Get a free on-site painting quote from MAK Painting Group. Call 0404 000 772, WhatsApp or email mak.painting.group@gmail.com."
+      "title": "Free Quote — Painting Melbourne | Contact MAK Painting Group",
+      "description": "Get a free, no-obligation on-site painting quote from MAK Painting Group. Call 0404 000 772, WhatsApp or fill out the form. Melbourne-wide service, respond within 1 business day."
     }
   },
   "Nav": {
@@ -251,6 +251,8 @@
     "labelProperty": "Property",
     "labelScope": "Scope",
     "labelExtras": "Extras",
-    "close": "Close"
+    "close": "Close",
+    "suburbError": "We don't service that area yet. Call us on 0404 000 772 — we may be able to help!",
+    "suburbHint": "e.g. Ferntree Gully, Ringwood, Glen Waverley…"
   }
 }

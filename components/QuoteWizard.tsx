@@ -2,7 +2,23 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
-import { EXTRAS } from "@/data/site";
+import { EXTRAS, SUBURBS } from "@/data/site";
+
+// Melbourne postcode range + known suburbs
+const MELBOURNE_POSTCODES = /^3[0-9]{3}$/;
+const SUBURB_SET = new Set(SUBURBS.map((s) => s.toLowerCase()));
+
+function isInServiceArea(input: string): boolean {
+  const v = input.trim();
+  if (!v) return false;
+  if (MELBOURNE_POSTCODES.test(v)) return true;
+  // match any word in the input against the suburb list
+  const words = v.toLowerCase();
+  for (const suburb of SUBURB_SET) {
+    if (words.includes(suburb)) return true;
+  }
+  return false;
+}
 
 export function QuoteWizard({ onClose }: { onClose: () => void }) {
   const t = useTranslations("QuoteWizard");
@@ -15,6 +31,7 @@ export function QuoteWizard({ onClose }: { onClose: () => void }) {
   const SCOPE_OPTIONS = [t("scope0"), t("scope1"), t("scope2")];
 
   const [step, setStep] = useState(0);
+  const [suburbError, setSuburbError] = useState("");
   const [data, setData] = useState({
     postcode: "", propertyType: "", scope: "",
     rooms: "", sqm: "", extras: [] as string[],
@@ -22,8 +39,18 @@ export function QuoteWizard({ onClose }: { onClose: () => void }) {
   });
   const [sent, setSent] = useState(false);
 
-  const next = () => setStep((s) => Math.min(s + 1, STEPS_WIZARD.length - 1));
-  const back = () => setStep((s) => Math.max(s - 1, 0));
+  function tryNext() {
+    if (step === 0) {
+      if (!isInServiceArea(data.postcode)) {
+        setSuburbError(t("suburbError"));
+        return;
+      }
+      setSuburbError("");
+    }
+    setStep((s) => Math.min(s + 1, STEPS_WIZARD.length - 1));
+  }
+
+  const back = () => { setSuburbError(""); setStep((s) => Math.max(s - 1, 0)); };
   const update = (k: string, v: string) => setData((d) => ({ ...d, [k]: v }));
   const toggleExtra = (e: string) =>
     setData((d) => ({
@@ -91,15 +118,26 @@ export function QuoteWizard({ onClose }: { onClose: () => void }) {
             ) : (
               <motion.div key={step} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.2 }}>
                 {step === 0 && (
-                  <div className="space-y-4">
+                  <div className="space-y-3">
                     <p className="text-gray-500 text-sm">{t("q0")}</p>
                     <input
                       type="text"
                       placeholder={t("ph0")}
                       value={data.postcode}
-                      onChange={(e) => update("postcode", e.target.value)}
-                      className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:border-gold"
+                      onChange={(e) => { update("postcode", e.target.value); setSuburbError(""); }}
+                      onKeyDown={(e) => e.key === "Enter" && tryNext()}
+                      className={`w-full bg-gray-50 border rounded-xl px-4 py-3 text-sm font-medium focus:outline-none transition-colors ${suburbError ? "border-red-400 focus:border-red-400" : "border-gray-200 focus:border-gold"}`}
                     />
+                    <p className="text-xs text-gray-400">{t("suburbHint")}</p>
+                    {suburbError && (
+                      <div className="flex items-start gap-2.5 bg-red-50 border border-red-200 rounded-xl px-4 py-3">
+                        <svg className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" viewBox="0 0 16 16" fill="none">
+                          <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.4"/>
+                          <path d="M8 5v3.5M8 11h.01" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+                        </svg>
+                        <p className="text-sm text-red-600 font-medium">{suburbError}</p>
+                      </div>
+                    )}
                   </div>
                 )}
                 {step === 1 && (
@@ -108,7 +146,7 @@ export function QuoteWizard({ onClose }: { onClose: () => void }) {
                     {PROPERTY_TYPES.map((pt) => (
                       <button
                         key={pt}
-                        onClick={() => { update("propertyType", pt); next(); }}
+                        onClick={() => { update("propertyType", pt); tryNext(); }}
                         className={`w-full flex items-center gap-3 rounded-xl border-2 px-4 py-3.5 text-sm font-bold transition-all ${data.propertyType === pt ? "border-gold bg-gold-soft text-gold-deep" : "border-gray-200 text-charcoal hover:border-gold"}`}
                       >
                         <span className={`w-5 h-5 rounded-full border-2 flex-shrink-0 ${data.propertyType === pt ? "border-gold bg-gold" : "border-gray-300"}`} />
@@ -123,7 +161,7 @@ export function QuoteWizard({ onClose }: { onClose: () => void }) {
                     {SCOPE_OPTIONS.map((s) => (
                       <button
                         key={s}
-                        onClick={() => { update("scope", s); next(); }}
+                        onClick={() => { update("scope", s); tryNext(); }}
                         className={`w-full flex items-center gap-3 rounded-xl border-2 px-4 py-3.5 text-sm font-bold transition-all ${data.scope === s ? "border-gold bg-gold-soft text-gold-deep" : "border-gray-200 text-charcoal hover:border-gold"}`}
                       >
                         <span className={`w-5 h-5 rounded-full border-2 flex-shrink-0 ${data.scope === s ? "border-gold bg-gold" : "border-gray-300"}`} />
@@ -174,6 +212,7 @@ export function QuoteWizard({ onClose }: { onClose: () => void }) {
                       type="date"
                       value={data.date}
                       onChange={(e) => update("date", e.target.value)}
+                      min={new Date().toISOString().split("T")[0]}
                       className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:border-gold"
                     />
                     <p className="text-xs text-gray-400">{t("note5")}</p>
@@ -229,7 +268,7 @@ export function QuoteWizard({ onClose }: { onClose: () => void }) {
             </div>
             {step < STEPS_WIZARD.length - 1 ? (
               <button
-                onClick={next}
+                onClick={tryNext}
                 className="bg-gold text-ink font-bold rounded-xl px-5 py-2.5 text-sm hover:bg-gold-dark transition-colors"
               >
                 {t("next")}

@@ -35,6 +35,7 @@ export async function generateMetadata({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Meta.home" });
   const baseUrl = "https://www.makpainting.com.au";
+  const ogImage = `${baseUrl}/og-image.jpg`;
   return {
     metadataBase: new URL(baseUrl),
     title: {
@@ -42,6 +43,17 @@ export async function generateMetadata({
       template: "%s | MAK Painting Group Melbourne",
     },
     description: t("description"),
+    keywords: [
+      "painting Melbourne", "painters Melbourne", "interior painting Melbourne",
+      "exterior painting Melbourne", "commercial painting Melbourne",
+      "roof painting Melbourne", "house painters Melbourne", "painting services Melbourne",
+      "MAK Painting Group", "Ferntree Gully painter", "eastern suburbs painter",
+    ],
+    authors: [{ name: "MAK Painting Group", url: baseUrl }],
+    creator: "MAK Painting Group",
+    publisher: "MAK Painting Group",
+    applicationName: "MAK Painting Group",
+    category: "Painting Contractor",
     alternates: {
       canonical: `${baseUrl}/${locale}`,
       languages: {
@@ -57,14 +69,23 @@ export async function generateMetadata({
       type: "website",
       locale: locale === "fa" ? "fa_IR" : "en_AU",
       siteName: "MAK Painting Group",
-      images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "MAK Painting Group" }],
+      images: [{ url: ogImage, width: 1200, height: 630, alt: "MAK Painting Group — Melbourne Painters" }],
     },
     twitter: {
       card: "summary_large_image",
       title: t("title"),
-      images: ["/og-image.jpg"],
+      description: t("description"),
+      images: [ogImage],
+      site: "@makpaintinggroup",
     },
-    robots: { index: true, follow: true },
+    verification: {
+      google: process.env.GOOGLE_SITE_VERIFICATION,
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 },
+    },
   };
 }
 
@@ -110,10 +131,34 @@ const jsonLd = {
     { "@type": "Review", author: { "@type": "Person", name: "Debbie Bumpstead" }, reviewRating: { "@type": "Rating", ratingValue: "5", bestRating: "5" }, reviewBody: "Very pleased with the painting of my ceilings inside & carport ceiling. A very efficient painter with no mess, came on the time arranged. Excellent price. I wouldn't go anywhere else." },
     { "@type": "Review", author: { "@type": "Person", name: "Emma Hulst" }, reviewRating: { "@type": "Rating", ratingValue: "5", bestRating: "5" }, reviewBody: "Highly recommend! Extremely efficient, reliable and professional. Communication was excellent from start to finish and the quality of work was outstanding." },
   ],
+  hasOfferCatalog: {
+    "@type": "OfferCatalog",
+    name: "Painting Services",
+    itemListElement: [
+      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Interior Painting Melbourne", url: "https://www.makpainting.com.au/en/services/interior" } },
+      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Exterior Painting Melbourne", url: "https://www.makpainting.com.au/en/services/exterior" } },
+      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Roof Painting Melbourne", url: "https://www.makpainting.com.au/en/services/roof" } },
+      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Commercial Painting Melbourne", url: "https://www.makpainting.com.au/en/services/commercial" } },
+      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Special Finishes Melbourne", url: "https://www.makpainting.com.au/en/services/special-finishes" } },
+      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Repaints & Touch-ups Melbourne", url: "https://www.makpainting.com.au/en/services/repaints" } },
+    ],
+  },
   sameAs: [
     "https://www.google.com/maps/place/MAK+Painting+Group/@-37.9725665,145.0531353,17z",
     "https://facebook.com/makpaintinggroup",
     "https://instagram.com/makpaintinggroup",
+  ],
+};
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    { "@type": "Question", name: "How quickly can you provide a quote?", acceptedAnswer: { "@type": "Answer", text: "We typically provide a free on-site quote within 24–48 hours of your enquiry." } },
+    { "@type": "Question", name: "What paint brands do you use?", acceptedAnswer: { "@type": "Answer", text: "We are certified Dulux Accredited painters and also work with Taubmans, Haymes and Wattyl." } },
+    { "@type": "Question", name: "Is surface preparation included in your quote?", acceptedAnswer: { "@type": "Answer", text: "Yes, always. Every MAK quote includes full prep: washing, sanding, filling holes and cracks, and priming bare surfaces." } },
+    { "@type": "Question", name: "What does your 7-year warranty cover?", acceptedAnswer: { "@type": "Answer", text: "Our 7-year workmanship warranty covers peeling, flaking, blistering and any other defect caused by application errors." } },
+    { "@type": "Question", name: "Are you insured and police checked?", acceptedAnswer: { "@type": "Answer", text: "Yes. MAK Painting Group holds a current $20M public liability policy and all team members hold a valid police clearance." } },
   ],
 };
 
@@ -134,10 +179,8 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} dir={dir} className={`${manrope.variable} ${vazirmatn.variable}`}>
       <head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       </head>
       <body className={locale === "fa" ? "font-fa" : ""}>
         <NextIntlClientProvider>

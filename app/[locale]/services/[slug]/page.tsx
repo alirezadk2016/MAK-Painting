@@ -17,10 +17,21 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug, locale } = await params;
   const s = SERVICES.find((x) => x.slug === slug);
   if (!s) return {};
+  const base = "https://www.makpainting.com.au";
   return {
     title: s.metaTitle,
     description: s.metaDesc,
-    alternates: { canonical: `https://www.makpainting.com.au/${locale}/services/${slug}` },
+    alternates: {
+      canonical: `${base}/${locale}/services/${slug}`,
+      languages: { en: `${base}/en/services/${slug}`, fa: `${base}/fa/services/${slug}`, "x-default": `${base}/en/services/${slug}` },
+    },
+    openGraph: {
+      title: s.metaTitle,
+      description: s.metaDesc,
+      url: `${base}/${locale}/services/${slug}`,
+      type: "website",
+      images: [{ url: `${base}${s.image.startsWith("/") ? s.image : "/og-image.jpg"}`, width: 1200, height: 630, alt: s.title }],
+    },
   };
 }
 
@@ -52,15 +63,30 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
   if (!service) notFound();
   const L = LABELS[locale === "fa" ? "fa" : "en"];
 
+  const base = "https://www.makpainting.com.au";
+  const breadcrumbLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: `${base}/${locale}` },
+      { "@type": "ListItem", position: 2, name: "Services", item: `${base}/${locale}/services` },
+      { "@type": "ListItem", position: 3, name: service.title, item: `${base}/${locale}/services/${service.slug}` },
+    ],
+  };
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Service",
     name: service.title,
     description: service.description,
+    url: `${base}/${locale}/services/${service.slug}`,
+    image: `${base}${service.image}`,
     provider: {
       "@type": "LocalBusiness",
+      "@id": `${base}/#business`,
       name: "MAK Painting Group",
-      address: { "@type": "PostalAddress", addressLocality: "Melbourne", addressRegion: "VIC" },
+      telephone: "+61404000772",
+      address: { "@type": "PostalAddress", addressLocality: "Ferntree Gully", addressRegion: "VIC", postalCode: "3156", addressCountry: "AU" },
     },
     areaServed: "Melbourne",
   };
@@ -68,6 +94,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
 
       <div className="pt-16 bg-canvas min-h-screen">
         {/* Hero */}

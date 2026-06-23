@@ -251,6 +251,8 @@
     "labelProperty": "ملک",
     "labelScope": "حوزه",
     "labelExtras": "افزودنی‌ها",
-    "close": "بستن"
+    "close": "بستن",
+    "suburbError": "این منطقه هنوز در محدوده سرویس ما نیست. با ما تماس بگیرید: ۰۴۰۴ ۰۰۰ ۷۷۲",
+    "suburbHint": "مثلاً: Ferntree Gully، Ringwood، Glen Waverley…"
   }
 }

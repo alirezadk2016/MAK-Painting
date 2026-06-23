@@ -7,7 +7,7 @@ export function ContactSection() {
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [fileNames, setFileNames] = useState<string[]>([]);
+  const [filePreviews, setFilePreviews] = useState<{ name: string; url: string }[]>([]);
   const fileRef = useRef<HTMLInputElement>(null);
   const t = useTranslations("Contact");
 
@@ -161,14 +161,8 @@ export function ContactSection() {
                     <svg className="w-6 h-6 text-gray-400" viewBox="0 0 24 24" fill="none">
                       <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
-                    {fileNames.length > 0 ? (
-                      <span className="text-sm text-gold-deep font-semibold">{fileNames.length} file{fileNames.length > 1 ? "s" : ""} selected</span>
-                    ) : (
-                      <>
-                        <span className="text-sm text-gray-400 font-medium">{t("uploadCta")}</span>
-                        <span className="text-xs text-gray-300">{t("uploadHint")}</span>
-                      </>
-                    )}
+                    <span className="text-sm text-gray-400 font-medium">{t("uploadCta")}</span>
+                    <span className="text-xs text-gray-300">{t("uploadHint")}</span>
                     <input
                       id="file-upload"
                       ref={fileRef}
@@ -176,9 +170,23 @@ export function ContactSection() {
                       accept="image/*"
                       multiple
                       className="hidden"
-                      onChange={(e) => setFileNames(Array.from(e.target.files ?? []).map((f) => f.name))}
+                      onChange={(e) => {
+                        const files = Array.from(e.target.files ?? []);
+                        setFilePreviews(files.map((f) => ({ name: f.name, url: URL.createObjectURL(f) })));
+                      }}
                     />
                   </label>
+                  {filePreviews.length > 0 && (
+                    <div className="grid grid-cols-3 gap-2 mt-2">
+                      {filePreviews.map((f) => (
+                        <div key={f.url} className="relative group">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={f.url} alt={f.name} className="w-full h-20 object-cover rounded-xl border border-gray-200" />
+                          <p className="text-xs text-gray-400 truncate mt-1">{f.name}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 {error && (
