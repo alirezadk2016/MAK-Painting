@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug, locale } = await params;
   const s = SERVICES.find((x) => x.slug === slug);
   if (!s) return {};
-  const base = "https://www.makpainting.com.au";
+  const base = "https://www.makvandi.info";
   return {
     title: s.metaTitle,
     description: s.metaDesc,
@@ -63,7 +63,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
   if (!service) notFound();
   const L = LABELS[locale === "fa" ? "fa" : "en"];
 
-  const base = "https://www.makpainting.com.au";
+  const base = "https://www.makvandi.info";
   const breadcrumbLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",

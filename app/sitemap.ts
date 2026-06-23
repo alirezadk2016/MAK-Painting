@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { SERVICES } from "@/data/site";
 import { routing } from "@/i18n/routing";
 
-const base = "https://www.makpainting.com.au";
+const base = "https://www.makvandi.info";
 
 function langs(path: string) {
   return {

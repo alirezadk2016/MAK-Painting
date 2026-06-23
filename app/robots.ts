@@ -2,6 +2,6 @@ import type { MetadataRoute } from "next";
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: { userAgent: "*", allow: "/" },
-    sitemap: "https://www.makpainting.com.au/sitemap.xml",
+    sitemap: "https://www.makvandi.info/sitemap.xml",
   };
 }

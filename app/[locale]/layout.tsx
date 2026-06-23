@@ -34,7 +34,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Meta.home" });
-  const baseUrl = "https://www.makpainting.com.au";
+  const baseUrl = "https://www.makvandi.info";
   const ogImage = `${baseUrl}/og-image.jpg`;
   return {
     metadataBase: new URL(baseUrl),
@@ -92,15 +92,15 @@ export async function generateMetadata({
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "PaintingContractor",
-  "@id": "https://www.makpainting.com.au/#business",
+  "@id": "https://www.makvandi.info/#business",
   name: "MAK Painting Group",
   description:
     "Professional residential and commercial painting services across Melbourne, Victoria. Interior, exterior, roof painting and special finishes.",
-  url: "https://www.makpainting.com.au",
+  url: "https://www.makvandi.info",
   telephone: "+61404000772",
   email: "mak.painting.group@gmail.com",
-  image: "https://www.makpainting.com.au/og-image.jpg",
-  logo: "https://www.makpainting.com.au/logo.jpg",
+  image: "https://www.makvandi.info/og-image.jpg",
+  logo: "https://www.makvandi.info/logo.jpg",
   address: {
     "@type": "PostalAddress",
     addressLocality: "Ferntree Gully",
@@ -135,12 +135,12 @@ const jsonLd = {
     "@type": "OfferCatalog",
     name: "Painting Services",
     itemListElement: [
-      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Interior Painting Melbourne", url: "https://www.makpainting.com.au/en/services/interior" } },
-      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Exterior Painting Melbourne", url: "https://www.makpainting.com.au/en/services/exterior" } },
-      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Roof Painting Melbourne", url: "https://www.makpainting.com.au/en/services/roof" } },
-      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Commercial Painting Melbourne", url: "https://www.makpainting.com.au/en/services/commercial" } },
-      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Special Finishes Melbourne", url: "https://www.makpainting.com.au/en/services/special-finishes" } },
-      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Repaints & Touch-ups Melbourne", url: "https://www.makpainting.com.au/en/services/repaints" } },
+      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Interior Painting Melbourne", url: "https://www.makvandi.info/en/services/interior" } },
+      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Exterior Painting Melbourne", url: "https://www.makvandi.info/en/services/exterior" } },
+      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Roof Painting Melbourne", url: "https://www.makvandi.info/en/services/roof" } },
+      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Commercial Painting Melbourne", url: "https://www.makvandi.info/en/services/commercial" } },
+      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Special Finishes Melbourne", url: "https://www.makvandi.info/en/services/special-finishes" } },
+      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Repaints & Touch-ups Melbourne", url: "https://www.makvandi.info/en/services/repaints" } },
     ],
   },
   sameAs: [

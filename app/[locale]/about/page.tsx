@@ -16,7 +16,7 @@ export async function generateMetadata({
   return {
     title: t("title"),
     description: t("description"),
-    alternates: { canonical: `https://www.makpainting.com.au/${locale}/about` },
+    alternates: { canonical: `https://www.makvandi.info/${locale}/about` },
   };
 }
 

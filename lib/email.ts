@@ -2,7 +2,7 @@ import { Resend } from "resend";
 import type { Booking } from "./db";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-const FROM = "MAK Painting Group <no-reply@makpainting.com.au>";
+const FROM = "MAK Painting Group <no-reply@makvandi.info>";
 const OWNER_EMAIL = process.env.OWNER_EMAIL ?? "mak.painting.group@gmail.com";
 
 function formatDate(d: string) {
@@ -150,7 +150,7 @@ export async function sendOwnerNotification(b: Booking) {
           <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:28px">
             <tr>
               <td style="padding:0 6px 0 0">
-                <a href="${process.env.NEXT_PUBLIC_BASE_URL ?? "https://www.makpainting.com.au"}/admin/dashboard" style="display:block;text-align:center;background:#1a1a1a;color:#c9a24b;font-weight:700;font-size:13px;text-decoration:none;padding:14px;border-radius:10px">View in Admin Panel →</a>
+                <a href="${process.env.NEXT_PUBLIC_BASE_URL ?? "https://www.makvandi.info"}/admin/dashboard" style="display:block;text-align:center;background:#1a1a1a;color:#c9a24b;font-weight:700;font-size:13px;text-decoration:none;padding:14px;border-radius:10px">View in Admin Panel →</a>
               </td>
             </tr>
           </table>
