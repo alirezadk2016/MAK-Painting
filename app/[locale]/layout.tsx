@@ -150,17 +150,7 @@ const jsonLd = {
   ],
 };
 
-const faqJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: [
-    { "@type": "Question", name: "How quickly can you provide a quote?", acceptedAnswer: { "@type": "Answer", text: "We typically provide a free on-site quote within 24–48 hours of your enquiry." } },
-    { "@type": "Question", name: "What paint brands do you use?", acceptedAnswer: { "@type": "Answer", text: "We are certified Dulux Accredited painters and also work with Taubmans, Haymes and Wattyl." } },
-    { "@type": "Question", name: "Is surface preparation included in your quote?", acceptedAnswer: { "@type": "Answer", text: "Yes, always. Every MAK quote includes full prep: washing, sanding, filling holes and cracks, and priming bare surfaces." } },
-    { "@type": "Question", name: "What does your 7-year warranty cover?", acceptedAnswer: { "@type": "Answer", text: "Our 7-year workmanship warranty covers peeling, flaking, blistering and any other defect caused by application errors." } },
-    { "@type": "Question", name: "Are you insured and police checked?", acceptedAnswer: { "@type": "Answer", text: "Yes. MAK Painting Group holds a current $20M public liability policy and all team members hold a valid police clearance." } },
-  ],
-};
+// FAQ schema is rendered per-page (home page) to avoid duplicate JSON-LD across all routes
 
 export default async function LocaleLayout({
   children,
@@ -180,7 +170,6 @@ export default async function LocaleLayout({
     <html lang={locale} dir={dir} className={`${manrope.variable} ${vazirmatn.variable}`}>
       <head>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       </head>
       <body className={locale === "fa" ? "font-fa" : ""}>
         <NextIntlClientProvider>

@@ -1,4 +1,5 @@
-import { setRequestLocale } from "next-intl/server";
+import type { Metadata } from "next";
+import { setRequestLocale, getTranslations } from "next-intl/server";
 import { Hero } from "@/components/Hero";
 import { Services } from "@/components/Services";
 import { HowItWorks } from "@/components/HowItWorks";
@@ -12,6 +13,21 @@ import { ServiceAreas } from "@/components/ServiceAreas";
 import { FAQ } from "@/components/FAQ";
 import { ContactSection } from "@/components/ContactSection";
 import { FAQS } from "@/data/site";
+import { canonicalAlternates, pageOG, pageTwitter } from "@/lib/seo";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "Meta.home" });
+  return {
+    alternates: canonicalAlternates("", locale),
+    openGraph: pageOG({ title: t("title"), description: t("description"), path: "", locale }),
+    twitter: pageTwitter({ title: t("title"), description: t("description") }),
+  };
+}
 
 const faqSchema = {
   "@context": "https://schema.org",

@@ -5,6 +5,20 @@ import { Reviews } from "@/components/Reviews";
 import { PageHeader } from "@/components/PageHeader";
 import { AboutCTA } from "@/components/AboutCTA";
 import { STATS } from "@/data/site";
+import { canonicalAlternates, pageOG, pageTwitter } from "@/lib/seo";
+
+const aboutJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "AboutPage",
+  url: "https://www.makvandi.info/en/about",
+  name: "About MAK Painting Group",
+  description: "Dulux Accredited Melbourne painters. Fully insured, 7-year workmanship warranty. Led by Hossain — 5-star rated across Melbourne.",
+  mainEntity: {
+    "@type": "PaintingContractor",
+    "@id": "https://www.makvandi.info/#business",
+    name: "MAK Painting Group",
+  },
+};
 
 export async function generateMetadata({
   params,
@@ -16,7 +30,10 @@ export async function generateMetadata({
   return {
     title: t("title"),
     description: t("description"),
-    alternates: { canonical: `https://www.makvandi.info/${locale}/about` },
+    keywords: ["MAK Painting Group", "about MAK Painting", "Melbourne painters", "Dulux accredited painter Melbourne", "insured painter Melbourne", "Hossain painter"],
+    alternates: canonicalAlternates("/about", locale),
+    openGraph: pageOG({ title: t("title"), description: t("description"), path: "/about", locale }),
+    twitter: pageTwitter({ title: t("title"), description: t("description") }),
   };
 }
 
@@ -38,6 +55,7 @@ export default async function AboutPage({
 
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(aboutJsonLd) }} />
       <PageHeader eyebrow={t("eyebrow")} title={t("title")} />
 
       {/* Intro + story */}

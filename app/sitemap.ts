@@ -11,8 +11,11 @@ function langs(path: string) {
   };
 }
 
+// Use a stable date so sitemap doesn't report all pages as modified on every deploy
+const LAST_MODIFIED = new Date("2025-06-23");
+
 export default function sitemap(): MetadataRoute.Sitemap {
-  const now = new Date();
+  const now = LAST_MODIFIED;
   const entries: MetadataRoute.Sitemap = [];
 
   const pages: [string, number, MetadataRoute.Sitemap[0]["changeFrequency"]][] = [

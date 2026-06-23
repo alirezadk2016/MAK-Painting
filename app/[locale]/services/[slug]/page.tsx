@@ -6,6 +6,7 @@ import { Link } from "@/i18n/navigation";
 import { SERVICES } from "@/data/site";
 import { ContactSection } from "@/components/ContactSection";
 import { routing } from "@/i18n/routing";
+import { pageTwitter } from "@/lib/seo";
 
 export function generateStaticParams() {
   return routing.locales.flatMap((locale) =>
@@ -25,13 +26,17 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       canonical: `${base}/${locale}/services/${slug}`,
       languages: { en: `${base}/en/services/${slug}`, fa: `${base}/fa/services/${slug}`, "x-default": `${base}/en/services/${slug}` },
     },
+    keywords: [s.title, `${s.title} Melbourne`, "Melbourne painting services", "MAK Painting Group", "Dulux accredited painter"],
     openGraph: {
       title: s.metaTitle,
       description: s.metaDesc,
       url: `${base}/${locale}/services/${slug}`,
       type: "website",
+      locale: locale === "fa" ? "fa_IR" : "en_AU",
+      siteName: "MAK Painting Group",
       images: [{ url: `${base}${s.image.startsWith("/") ? s.image : "/og-image.jpg"}`, width: 1200, height: 630, alt: s.title }],
     },
+    twitter: pageTwitter({ title: s.metaTitle, description: s.metaDesc, image: `${base}${s.image.startsWith("/") ? s.image : "/og-image.jpg"}` }),
   };
 }
 

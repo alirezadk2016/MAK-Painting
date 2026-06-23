@@ -4,6 +4,16 @@ import { Gallery } from "@/components/Gallery";
 import { ColorInspiration } from "@/components/ColorInspiration";
 import { Reviews } from "@/components/Reviews";
 import { PageHeader } from "@/components/PageHeader";
+import { canonicalAlternates, pageOG, pageTwitter } from "@/lib/seo";
+
+const galleryJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ImageGallery",
+  url: "https://www.makvandi.info/en/gallery",
+  name: "Painting Gallery — Before & After Projects | MAK Painting Group",
+  description: "Before and after painting transformations by MAK Painting Group — interior, exterior, feature walls, door resprays and ceiling repairs across Melbourne.",
+  provider: { "@type": "PaintingContractor", "@id": "https://www.makvandi.info/#business" },
+};
 
 export async function generateMetadata({
   params,
@@ -15,7 +25,10 @@ export async function generateMetadata({
   return {
     title: t("title"),
     description: t("description"),
-    alternates: { canonical: `https://www.makvandi.info/${locale}/gallery` },
+    keywords: ["painting before after Melbourne", "painting gallery", "interior painting results", "exterior painting results", "MAK Painting portfolio"],
+    alternates: canonicalAlternates("/gallery", locale),
+    openGraph: pageOG({ title: t("title"), description: t("description"), path: "/gallery", locale }),
+    twitter: pageTwitter({ title: t("title"), description: t("description") }),
   };
 }
 
@@ -29,6 +42,7 @@ export default async function GalleryPage({
   const t = await getTranslations("GalleryPage");
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(galleryJsonLd) }} />
       <PageHeader eyebrow={t("eyebrow")} title={t("title")} subtitle={t("subtitle")} />
       <Gallery hideHeading />
       <ColorInspiration />
