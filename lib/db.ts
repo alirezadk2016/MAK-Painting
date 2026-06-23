@@ -64,9 +64,13 @@ export async function updateBookingStatus(id: string, status: BookingStatus): Pr
 
 export async function listBookings(limit = 200): Promise<Booking[]> {
   if (!hasKV()) return [];
-  const kv = await getKV();
-  const ids = await kv.zrange<string[]>(KV_SET, 0, limit - 1, { rev: true });
-  if (!ids.length) return [];
-  const bookings = await Promise.all(ids.map((id) => kv.get<Booking>(key(id))));
-  return bookings.filter(Boolean) as Booking[];
+  try {
+    const kv = await getKV();
+    const ids = await kv.zrange<string[]>(KV_SET, 0, limit - 1, { rev: true });
+    if (!ids.length) return [];
+    const bookings = await Promise.all(ids.map((id) => kv.get<Booking>(key(id))));
+    return bookings.filter(Boolean) as Booking[];
+  } catch {
+    return [];
+  }
 }

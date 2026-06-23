@@ -18,14 +18,20 @@ const DEFAULT_GALLERY = [
 export default async function AdminDashboard() {
   await requireAdmin();
 
-  const [bookings, saved] = await Promise.all([listBookings(), getSiteConfig()]);
+  const [bookings, saved] = await Promise.all([
+    listBookings().catch(() => []),
+    getSiteConfig().catch(() => null),
+  ]);
+
+  const hasBlobToken = !!process.env.BLOB_READ_WRITE_TOKEN;
 
   const config: SiteConfig = {
-    hero:     saved?.hero     ?? "/1.png",
-    services: saved?.services ?? {},
-    gallery:  saved?.gallery?.length ? saved.gallery : DEFAULT_GALLERY,
-    pricing:  saved?.pricing?.length ? saved.pricing : DEFAULT_PRICING,
+    hero:         saved?.hero         ?? "/1.png",
+    services:     saved?.services     ?? {},
+    serviceCards: saved?.serviceCards,
+    gallery:      saved?.gallery?.length  ? saved.gallery  : DEFAULT_GALLERY,
+    pricing:      saved?.pricing?.length  ? saved.pricing  : DEFAULT_PRICING,
   };
 
-  return <DashboardClient bookings={bookings} config={config} />;
+  return <DashboardClient bookings={bookings} config={config} hasBlobToken={hasBlobToken} />;
 }

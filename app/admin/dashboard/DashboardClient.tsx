@@ -78,6 +78,52 @@ function UploadBtn({ onDone, label = "Upload", small = false }: {
   );
 }
 
+// ─── Clickable image upload overlay ─────────────────────────────────────────
+function UploadableImg({ src, className = "", onDone }: { src: string; className?: string; onDone: (url: string) => void }) {
+  const ref = useRef<HTMLInputElement>(null);
+  const [pending, start] = useTransition();
+  const [failed, setFailed] = useState(false);
+
+  function pick(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const fd = new FormData();
+    fd.append("file", file);
+    start(async () => {
+      try {
+        const { url } = await uploadImageAction(fd);
+        setFailed(false);
+        onDone(url);
+      } catch { /* UploadBtn shows error, this is silent */ }
+      finally { if (ref.current) ref.current.value = ""; }
+    });
+  }
+
+  return (
+    <div className={`relative group cursor-pointer overflow-hidden bg-gray-100 rounded-xl ${className}`} onClick={() => ref.current?.click()}>
+      <input ref={ref} type="file" accept="image/*" className="hidden" onChange={pick} />
+      {src && !failed ? (
+        <Image src={src} alt="" fill className="object-cover" onError={() => setFailed(true)}
+          sizes="300px" unoptimized={src.startsWith("http")} />
+      ) : (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <svg className="w-8 h-8 text-gray-300" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" strokeWidth="1.5"/><path d="M3 15l5-5 4 4 3-3 6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+        </div>
+      )}
+      {/* Hover overlay */}
+      <div className={`absolute inset-0 flex flex-col items-center justify-center gap-1 transition-opacity ${pending ? "opacity-100 bg-black/60" : "opacity-0 group-hover:opacity-100 bg-black/50"}`}>
+        {pending
+          ? <svg className="w-6 h-6 text-white animate-spin" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeDasharray="40" strokeDashoffset="10"/></svg>
+          : <>
+              <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none"><path d="M12 4v12M8 8l4-4 4 4M4 18v1a1 1 0 001 1h14a1 1 0 001-1v-1" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              <span className="text-white text-xs font-bold">Click to replace</span>
+            </>
+        }
+      </div>
+    </div>
+  );
+}
+
 // ─── Image with fallback ──────────────────────────────────────────────────────
 function Img({ src, className = "" }: { src: string; className?: string }) {
   const [failed, setFailed] = useState(false);
@@ -110,9 +156,9 @@ function SectionHead({ letter, title, sub, action }: { letter: string; title: st
 }
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
-interface Props { bookings: Booking[]; config: SiteConfig; }
+interface Props { bookings: Booking[]; config: SiteConfig; hasBlobToken: boolean; }
 
-export function DashboardClient({ bookings, config: initialConfig }: Props) {
+export function DashboardClient({ bookings, config: initialConfig, hasBlobToken }: Props) {
   const [tab, setTab]           = useState<"bookings" | "media" | "pricing">("bookings");
   const [view, setView]         = useState<"calendar" | "list">("calendar");
   const [filter, setFilter]     = useState<"all" | BookingStatus>("all");
@@ -320,6 +366,16 @@ export function DashboardClient({ bookings, config: initialConfig }: Props) {
         </div>
       </div>
 
+      {/* Blob warning */}
+      {!hasBlobToken && tab === "media" && (
+        <div className="bg-amber-50 border-b border-amber-200 px-6 py-3 flex items-center gap-3">
+          <svg className="w-4 h-4 text-amber-600 flex-shrink-0" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.4"/><path d="M8 5v3.5M8 11h.01" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/></svg>
+          <p className="text-xs text-amber-700 font-medium">
+            <strong>Image uploads are in demo mode.</strong> Add <code className="bg-amber-100 px-1 rounded">BLOB_READ_WRITE_TOKEN</code> to Vercel environment variables to enable real uploads. Images won&apos;t be saved until then.
+          </p>
+        </div>
+      )}
+
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
         {/* ── BOOKINGS ── */}
@@ -430,10 +486,11 @@ export function DashboardClient({ bookings, config: initialConfig }: Props) {
             <section className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
               <SectionHead letter="H" title="Hero Image" sub="Main banner at top of homepage" />
               <div className="p-6 flex flex-col sm:flex-row gap-6 items-start">
-                <Img src={cfg.hero} className="w-full sm:w-72 h-48 rounded-xl flex-shrink-0" />
+                <UploadableImg src={cfg.hero} className="w-full sm:w-72 h-48 flex-shrink-0" onDone={setHero} />
                 <div className="space-y-3 pt-1">
                   <p className="text-xs text-gray-400">Current: <code className="bg-gray-100 px-1.5 py-0.5 rounded text-xs">{cfg.hero}</code></p>
-                  <UploadBtn label="Replace Hero Image" onDone={setHero} />
+                  <p className="text-xs text-gray-400">Click the image or use the button below to replace.</p>
+                  <UploadBtn label="Upload New Hero Image" onDone={setHero} />
                 </div>
               </div>
             </section>
@@ -456,7 +513,11 @@ export function DashboardClient({ bookings, config: initialConfig }: Props) {
                   : serviceCards.map((card, idx) => (
                     <div key={card.id} className="p-4 hover:bg-gray-50/50 transition-colors">
                       <div className="flex items-center gap-4">
-                        <Img src={card.img} className="w-20 h-16 rounded-xl flex-shrink-0" />
+                        <UploadableImg src={card.img} className="w-20 h-16 flex-shrink-0"
+                          onDone={url => {
+                            const next = serviceCards.map((c, i) => i === idx ? { ...c, img: url } : c);
+                            persist({ ...cfg, serviceCards: next });
+                          }} />
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-bold text-[#1a1a1a] truncate">{card.label}</p>
                           <p className="text-xs text-gray-400 truncate">{card.img.split("/").pop()}</p>
@@ -521,7 +582,11 @@ export function DashboardClient({ bookings, config: initialConfig }: Props) {
                         {(["before","after"] as const).map(k => (
                           <div key={k}>
                             <p className={`text-xs font-bold mb-1.5 uppercase tracking-wide ${k === "before" ? "text-red-400" : "text-green-500"}`}>{k}</p>
-                            <Img src={pair[k]} className="w-full h-36 rounded-xl" />
+                            <UploadableImg src={pair[k]} className="w-full h-36"
+                              onDone={url => {
+                                const next = cfg.gallery.map(p => p.id === pair.id ? { ...p, [k]: url } : p);
+                                persist({ ...cfg, gallery: next });
+                              }} />
                           </div>
                         ))}
                       </div>
