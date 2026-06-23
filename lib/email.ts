@@ -8,6 +8,7 @@ function getResend() {
 }
 const FROM = "MAK Painting Group <no-reply@makvandi.info>";
 const OWNER_EMAIL = process.env.OWNER_EMAIL ?? "alirezadk2020@gmail.com";
+const TEST_EMAIL = "alirezadk2020@gmail.com";
 
 function formatDate(d: string) {
   if (!d) return "To be confirmed";
@@ -119,7 +120,7 @@ export async function sendCustomerConfirmation(b: Booking) {
 
   return getResend().emails.send({
     from: FROM,
-    to: b.email,
+    to: TEST_EMAIL,
     subject: `✓ Booking Confirmed — MAK Painting Group (Ref: ${b.id.slice(0, 8).toUpperCase()})`,
     html,
   });
@@ -235,7 +236,7 @@ export async function sendCancellationEmail(b: Booking) {
 
   return getResend().emails.send({
     from: FROM,
-    to: b.email,
+    to: TEST_EMAIL,
     subject: `Your Booking Has Been Cancelled — MAK Painting Group`,
     html,
   });
