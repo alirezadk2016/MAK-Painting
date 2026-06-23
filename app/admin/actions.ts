@@ -37,16 +37,20 @@ export async function updateBookingAction(id: string, status: BookingStatus) {
   if (status === "cancelled" && booking.email && process.env.RESEND_API_KEY) {
     await sendCancellationEmail(booking).catch(console.error);
   }
-  revalidatePath("/admin/dashboard");
+  // Do NOT revalidate /admin/dashboard — it's force-dynamic (always fresh)
+  // and revalidating an auth-protected page from a server action causes a
+  // "Server Components render error" because the re-render runs without cookies.
   return booking;
 }
 
 export async function saveSiteConfigAction(config: SiteConfig) {
   await requireAdmin();
   await setSiteConfig(config);
-  revalidatePath("/admin/dashboard");
-  revalidatePath("/en");
-  revalidatePath("/fa");
+  // Only revalidate public-facing pages, never the protected admin route.
+  revalidatePath("/en", "page");
+  revalidatePath("/fa", "page");
+  revalidatePath("/en/gallery", "page");
+  revalidatePath("/fa/gallery", "page");
 }
 
 export async function uploadImageAction(formData: FormData) {
