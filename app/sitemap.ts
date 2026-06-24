@@ -12,7 +12,7 @@ function langs(path: string) {
 }
 
 // Use a stable date so sitemap doesn't report all pages as modified on every deploy
-const LAST_MODIFIED = new Date("2025-06-23");
+const LAST_MODIFIED = new Date("2026-06-24");
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = LAST_MODIFIED;
@@ -24,6 +24,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ["/about", 0.8, "monthly"],
     ["/gallery", 0.8, "monthly"],
     ["/contact", 0.9, "monthly"],
+    ["/our-promise", 0.7, "monthly"],
   ];
 
   for (const locale of routing.locales) {
