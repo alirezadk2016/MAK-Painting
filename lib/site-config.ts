@@ -42,11 +42,30 @@ export interface AlbumPhoto {
   caption?: string;
 }
 
+export interface AboutStat {
+  num: string;
+  suffix: string;
+  label: string;
+}
+
+export interface AboutValue {
+  title: string;
+  body: string;
+}
+
 export interface AboutContent {
+  eyebrow?: string;
+  pageTitle?: string;
   intro?: string;
+  stats?: AboutStat[];
   storyTitle?: string;
   storyBody?: string;
   photos?: AlbumPhoto[];
+  valuesTitle?: string;
+  values?: AboutValue[];
+  ctaTitle?: string;
+  ctaBody?: string;
+  ctaButton?: string;
 }
 
 export interface HeroPosition {

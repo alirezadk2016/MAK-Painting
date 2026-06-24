@@ -51,23 +51,36 @@ export default async function AboutPage({
     getSiteConfig().catch(() => null),
   ]);
 
-  const about = siteConfig?.about;
-  const intro      = about?.intro      ?? t("intro");
-  const storyTitle = about?.storyTitle ?? t("storyTitle");
-  const storyBody  = about?.storyBody  ?? t("storyBody");
-  const photos     = about?.photos ?? [];
+  const ab = siteConfig?.about;
 
-  const values = [
-    { title: t("value1Title"), body: t("value1Body") },
-    { title: t("value2Title"), body: t("value2Body") },
-    { title: t("value3Title"), body: t("value3Body") },
-    { title: t("value4Title"), body: t("value4Body") },
-  ];
+  const eyebrow    = ab?.eyebrow    ?? t("eyebrow");
+  const pageTitle  = ab?.pageTitle  ?? t("title");
+  const intro      = ab?.intro      ?? t("intro");
+  const storyTitle = ab?.storyTitle ?? t("storyTitle");
+  const storyBody  = ab?.storyBody  ?? t("storyBody");
+  const photos     = ab?.photos     ?? [];
+  const valuesTitle = ab?.valuesTitle ?? t("valuesTitle");
+  const ctaTitle   = ab?.ctaTitle   ?? t("ctaTitle");
+  const ctaBody    = ab?.ctaBody    ?? t("ctaBody");
+  const ctaButton  = ab?.ctaButton  ?? t("ctaButton");
+
+  const stats = ab?.stats?.length
+    ? ab.stats
+    : STATS.map(s => ({ num: String(s.num), suffix: s.suffix, label: s.label }));
+
+  const values = ab?.values?.length
+    ? ab.values
+    : [
+        { title: t("value1Title"), body: t("value1Body") },
+        { title: t("value2Title"), body: t("value2Body") },
+        { title: t("value3Title"), body: t("value3Body") },
+        { title: t("value4Title"), body: t("value4Body") },
+      ];
 
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(aboutJsonLd) }} />
-      <PageHeader eyebrow={t("eyebrow")} title={t("title")} />
+      <PageHeader eyebrow={eyebrow} title={pageTitle} />
 
       {/* Intro + story */}
       <section className="py-16 lg:py-20 bg-white">
@@ -78,11 +91,10 @@ export default async function AboutPage({
 
           {/* Stats */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-14">
-            {STATS.map((s) => (
-              <div key={s.label} className="bg-canvas rounded-2xl p-5 text-center border border-gold/10">
+            {stats.map((s, i) => (
+              <div key={i} className="bg-canvas rounded-2xl p-5 text-center border border-gold/10">
                 <p className="text-3xl font-black text-gold-deep">
-                  {s.num}
-                  {s.suffix}
+                  {s.num}{s.suffix}
                 </p>
                 <p className="text-xs text-gray-500 font-semibold mt-1">{s.label}</p>
               </div>
@@ -92,7 +104,7 @@ export default async function AboutPage({
           <h2 className="text-2xl lg:text-3xl font-black text-charcoal mb-4">{storyTitle}</h2>
           <p className="text-gray-600 leading-relaxed">{storyBody}</p>
 
-          {/* Dynamic photo grid */}
+          {/* Photo grid */}
           {photos.length > 0 && (
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-12">
               {photos.map((photo) => (
@@ -114,7 +126,7 @@ export default async function AboutPage({
       {/* Values */}
       <section className="py-16 lg:py-20 bg-canvas">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl lg:text-3xl font-black text-charcoal text-center mb-12">{t("valuesTitle")}</h2>
+          <h2 className="text-2xl lg:text-3xl font-black text-charcoal text-center mb-12">{valuesTitle}</h2>
           <div className="grid sm:grid-cols-2 gap-6">
             {values.map((v, i) => (
               <div key={i} className="bg-white rounded-2xl p-6 shadow-card border border-gray-100">
@@ -131,7 +143,7 @@ export default async function AboutPage({
 
       <WhyMAK />
       <Reviews />
-      <AboutCTA title={t("ctaTitle")} body={t("ctaBody")} button={t("ctaButton")} />
+      <AboutCTA title={ctaTitle} body={ctaBody} button={ctaButton} />
     </>
   );
 }

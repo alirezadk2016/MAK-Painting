@@ -471,12 +471,38 @@ export function DashboardClient({ bookings, config: initialConfig, hasBlobToken 
   }
 
   // ── About ──
+  const DEFAULT_STATS = [
+    { num: "5.0", suffix: "★", label: "Google rating" },
+    { num: "7",   suffix: "",   label: "Verified Google reviews" },
+    { num: "7",   suffix: "-yr",label: "Workmanship warranty" },
+    { num: "100", suffix: "%",  label: "Satisfaction guaranteed" },
+  ];
+  const DEFAULT_VALUES = [
+    { title: "Quality prep, always",        body: "We never skip the prep. Washing, filling, sanding and priming are included in every quote — it's what makes a finish last." },
+    { title: "Honest, transparent pricing", body: "Free, itemised, obligation-free quotes. No surprises, no hidden costs — just clear pricing you can plan around." },
+    { title: "Fully insured & checked",     body: "$20M public liability cover and police-checked team members. Your home and family are in safe hands." },
+    { title: "Backed by warranty",          body: "Every job is covered by our 7-year workmanship warranty. If anything isn't right, we return and fix it free." },
+  ];
   const [aboutContent, setAboutContent] = useState<AboutContent>(initialConfig.about ?? {});
   function updateAbout(patch: Partial<AboutContent>) {
     const next = { ...aboutContent, ...patch };
     setAboutContent(next);
     setCfg(prev => ({ ...prev, about: next }));
     setDirty(true);
+  }
+  const aboutStats = aboutContent.stats ?? DEFAULT_STATS;
+  const aboutValues = aboutContent.values ?? DEFAULT_VALUES;
+  const [valueModal, setValueModal] = useState<{ idx: number } | null>(null);
+  const [valueForm, setValueForm]   = useState({ title: "", body: "" });
+  function openEditValue(idx: number) {
+    setValueForm({ ...aboutValues[idx] });
+    setValueModal({ idx });
+  }
+  function saveValue() {
+    if (!valueModal) return;
+    const next = aboutValues.map((v, i) => i === valueModal.idx ? { title: valueForm.title.trim(), body: valueForm.body.trim() } : v);
+    updateAbout({ values: next });
+    setValueModal(null);
   }
   const aboutPhotos: AlbumPhoto[] = aboutContent.photos ?? [];
   const [aboutPhotoModal, setAboutPhotoModal] = useState<{ mode: "add" | "edit"; idx?: number } | null>(null);
@@ -1153,50 +1179,94 @@ export function DashboardClient({ bookings, config: initialConfig, hasBlobToken 
           <div className="space-y-6">
             <div className="bg-blue-50 border border-blue-200 rounded-2xl px-5 py-4 flex gap-3 items-start">
               <svg className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8.5" stroke="currentColor" strokeWidth="1.5"/><path d="M10 9v5M10 7v.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
-              <p className="text-sm text-blue-700">Edit the text and photos shown on the <strong>/about</strong> page. Leave a field blank to use the default translated text.</p>
+              <p className="text-sm text-blue-700">Full control over the <strong>/about</strong> page. All fields fall back to default text when left blank.</p>
             </div>
 
-            {/* Text content */}
+            {/* 1. Header */}
             <section className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
-              <SectionHead letter="T" title="About Page Text" sub="Intro paragraph · story section" />
-              <div className="p-6 space-y-5">
+              <SectionHead letter="1" title="Page Header" sub="Eyebrow label · main heading" />
+              <div className="p-6 grid sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-gray-600 mb-1.5 uppercase tracking-wide">Intro Paragraph</label>
-                  <textarea
-                    value={aboutContent.intro ?? ""}
-                    onChange={e => updateAbout({ intro: e.target.value || undefined })}
-                    placeholder="MAK Painting Group is a Melbourne-based painting business led by Hossain…"
-                    rows={4}
-                    className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#c9a24b] transition-colors resize-none"
-                  />
+                  <label className="block text-xs font-bold text-gray-600 mb-1.5 uppercase tracking-wide">Eyebrow <span className="normal-case text-gray-400 font-normal">(small text above heading)</span></label>
+                  <input value={aboutContent.eyebrow ?? ""} onChange={e => updateAbout({ eyebrow: e.target.value || undefined })}
+                    placeholder="About us"
+                    className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#c9a24b] transition-colors" />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-gray-600 mb-1.5 uppercase tracking-wide">Story Section Heading</label>
-                  <input
-                    value={aboutContent.storyTitle ?? ""}
-                    onChange={e => updateAbout({ storyTitle: e.target.value || undefined })}
-                    placeholder="Our story"
-                    className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#c9a24b] transition-colors"
-                  />
+                  <label className="block text-xs font-bold text-gray-600 mb-1.5 uppercase tracking-wide">Page Heading</label>
+                  <input value={aboutContent.pageTitle ?? ""} onChange={e => updateAbout({ pageTitle: e.target.value || undefined })}
+                    placeholder="Melbourne painters who actually care"
+                    className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#c9a24b] transition-colors" />
                 </div>
-                <div>
-                  <label className="block text-xs font-bold text-gray-600 mb-1.5 uppercase tracking-wide">Story Body</label>
-                  <textarea
-                    value={aboutContent.storyBody ?? ""}
-                    onChange={e => updateAbout({ storyBody: e.target.value || undefined })}
-                    placeholder="What started as a passion for craftsmanship has grown into…"
-                    rows={4}
-                    className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#c9a24b] transition-colors resize-none"
-                  />
-                </div>
-                <p className="text-xs text-gray-400">Leave blank to use the default translated text.</p>
               </div>
             </section>
 
-            {/* About photos */}
+            {/* 2. Intro */}
             <section className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
-              <SectionHead
-                letter="P" title="About Page Photos" sub={`${aboutPhotos.length} photos · shown below the story text`}
+              <SectionHead letter="2" title="Intro Paragraph" sub="First paragraph shown below the heading" />
+              <div className="p-6">
+                <textarea value={aboutContent.intro ?? ""} onChange={e => updateAbout({ intro: e.target.value || undefined })}
+                  placeholder="MAK Painting Group is a Melbourne-based painting business led by Hossain…"
+                  rows={4}
+                  className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#c9a24b] transition-colors resize-none" />
+              </div>
+            </section>
+
+            {/* 3. Stats */}
+            <section className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
+              <SectionHead letter="3" title="Stats" sub="4 number badges shown below the intro" />
+              <div className="divide-y divide-gray-50">
+                {aboutStats.map((s, i) => (
+                  <div key={i} className="p-4 grid grid-cols-3 gap-3 items-center">
+                    <div>
+                      <label className="block text-[10px] font-bold text-gray-400 mb-1 uppercase tracking-wide">Number</label>
+                      <input value={s.num} onChange={e => {
+                        const next = aboutStats.map((x, j) => j === i ? { ...x, num: e.target.value } : x);
+                        updateAbout({ stats: next });
+                      }} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#c9a24b] transition-colors" />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold text-gray-400 mb-1 uppercase tracking-wide">Suffix</label>
+                      <input value={s.suffix} onChange={e => {
+                        const next = aboutStats.map((x, j) => j === i ? { ...x, suffix: e.target.value } : x);
+                        updateAbout({ stats: next });
+                      }} placeholder="★ or -yr or %" className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#c9a24b] transition-colors" />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold text-gray-400 mb-1 uppercase tracking-wide">Label</label>
+                      <input value={s.label} onChange={e => {
+                        const next = aboutStats.map((x, j) => j === i ? { ...x, label: e.target.value } : x);
+                        updateAbout({ stats: next });
+                      }} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#c9a24b] transition-colors" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* 4. Story */}
+            <section className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
+              <SectionHead letter="4" title="Our Story" sub="Heading + paragraph below the stats" />
+              <div className="p-6 space-y-4">
+                <div>
+                  <label className="block text-xs font-bold text-gray-600 mb-1.5 uppercase tracking-wide">Heading</label>
+                  <input value={aboutContent.storyTitle ?? ""} onChange={e => updateAbout({ storyTitle: e.target.value || undefined })}
+                    placeholder="Our story"
+                    className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#c9a24b] transition-colors" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-gray-600 mb-1.5 uppercase tracking-wide">Body</label>
+                  <textarea value={aboutContent.storyBody ?? ""} onChange={e => updateAbout({ storyBody: e.target.value || undefined })}
+                    placeholder="What started as a passion for craftsmanship has grown into…"
+                    rows={4}
+                    className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#c9a24b] transition-colors resize-none" />
+                </div>
+              </div>
+            </section>
+
+            {/* 5. Photos */}
+            <section className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
+              <SectionHead letter="5" title="Photos" sub={`${aboutPhotos.length} photos · grid shown below the story text`}
                 action={
                   <button onClick={openAddAboutPhoto}
                     className="flex items-center gap-1.5 bg-[#c9a24b] hover:bg-[#b8913a] text-[#1a1a1a] text-xs font-bold px-4 py-2 rounded-xl transition-colors">
@@ -1207,15 +1277,12 @@ export function DashboardClient({ bookings, config: initialConfig, hasBlobToken 
               />
               <div className="divide-y divide-gray-50">
                 {aboutPhotos.length === 0
-                  ? <p className="text-center text-gray-400 text-sm py-12">No photos added. Click &ldquo;Add Photo&rdquo; to add one.</p>
+                  ? <p className="text-center text-gray-400 text-sm py-10">No photos. Click &ldquo;Add Photo&rdquo; to add one.</p>
                   : aboutPhotos.map((photo, idx) => (
                     <div key={photo.id} className="p-4 hover:bg-gray-50/50 transition-colors">
                       <div className="flex items-start gap-4">
                         <UploadableImg src={photo.src} className="w-20 h-16 flex-shrink-0"
-                          onDone={url => {
-                            const next = aboutPhotos.map((p, i) => i === idx ? { ...p, src: url } : p);
-                            updateAbout({ photos: next });
-                          }} />
+                          onDone={url => updateAbout({ photos: aboutPhotos.map((p, i) => i === idx ? { ...p, src: url } : p) })} />
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-bold text-[#1a1a1a] truncate">{photo.caption || "—"}</p>
                           <p className="text-xs text-gray-400 mt-0.5 truncate">{photo.src}</p>
@@ -1236,6 +1303,55 @@ export function DashboardClient({ bookings, config: initialConfig, hasBlobToken 
                     </div>
                   ))
                 }
+              </div>
+            </section>
+
+            {/* 6. Values */}
+            <section className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
+              <SectionHead letter="6" title="Values Section" sub="Section heading + 4 value cards" />
+              <div className="p-6 pb-4">
+                <label className="block text-xs font-bold text-gray-600 mb-1.5 uppercase tracking-wide">Section Heading</label>
+                <input value={aboutContent.valuesTitle ?? ""} onChange={e => updateAbout({ valuesTitle: e.target.value || undefined })}
+                  placeholder="What we stand for"
+                  className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#c9a24b] transition-colors mb-2" />
+              </div>
+              <div className="divide-y divide-gray-50">
+                {aboutValues.map((v, i) => (
+                  <div key={i} className="px-6 py-4 flex items-start gap-4 hover:bg-gray-50/50 transition-colors">
+                    <div className="w-8 h-8 rounded-lg bg-[#1a1a1a] text-[#c9a24b] flex items-center justify-center text-xs font-black flex-shrink-0 mt-0.5">{i + 1}</div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-bold text-[#1a1a1a]">{v.title}</p>
+                      <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{v.body}</p>
+                    </div>
+                    <button onClick={() => openEditValue(i)} className="text-xs font-bold text-[#c9a24b] bg-[#c9a24b]/10 hover:bg-[#c9a24b]/20 px-3 py-1.5 rounded-lg transition-colors flex-shrink-0">Edit</button>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* 7. CTA */}
+            <section className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
+              <SectionHead letter="7" title="Call to Action" sub="Bottom section with a quote button" />
+              <div className="p-6 space-y-4">
+                <div>
+                  <label className="block text-xs font-bold text-gray-600 mb-1.5 uppercase tracking-wide">Heading</label>
+                  <input value={aboutContent.ctaTitle ?? ""} onChange={e => updateAbout({ ctaTitle: e.target.value || undefined })}
+                    placeholder="Ready to transform your space?"
+                    className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#c9a24b] transition-colors" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-gray-600 mb-1.5 uppercase tracking-wide">Body</label>
+                  <textarea value={aboutContent.ctaBody ?? ""} onChange={e => updateAbout({ ctaBody: e.target.value || undefined })}
+                    placeholder="Get a free, no-obligation on-site quote from Melbourne's 5-star painters."
+                    rows={2}
+                    className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#c9a24b] transition-colors resize-none" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-gray-600 mb-1.5 uppercase tracking-wide">Button Text</label>
+                  <input value={aboutContent.ctaButton ?? ""} onChange={e => updateAbout({ ctaButton: e.target.value || undefined })}
+                    placeholder="Get a free quote"
+                    className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#c9a24b] transition-colors" />
+                </div>
               </div>
             </section>
           </div>
@@ -1410,6 +1526,40 @@ export function DashboardClient({ bookings, config: initialConfig, hasBlobToken 
               <button onClick={saveAboutPhoto} disabled={!aboutPhotoForm.src || isPending}
                 className="flex-1 bg-[#c9a24b] hover:bg-[#b8913a] disabled:opacity-50 text-[#1a1a1a] font-bold rounded-xl py-3 text-sm transition-colors">
                 {aboutPhotoModal.mode === "add" ? "Add Photo" : "Save Changes"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Value card modal ── */}
+      {valueModal && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setValueModal(null)}>
+          <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden" onClick={e => e.stopPropagation()}>
+            <div className="bg-[#1a1a1a] px-6 py-5 flex items-center justify-between">
+              <p className="text-white font-black">Edit Value Card {valueModal.idx + 1}</p>
+              <button onClick={() => setValueModal(null)} className="text-white/60 hover:text-white"><svg className="w-5 h-5" viewBox="0 0 20 20" fill="none"><path d="M15 5L5 15M5 5l10 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg></button>
+            </div>
+            <div className="p-6 space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-gray-600 mb-1.5 uppercase tracking-wide">Title</label>
+                <input value={valueForm.title} onChange={e => setValueForm(f => ({ ...f, title: e.target.value }))}
+                  placeholder="Quality prep, always"
+                  className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#c9a24b] transition-colors" />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-gray-600 mb-1.5 uppercase tracking-wide">Body</label>
+                <textarea value={valueForm.body} onChange={e => setValueForm(f => ({ ...f, body: e.target.value }))}
+                  placeholder="We never skip the prep…"
+                  rows={4}
+                  className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#c9a24b] transition-colors resize-none" />
+              </div>
+            </div>
+            <div className="px-6 pb-6 flex gap-3">
+              <button onClick={() => setValueModal(null)} className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl py-3 text-sm">Cancel</button>
+              <button onClick={saveValue} disabled={!valueForm.title.trim() || !valueForm.body.trim()}
+                className="flex-1 bg-[#c9a24b] hover:bg-[#b8913a] disabled:opacity-50 text-[#1a1a1a] font-bold rounded-xl py-3 text-sm transition-colors">
+                Save Changes
               </button>
             </div>
           </div>
