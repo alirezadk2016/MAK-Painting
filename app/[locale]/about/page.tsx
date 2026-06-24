@@ -53,16 +53,16 @@ export default async function AboutPage({
 
   const ab = siteConfig?.about;
 
-  const eyebrow    = ab?.eyebrow    ?? t("eyebrow");
-  const pageTitle  = ab?.pageTitle  ?? t("title");
-  const intro      = ab?.intro      ?? t("intro");
-  const storyTitle = ab?.storyTitle ?? t("storyTitle");
-  const storyBody  = ab?.storyBody  ?? t("storyBody");
-  const photos     = ab?.photos     ?? [];
-  const valuesTitle = ab?.valuesTitle ?? t("valuesTitle");
-  const ctaTitle   = ab?.ctaTitle   ?? t("ctaTitle");
-  const ctaBody    = ab?.ctaBody    ?? t("ctaBody");
-  const ctaButton  = ab?.ctaButton  ?? t("ctaButton");
+  const eyebrow     = ab?.eyebrow     || t("eyebrow");
+  const pageTitle   = ab?.pageTitle   || t("title");
+  const intro       = ab?.intro       || t("intro");
+  const storyTitle  = ab?.storyTitle  || t("storyTitle");
+  const storyBody   = ab?.storyBody   || t("storyBody");
+  const photos      = ab?.photos      ?? [];
+  const valuesTitle = ab?.valuesTitle || t("valuesTitle");
+  const ctaTitle    = ab?.ctaTitle    || t("ctaTitle");
+  const ctaBody     = ab?.ctaBody     || t("ctaBody");
+  const ctaButton   = ab?.ctaButton   || t("ctaButton");
 
   const stats = ab?.stats?.length
     ? ab.stats

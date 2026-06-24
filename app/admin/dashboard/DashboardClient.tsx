@@ -471,6 +471,17 @@ export function DashboardClient({ bookings, config: initialConfig, hasBlobToken 
   }
 
   // ── About ──
+  const DEFAULT_ABOUT = {
+    eyebrow:     "About us",
+    pageTitle:   "Melbourne painters who actually care",
+    intro:       "MAK Painting Group is a Melbourne-based painting business led by Hossain, delivering premium interior, exterior, roof and commercial painting across the city. We built our 5-star reputation one job at a time — with honest advice, meticulous prep and finishes that last.",
+    storyTitle:  "Our story",
+    storyBody:   "What started as a passion for craftsmanship has grown into one of eastern Melbourne's most trusted painting teams. From our base in Ferntree Gully we serve homeowners, landlords, builders and businesses — always with the same promise: turn up on time, protect your property, and leave a finish you're proud of.",
+    valuesTitle: "What we stand for",
+    ctaTitle:    "Ready to transform your space?",
+    ctaBody:     "Get a free, no-obligation on-site quote from Melbourne's 5-star painters.",
+    ctaButton:   "Get a free quote",
+  };
   const DEFAULT_STATS = [
     { num: "5.0", suffix: "★", label: "Google rating" },
     { num: "7",   suffix: "",   label: "Verified Google reviews" },
@@ -483,7 +494,18 @@ export function DashboardClient({ bookings, config: initialConfig, hasBlobToken 
     { title: "Fully insured & checked",     body: "$20M public liability cover and police-checked team members. Your home and family are in safe hands." },
     { title: "Backed by warranty",          body: "Every job is covered by our 7-year workmanship warranty. If anything isn't right, we return and fix it free." },
   ];
-  const [aboutContent, setAboutContent] = useState<AboutContent>(initialConfig.about ?? {});
+  const [aboutContent, setAboutContent] = useState<AboutContent>(() => ({
+    eyebrow:     DEFAULT_ABOUT.eyebrow,
+    pageTitle:   DEFAULT_ABOUT.pageTitle,
+    intro:       DEFAULT_ABOUT.intro,
+    storyTitle:  DEFAULT_ABOUT.storyTitle,
+    storyBody:   DEFAULT_ABOUT.storyBody,
+    valuesTitle: DEFAULT_ABOUT.valuesTitle,
+    ctaTitle:    DEFAULT_ABOUT.ctaTitle,
+    ctaBody:     DEFAULT_ABOUT.ctaBody,
+    ctaButton:   DEFAULT_ABOUT.ctaButton,
+    ...initialConfig.about,
+  }));
   function updateAbout(patch: Partial<AboutContent>) {
     const next = { ...aboutContent, ...patch };
     setAboutContent(next);
@@ -1188,13 +1210,13 @@ export function DashboardClient({ bookings, config: initialConfig, hasBlobToken 
               <div className="p-6 grid sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-bold text-gray-600 mb-1.5 uppercase tracking-wide">Eyebrow <span className="normal-case text-gray-400 font-normal">(small text above heading)</span></label>
-                  <input value={aboutContent.eyebrow ?? ""} onChange={e => updateAbout({ eyebrow: e.target.value || undefined })}
+                  <input value={aboutContent.eyebrow ?? ""} onChange={e => updateAbout({ eyebrow: e.target.value })}
                     placeholder="About us"
                     className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#c9a24b] transition-colors" />
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-gray-600 mb-1.5 uppercase tracking-wide">Page Heading</label>
-                  <input value={aboutContent.pageTitle ?? ""} onChange={e => updateAbout({ pageTitle: e.target.value || undefined })}
+                  <input value={aboutContent.pageTitle ?? ""} onChange={e => updateAbout({ pageTitle: e.target.value })}
                     placeholder="Melbourne painters who actually care"
                     className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#c9a24b] transition-colors" />
                 </div>
@@ -1205,7 +1227,7 @@ export function DashboardClient({ bookings, config: initialConfig, hasBlobToken 
             <section className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
               <SectionHead letter="2" title="Intro Paragraph" sub="First paragraph shown below the heading" />
               <div className="p-6">
-                <textarea value={aboutContent.intro ?? ""} onChange={e => updateAbout({ intro: e.target.value || undefined })}
+                <textarea value={aboutContent.intro ?? ""} onChange={e => updateAbout({ intro: e.target.value })}
                   placeholder="MAK Painting Group is a Melbourne-based painting business led by Hossain…"
                   rows={4}
                   className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#c9a24b] transition-colors resize-none" />
@@ -1250,13 +1272,13 @@ export function DashboardClient({ bookings, config: initialConfig, hasBlobToken 
               <div className="p-6 space-y-4">
                 <div>
                   <label className="block text-xs font-bold text-gray-600 mb-1.5 uppercase tracking-wide">Heading</label>
-                  <input value={aboutContent.storyTitle ?? ""} onChange={e => updateAbout({ storyTitle: e.target.value || undefined })}
+                  <input value={aboutContent.storyTitle ?? ""} onChange={e => updateAbout({ storyTitle: e.target.value })}
                     placeholder="Our story"
                     className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#c9a24b] transition-colors" />
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-gray-600 mb-1.5 uppercase tracking-wide">Body</label>
-                  <textarea value={aboutContent.storyBody ?? ""} onChange={e => updateAbout({ storyBody: e.target.value || undefined })}
+                  <textarea value={aboutContent.storyBody ?? ""} onChange={e => updateAbout({ storyBody: e.target.value })}
                     placeholder="What started as a passion for craftsmanship has grown into…"
                     rows={4}
                     className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#c9a24b] transition-colors resize-none" />
@@ -1311,7 +1333,7 @@ export function DashboardClient({ bookings, config: initialConfig, hasBlobToken 
               <SectionHead letter="6" title="Values Section" sub="Section heading + 4 value cards" />
               <div className="p-6 pb-4">
                 <label className="block text-xs font-bold text-gray-600 mb-1.5 uppercase tracking-wide">Section Heading</label>
-                <input value={aboutContent.valuesTitle ?? ""} onChange={e => updateAbout({ valuesTitle: e.target.value || undefined })}
+                <input value={aboutContent.valuesTitle ?? ""} onChange={e => updateAbout({ valuesTitle: e.target.value })}
                   placeholder="What we stand for"
                   className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#c9a24b] transition-colors mb-2" />
               </div>
@@ -1335,20 +1357,20 @@ export function DashboardClient({ bookings, config: initialConfig, hasBlobToken 
               <div className="p-6 space-y-4">
                 <div>
                   <label className="block text-xs font-bold text-gray-600 mb-1.5 uppercase tracking-wide">Heading</label>
-                  <input value={aboutContent.ctaTitle ?? ""} onChange={e => updateAbout({ ctaTitle: e.target.value || undefined })}
+                  <input value={aboutContent.ctaTitle ?? ""} onChange={e => updateAbout({ ctaTitle: e.target.value })}
                     placeholder="Ready to transform your space?"
                     className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#c9a24b] transition-colors" />
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-gray-600 mb-1.5 uppercase tracking-wide">Body</label>
-                  <textarea value={aboutContent.ctaBody ?? ""} onChange={e => updateAbout({ ctaBody: e.target.value || undefined })}
+                  <textarea value={aboutContent.ctaBody ?? ""} onChange={e => updateAbout({ ctaBody: e.target.value })}
                     placeholder="Get a free, no-obligation on-site quote from Melbourne's 5-star painters."
                     rows={2}
                     className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#c9a24b] transition-colors resize-none" />
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-gray-600 mb-1.5 uppercase tracking-wide">Button Text</label>
-                  <input value={aboutContent.ctaButton ?? ""} onChange={e => updateAbout({ ctaButton: e.target.value || undefined })}
+                  <input value={aboutContent.ctaButton ?? ""} onChange={e => updateAbout({ ctaButton: e.target.value })}
                     placeholder="Get a free quote"
                     className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#c9a24b] transition-colors" />
                 </div>
