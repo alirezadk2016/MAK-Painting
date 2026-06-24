@@ -6,9 +6,10 @@ import type { AlbumPhoto } from "@/lib/site-config";
 
 interface Props {
   photos: AlbumPhoto[];
+  title?: string;
 }
 
-export function PhotoAlbum({ photos }: Props) {
+export function PhotoAlbum({ photos, title }: Props) {
   const [lightbox, setLightbox] = useState<AlbumPhoto | null>(null);
 
   if (!photos.length) return null;
@@ -18,7 +19,7 @@ export function PhotoAlbum({ photos }: Props) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <p className="text-xs font-bold uppercase tracking-widest text-terra mb-2">Our Work</p>
-          <h2 className="text-4xl lg:text-5xl font-black text-charcoal mb-4">Project Photos</h2>
+          <h2 className="text-4xl lg:text-5xl font-black text-charcoal mb-4">{title ?? "Project Photos"}</h2>
           <p className="text-gray-500 text-lg max-w-xl mx-auto">A closer look at the quality and craftsmanship behind every job.</p>
         </div>
 

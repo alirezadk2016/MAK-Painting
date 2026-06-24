@@ -7,6 +7,73 @@ import { SERVICES } from "@/data/site";
 import { ContactSection } from "@/components/ContactSection";
 import { routing } from "@/i18n/routing";
 import { pageTwitter } from "@/lib/seo";
+import { PhotoAlbum } from "@/components/PhotoAlbum";
+
+const SERVICE_PHOTOS: Record<string, { src: string; caption: string }[]> = {
+  interior: [
+    { src: "/wall-interior-1.jpg",   caption: "Wall Painting" },
+    { src: "/wall-interior-2.jpg",   caption: "Wall Painting" },
+    { src: "/wall-interior-3.jpg",   caption: "Wall Painting" },
+    { src: "/wall-interior-4.jpg",   caption: "Wall Painting" },
+    { src: "/wall-interior-5.jpg",   caption: "Wall Painting" },
+    { src: "/wall-interior-6.jpg",   caption: "Wall Painting" },
+    { src: "/interior-space-1.jpg",  caption: "Interior Space" },
+    { src: "/interior-space-2.jpg",  caption: "Interior Space" },
+    { src: "/living-room-after.jpg", caption: "Living Room" },
+    { src: "/bedroom-pink-after.jpg",caption: "Bedroom" },
+    { src: "/kitchen-after.jpg",     caption: "Kitchen" },
+    { src: "/hallway-after.jpg",     caption: "Hallway" },
+    { src: "/staircase-1.jpg",       caption: "Staircase" },
+    { src: "/staircase-2.jpg",       caption: "Staircase" },
+    { src: "/staircase-3.jpg",       caption: "Staircase" },
+  ],
+  exterior: [
+    { src: "/exterior-terrace.jpg",   caption: "Exterior" },
+    { src: "/exterior-render.jpg",    caption: "Render & Repaint" },
+    { src: "/deck-after.jpg",         caption: "Deck" },
+    { src: "/deck-exterior-after.jpg",caption: "Exterior Deck" },
+    { src: "/pool-area.jpg",          caption: "Pool Area" },
+  ],
+  roof: [
+    { src: "/ceiling-repair-1.jpg", caption: "Ceiling Repair & Paint" },
+    { src: "/ceiling-repair-2.jpg", caption: "Ceiling Repair & Paint" },
+    { src: "/ceiling-repair-3.jpg", caption: "Ceiling Repair & Paint" },
+    { src: "/ceiling-repair-4.jpg", caption: "Ceiling Repair & Paint" },
+    { src: "/ceiling-repair-5.jpg", caption: "Ceiling Repair & Paint" },
+    { src: "/ceiling-repair-6.jpg", caption: "Ceiling Repair & Paint" },
+    { src: "/ceiling-repair-7.jpg", caption: "Ceiling Repair & Paint" },
+    { src: "/ceiling-repair-8.jpg", caption: "Ceiling Repair & Paint" },
+    { src: "/ceiling-repair-9.jpg", caption: "Ceiling Repair & Paint" },
+    { src: "/ceiling-repair-10.jpg",caption: "Ceiling Repair & Paint" },
+  ],
+  commercial: [
+    { src: "/commercial-living-during.jpg", caption: "Commercial Project" },
+    { src: "/commercial-prep.jpg",          caption: "Commercial Prep" },
+    { src: "/interior-space-1.jpg",         caption: "Interior Space" },
+    { src: "/interior-space-2.jpg",         caption: "Interior Space" },
+  ],
+  "special-finishes": [
+    { src: "/feature-wall-lilac.jpg",      caption: "Feature Wall" },
+    { src: "/feature-wall-undercoat.jpg",  caption: "Feature Wall" },
+    { src: "/wall-interior-5.jpg",         caption: "Wall Finish" },
+    { src: "/wall-interior-6.jpg",         caption: "Wall Finish" },
+  ],
+  repaints: [
+    { src: "/door-window-1.jpg", caption: "Door & Window" },
+    { src: "/door-window-2.jpg", caption: "Door & Window" },
+    { src: "/door-window-3.jpg", caption: "Door & Window" },
+    { src: "/door-window-4.jpg", caption: "Door & Window" },
+    { src: "/door-window-5.jpg", caption: "Door & Window" },
+    { src: "/door-window-6.jpg", caption: "Door & Window" },
+    { src: "/door-window-7.jpg", caption: "Door & Window" },
+    { src: "/door-window-8.jpg", caption: "Door & Window" },
+    { src: "/door-window-9.jpg", caption: "Door & Window" },
+    { src: "/wall-interior-7.jpg",  caption: "Wall Repaint" },
+    { src: "/wall-interior-8.jpg",  caption: "Wall Repaint" },
+    { src: "/wall-interior-9.jpg",  caption: "Wall Repaint" },
+    { src: "/wall-interior-10.jpg", caption: "Wall Repaint" },
+  ],
+};
 
 export function generateStaticParams() {
   return routing.locales.flatMap((locale) =>
@@ -129,6 +196,14 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
             </div>
           </div>
         </div>
+
+        {/* Photo album for this service */}
+        {SERVICE_PHOTOS[service.slug]?.length > 0 && (
+          <PhotoAlbum
+            photos={SERVICE_PHOTOS[service.slug].map((p, i) => ({ id: i + 1, ...p }))}
+            title={`${service.title} — Our Work`}
+          />
+        )}
 
         <ContactSection />
       </div>
