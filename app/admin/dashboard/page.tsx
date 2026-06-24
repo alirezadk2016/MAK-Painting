@@ -1,6 +1,6 @@
 import { requireAdmin } from "@/lib/auth";
 import { listBookings } from "@/lib/db";
-import { getSiteConfig, DEFAULT_PRICING, DEFAULT_FAQS, type SiteConfig } from "@/lib/site-config";
+import { getSiteConfig, DEFAULT_PRICING, DEFAULT_FAQS, DEFAULT_ALBUM_PHOTOS, type SiteConfig } from "@/lib/site-config";
 import { DashboardClient } from "./DashboardClient";
 
 export const dynamic = "force-dynamic";
@@ -34,6 +34,7 @@ export default async function AdminDashboard() {
     gallery:         saved?.gallery?.length  ? saved.gallery  : DEFAULT_GALLERY,
     pricing:         saved?.pricing?.length  ? saved.pricing  : DEFAULT_PRICING,
     faqs:            saved?.faqs?.length     ? saved.faqs     : DEFAULT_FAQS,
+    album:           saved?.album?.length    ? saved.album    : DEFAULT_ALBUM_PHOTOS,
   };
 
   return <DashboardClient bookings={bookings} config={config} hasBlobToken={hasBlobToken} />;

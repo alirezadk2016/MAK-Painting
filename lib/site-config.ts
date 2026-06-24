@@ -36,6 +36,12 @@ export interface FaqItem {
   a: string;
 }
 
+export interface AlbumPhoto {
+  id: number;
+  src: string;
+  caption?: string;
+}
+
 export interface HeroPosition {
   x: number;   // 0–100, object-position x%
   y: number;   // 0–100, object-position y%
@@ -51,6 +57,7 @@ export interface SiteConfig {
   gallery: GalleryPair[];
   pricing: PricingTier[];
   faqs?: FaqItem[];
+  album?: AlbumPhoto[];
 }
 
 // Keep old type alias so existing imports don't break
@@ -115,6 +122,15 @@ export const DEFAULT_FAQS: FaqItem[] = [
   { q: "Are you insured and police checked?",        a: "Yes. MAK Painting Group holds a current $20M public liability policy and all team members hold a valid Working With Children Check and police clearance. Certificates are available on request." },
   { q: "Do you do weekend work?",                    a: "Yes. We offer Saturday work at standard rates for residential projects. Sunday and public holiday work is available for commercial clients at a small surcharge. Just let us know your preference when booking." },
   { q: "How do you keep the job site clean?",        a: "We use dust sheets, drop cloths and masking to protect all surfaces. At the end of each day we tidy up, and on completion we do a full clean-up including removing all materials, rubbish and touch-up any accidental marks." },
+];
+
+export const DEFAULT_ALBUM_PHOTOS: AlbumPhoto[] = [
+  { id: 1, src: "/1.png",                   caption: "MAK Painting Group" },
+  { id: 2, src: "/living-room-after.jpg",   caption: "Interior Painting" },
+  { id: 3, src: "/kitchen-after.jpg",        caption: "Kitchen Cabinet Painting" },
+  { id: 4, src: "/bedroom-pink-after.jpg",   caption: "Bedroom Painting" },
+  { id: 5, src: "/deck-after.jpg",           caption: "Deck Painting" },
+  { id: 6, src: "/exterior-terrace.jpg",     caption: "Exterior Painting" },
 ];
 
 function hasKV(): boolean {

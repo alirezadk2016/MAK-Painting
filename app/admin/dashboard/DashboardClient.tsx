@@ -4,7 +4,7 @@ import { useTransition, useOptimistic, useState, useRef, useCallback } from "rea
 import Image from "next/image";
 import { logoutAction, updateBookingAction, saveSiteConfigAction, uploadImageAction } from "../actions";
 import type { Booking, BookingStatus } from "@/lib/db";
-import type { SiteConfig, GalleryPair, PricingTier, ServiceCard, HeroPosition, ServicesSection, FaqItem } from "@/lib/site-config";
+import type { SiteConfig, GalleryPair, PricingTier, ServiceCard, HeroPosition, ServicesSection, FaqItem, AlbumPhoto } from "@/lib/site-config";
 
 // ─── Static defaults ──────────────────────────────────────────────────────────
 const DEFAULT_SERVICES = [
@@ -470,6 +470,40 @@ export function DashboardClient({ bookings, config: initialConfig, hasBlobToken 
     setFaqModal(null);
   }
 
+  // ── Photo Album ──
+  const albumPhotos: AlbumPhoto[] = cfg.album ?? [];
+  const [albumModal, setAlbumModal] = useState<{ mode: "add" | "edit"; idx?: number } | null>(null);
+  const [albumForm, setAlbumForm]   = useState<AlbumPhoto>({ id: 0, src: "", caption: "" });
+
+  function openAddAlbum() {
+    setAlbumForm({ id: Math.max(0, ...albumPhotos.map(p => p.id)) + 1, src: "", caption: "" });
+    setAlbumModal({ mode: "add" });
+  }
+  function openEditAlbum(photo: AlbumPhoto, idx: number) {
+    setAlbumForm({ ...photo });
+    setAlbumModal({ mode: "edit", idx });
+  }
+  function deleteAlbum(idx: number) {
+    if (!confirm("Remove this photo?")) return;
+    persist({ ...cfg, album: albumPhotos.filter((_, i) => i !== idx) });
+  }
+  function moveAlbum(idx: number, dir: -1 | 1) {
+    const arr = [...albumPhotos];
+    const swap = idx + dir;
+    if (swap < 0 || swap >= arr.length) return;
+    [arr[idx], arr[swap]] = [arr[swap], arr[idx]];
+    persist({ ...cfg, album: arr });
+  }
+  function saveAlbum() {
+    if (!albumForm.src) return;
+    const photo: AlbumPhoto = { ...albumForm, caption: albumForm.caption?.trim() || undefined };
+    const next = albumModal?.mode === "add"
+      ? [...albumPhotos, photo]
+      : albumPhotos.map((p, i) => i === albumModal!.idx ? photo : p);
+    persist({ ...cfg, album: next });
+    setAlbumModal(null);
+  }
+
   // ── Calendar ──
   const days  = daysInMonth(calYear, calMonth);
   const first = firstDayOfMonth(calYear, calMonth);
@@ -923,6 +957,52 @@ export function DashboardClient({ bookings, config: initialConfig, hasBlobToken 
                 }
               </div>
             </section>
+
+            {/* Photo Album */}
+            <section className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
+              <SectionHead
+                letter="A" title="Photo Album" sub={`${albumPhotos.length} photos · shown on the Gallery page below before/after section`}
+                action={
+                  <button onClick={openAddAlbum}
+                    className="flex items-center gap-1.5 bg-[#c9a24b] hover:bg-[#b8913a] text-[#1a1a1a] text-xs font-bold px-4 py-2 rounded-xl transition-colors">
+                    <svg className="w-3.5 h-3.5" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
+                    Add Photo
+                  </button>
+                }
+              />
+              <div className="divide-y divide-gray-50">
+                {albumPhotos.length === 0
+                  ? <p className="text-center text-gray-400 text-sm py-12">No photos yet.</p>
+                  : albumPhotos.map((photo, idx) => (
+                    <div key={photo.id} className="p-4 hover:bg-gray-50/50 transition-colors">
+                      <div className="flex items-start gap-4">
+                        <UploadableImg src={photo.src} className="w-20 h-16 flex-shrink-0"
+                          onDone={url => {
+                            const next = albumPhotos.map((p, i) => i === idx ? { ...p, src: url } : p);
+                            persist({ ...cfg, album: next });
+                          }} />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-bold text-[#1a1a1a] truncate">{photo.caption || "—"}</p>
+                          <p className="text-xs text-gray-400 mt-0.5 truncate">{photo.src}</p>
+                        </div>
+                        <div className="flex items-center gap-1.5 flex-shrink-0">
+                          <button onClick={() => moveAlbum(idx, -1)} disabled={idx === 0}
+                            className="w-7 h-7 flex items-center justify-center rounded-lg border border-gray-200 hover:border-gray-400 disabled:opacity-30 transition-colors text-gray-500">
+                            <svg className="w-3.5 h-3.5" viewBox="0 0 16 16" fill="none"><path d="M4 10l4-4 4 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                          </button>
+                          <button onClick={() => moveAlbum(idx, 1)} disabled={idx === albumPhotos.length - 1}
+                            className="w-7 h-7 flex items-center justify-center rounded-lg border border-gray-200 hover:border-gray-400 disabled:opacity-30 transition-colors text-gray-500">
+                            <svg className="w-3.5 h-3.5" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                          </button>
+                          <button onClick={() => openEditAlbum(photo, idx)} className="text-xs font-bold text-[#c9a24b] bg-[#c9a24b]/10 hover:bg-[#c9a24b]/20 px-3 py-1.5 rounded-lg transition-colors">Edit</button>
+                          <button onClick={() => deleteAlbum(idx)} className="text-xs font-bold text-red-500 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg transition-colors">Delete</button>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                }
+              </div>
+            </section>
           </div>
         )}
 
@@ -1160,6 +1240,41 @@ export function DashboardClient({ bookings, config: initialConfig, hasBlobToken 
               <button onClick={saveGallery} disabled={!gForm.title || !gForm.before || !gForm.after || isPending}
                 className="flex-1 bg-[#c9a24b] hover:bg-[#b8913a] disabled:opacity-50 text-[#1a1a1a] font-bold rounded-xl py-3 text-sm transition-colors">
                 {gModal.mode === "add" ? "Add Pair" : "Save Changes"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Album photo modal ── */}
+      {albumModal && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setAlbumModal(null)}>
+          <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden" onClick={e => e.stopPropagation()}>
+            <div className="bg-[#1a1a1a] px-6 py-5 flex items-center justify-between">
+              <p className="text-white font-black">{albumModal.mode === "add" ? "Add Album Photo" : "Edit Album Photo"}</p>
+              <button onClick={() => setAlbumModal(null)} className="text-white/60 hover:text-white"><svg className="w-5 h-5" viewBox="0 0 20 20" fill="none"><path d="M15 5L5 15M5 5l10 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg></button>
+            </div>
+            <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+              <div>
+                <label className="block text-xs font-bold text-gray-600 mb-1.5 uppercase tracking-wide">Photo</label>
+                {albumForm.src && <Img src={albumForm.src} className="w-full h-48 rounded-xl mb-2" />}
+                <UploadBtn small label="Upload Photo" onDone={url => setAlbumForm(f => ({ ...f, src: url }))} />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-gray-600 mb-1.5 uppercase tracking-wide">Caption <span className="normal-case text-gray-400 font-normal">(optional)</span></label>
+                <input
+                  value={albumForm.caption ?? ""}
+                  onChange={e => setAlbumForm(f => ({ ...f, caption: e.target.value }))}
+                  placeholder="e.g. Lounge room repaint — South Yarra"
+                  className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#c9a24b] transition-colors"
+                />
+              </div>
+            </div>
+            <div className="px-6 pb-6 flex gap-3">
+              <button onClick={() => setAlbumModal(null)} className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl py-3 text-sm">Cancel</button>
+              <button onClick={saveAlbum} disabled={!albumForm.src || isPending}
+                className="flex-1 bg-[#c9a24b] hover:bg-[#b8913a] disabled:opacity-50 text-[#1a1a1a] font-bold rounded-xl py-3 text-sm transition-colors">
+                {albumModal.mode === "add" ? "Add Photo" : "Save Changes"}
               </button>
             </div>
           </div>
