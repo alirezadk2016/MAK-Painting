@@ -152,12 +152,31 @@ export const DEFAULT_FAQS: FaqItem[] = [
 ];
 
 export const DEFAULT_ALBUM_PHOTOS: AlbumPhoto[] = [
-  { id: 1, src: "/1.png",                   caption: "MAK Painting Group" },
-  { id: 2, src: "/living-room-after.jpg",   caption: "Interior Painting" },
-  { id: 3, src: "/kitchen-after.jpg",        caption: "Kitchen Cabinet Painting" },
-  { id: 4, src: "/bedroom-pink-after.jpg",   caption: "Bedroom Painting" },
-  { id: 5, src: "/deck-after.jpg",           caption: "Deck Painting" },
-  { id: 6, src: "/exterior-terrace.jpg",     caption: "Exterior Painting" },
+  { id: 1,  src: "/living-room-after.jpg",    caption: "Interior Painting" },
+  { id: 2,  src: "/kitchen-after.jpg",         caption: "Kitchen Painting" },
+  { id: 3,  src: "/bedroom-pink-after.jpg",    caption: "Bedroom Painting" },
+  { id: 4,  src: "/exterior-terrace.jpg",      caption: "Exterior Painting" },
+  { id: 5,  src: "/deck-after.jpg",            caption: "Deck Painting" },
+  { id: 6,  src: "/wall-interior-1.jpg",       caption: "Wall Painting" },
+  { id: 7,  src: "/wall-interior-2.jpg",       caption: "Wall Painting" },
+  { id: 8,  src: "/wall-interior-3.jpg",       caption: "Wall Painting" },
+  { id: 9,  src: "/wall-interior-4.jpg",       caption: "Wall Painting" },
+  { id: 10, src: "/wall-interior-5.jpg",       caption: "Wall Painting" },
+  { id: 11, src: "/ceiling-repair-1.jpg",      caption: "Ceiling Repair & Paint" },
+  { id: 12, src: "/ceiling-repair-2.jpg",      caption: "Ceiling Repair & Paint" },
+  { id: 13, src: "/ceiling-repair-3.jpg",      caption: "Ceiling Repair & Paint" },
+  { id: 14, src: "/ceiling-repair-4.jpg",      caption: "Ceiling Repair & Paint" },
+  { id: 15, src: "/ceiling-repair-5.jpg",      caption: "Ceiling Repair & Paint" },
+  { id: 16, src: "/door-window-1.jpg",         caption: "Door & Window Painting" },
+  { id: 17, src: "/door-window-2.jpg",         caption: "Door & Window Painting" },
+  { id: 18, src: "/door-window-3.jpg",         caption: "Door & Window Painting" },
+  { id: 19, src: "/door-window-4.jpg",         caption: "Door & Window Painting" },
+  { id: 20, src: "/door-window-5.jpg",         caption: "Door & Window Painting" },
+  { id: 21, src: "/staircase-1.jpg",           caption: "Staircase Painting" },
+  { id: 22, src: "/staircase-2.jpg",           caption: "Staircase Painting" },
+  { id: 23, src: "/staircase-3.jpg",           caption: "Staircase Painting" },
+  { id: 24, src: "/interior-space-1.jpg",      caption: "Interior Space" },
+  { id: 25, src: "/interior-space-2.jpg",      caption: "Interior Space" },
 ];
 
 function hasKV(): boolean {
