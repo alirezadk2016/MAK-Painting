@@ -22,7 +22,7 @@ export function Pricing({ tiers = DEFAULT_PRICING }: Props) {
           <p className="text-gray-500 text-lg max-w-xl mx-auto">{t("subtitle")}</p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6 items-stretch overflow-x-hidden">
+        <div className="grid md:grid-cols-3 gap-6 items-stretch pt-5">
           {tiers.map((tier, i) => (
             <motion.div
               key={tier.id}
