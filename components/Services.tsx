@@ -6,6 +6,15 @@ import { motion } from "framer-motion";
 import { SERVICES } from "@/data/site";
 import type { ServiceCard, ServicesSection } from "@/lib/site-config";
 
+const PHOTO_COUNTS: Record<string, number> = {
+  interior: 15,
+  exterior: 5,
+  roof: 10,
+  commercial: 4,
+  "special-finishes": 4,
+  repaints: 13,
+};
+
 interface Props {
   cards?: ServiceCard[];
   section?: ServicesSection;
@@ -90,7 +99,7 @@ function ServiceCardInner({
   t,
   showLink = true,
 }: {
-  s: { title: string; image: string; short: string; priceFrom: string };
+  s: { id?: string; title: string; image: string; short: string; priceFrom: string };
   t: ReturnType<typeof useTranslations>;
   showLink?: boolean;
 }) {
@@ -108,6 +117,15 @@ function ServiceCardInner({
         <div className="absolute bottom-0 inset-x-0 p-4">
           <h3 className="text-white font-black text-xl leading-tight">{s.title}</h3>
         </div>
+        {s.id && PHOTO_COUNTS[s.id] && (
+          <div className="absolute top-3 end-3 flex items-center gap-1.5 bg-white/20 backdrop-blur-md border border-white/30 rounded-full px-3 py-1.5">
+            <svg className="w-3.5 h-3.5 text-white" viewBox="0 0 16 16" fill="none">
+              <rect x="1" y="3" width="14" height="10" rx="2" stroke="currentColor" strokeWidth="1.4"/>
+              <circle cx="8" cy="8" r="2.5" stroke="currentColor" strokeWidth="1.4"/>
+            </svg>
+            <span className="text-white text-xs font-bold">{PHOTO_COUNTS[s.id]}+ photos</span>
+          </div>
+        )}
       </div>
       {(s.short || s.priceFrom || showLink) && (
         <div className="p-5">
