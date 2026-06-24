@@ -42,6 +42,13 @@ export interface AlbumPhoto {
   caption?: string;
 }
 
+export interface AboutContent {
+  intro?: string;
+  storyTitle?: string;
+  storyBody?: string;
+  photos?: AlbumPhoto[];
+}
+
 export interface HeroPosition {
   x: number;   // 0–100, object-position x%
   y: number;   // 0–100, object-position y%
@@ -58,6 +65,7 @@ export interface SiteConfig {
   pricing: PricingTier[];
   faqs?: FaqItem[];
   album?: AlbumPhoto[];
+  about?: AboutContent;
 }
 
 // Keep old type alias so existing imports don't break

@@ -4,7 +4,7 @@ import { useTransition, useOptimistic, useState, useRef, useCallback } from "rea
 import Image from "next/image";
 import { logoutAction, updateBookingAction, saveSiteConfigAction, uploadImageAction } from "../actions";
 import type { Booking, BookingStatus } from "@/lib/db";
-import type { SiteConfig, GalleryPair, PricingTier, ServiceCard, HeroPosition, ServicesSection, FaqItem, AlbumPhoto } from "@/lib/site-config";
+import type { SiteConfig, GalleryPair, PricingTier, ServiceCard, HeroPosition, ServicesSection, FaqItem, AlbumPhoto, AboutContent } from "@/lib/site-config";
 
 // ─── Static defaults ──────────────────────────────────────────────────────────
 const DEFAULT_SERVICES = [
@@ -234,7 +234,7 @@ function SectionHead({ letter, title, sub, action }: { letter: string; title: st
 interface Props { bookings: Booking[]; config: SiteConfig; hasBlobToken: boolean; }
 
 export function DashboardClient({ bookings, config: initialConfig, hasBlobToken }: Props) {
-  const [tab, setTab]           = useState<"bookings" | "media" | "pricing" | "faq">("bookings");
+  const [tab, setTab]           = useState<"bookings" | "media" | "pricing" | "faq" | "about">("bookings");
   const [view, setView]         = useState<"calendar" | "list">("calendar");
   const [filter, setFilter]     = useState<"all" | BookingStatus>("all");
   const [calYear, setCalYear]   = useState(new Date().getFullYear());
@@ -470,6 +470,47 @@ export function DashboardClient({ bookings, config: initialConfig, hasBlobToken 
     setFaqModal(null);
   }
 
+  // ── About ──
+  const [aboutContent, setAboutContent] = useState<AboutContent>(initialConfig.about ?? {});
+  function updateAbout(patch: Partial<AboutContent>) {
+    const next = { ...aboutContent, ...patch };
+    setAboutContent(next);
+    setCfg(prev => ({ ...prev, about: next }));
+    setDirty(true);
+  }
+  const aboutPhotos: AlbumPhoto[] = aboutContent.photos ?? [];
+  const [aboutPhotoModal, setAboutPhotoModal] = useState<{ mode: "add" | "edit"; idx?: number } | null>(null);
+  const [aboutPhotoForm, setAboutPhotoForm]   = useState<AlbumPhoto>({ id: 0, src: "", caption: "" });
+
+  function openAddAboutPhoto() {
+    setAboutPhotoForm({ id: Math.max(0, ...aboutPhotos.map(p => p.id)) + 1, src: "", caption: "" });
+    setAboutPhotoModal({ mode: "add" });
+  }
+  function openEditAboutPhoto(photo: AlbumPhoto, idx: number) {
+    setAboutPhotoForm({ ...photo });
+    setAboutPhotoModal({ mode: "edit", idx });
+  }
+  function deleteAboutPhoto(idx: number) {
+    if (!confirm("Remove this photo?")) return;
+    updateAbout({ photos: aboutPhotos.filter((_, i) => i !== idx) });
+  }
+  function moveAboutPhoto(idx: number, dir: -1 | 1) {
+    const arr = [...aboutPhotos];
+    const swap = idx + dir;
+    if (swap < 0 || swap >= arr.length) return;
+    [arr[idx], arr[swap]] = [arr[swap], arr[idx]];
+    updateAbout({ photos: arr });
+  }
+  function saveAboutPhoto() {
+    if (!aboutPhotoForm.src) return;
+    const photo: AlbumPhoto = { ...aboutPhotoForm, caption: aboutPhotoForm.caption?.trim() || undefined };
+    const next = aboutPhotoModal?.mode === "add"
+      ? [...aboutPhotos, photo]
+      : aboutPhotos.map((p, i) => i === aboutPhotoModal!.idx ? photo : p);
+    updateAbout({ photos: next });
+    setAboutPhotoModal(null);
+  }
+
   // ── Photo Album ──
   const albumPhotos: AlbumPhoto[] = cfg.album ?? [];
   const [albumModal, setAlbumModal] = useState<{ mode: "add" | "edit"; idx?: number } | null>(null);
@@ -565,6 +606,7 @@ export function DashboardClient({ bookings, config: initialConfig, hasBlobToken 
             { key: "media",    label: "Media",          icon: "🖼" },
             { key: "pricing",  label: "Pricing",        icon: "💰" },
             { key: "faq",      label: "FAQ",            icon: "❓" },
+            { key: "about",    label: "About",          icon: "👤" },
           ] as const).map(t => (
             <button key={t.key} onClick={() => setTab(t.key)}
               className={`flex items-center gap-2 px-5 py-3.5 text-sm font-bold border-b-2 transition-colors ${
@@ -1105,6 +1147,99 @@ export function DashboardClient({ bookings, config: initialConfig, hasBlobToken 
             </section>
           </div>
         )}
+
+        {/* ── ABOUT ── */}
+        {tab === "about" && (
+          <div className="space-y-6">
+            <div className="bg-blue-50 border border-blue-200 rounded-2xl px-5 py-4 flex gap-3 items-start">
+              <svg className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8.5" stroke="currentColor" strokeWidth="1.5"/><path d="M10 9v5M10 7v.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
+              <p className="text-sm text-blue-700">Edit the text and photos shown on the <strong>/about</strong> page. Leave a field blank to use the default translated text.</p>
+            </div>
+
+            {/* Text content */}
+            <section className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
+              <SectionHead letter="T" title="About Page Text" sub="Intro paragraph · story section" />
+              <div className="p-6 space-y-5">
+                <div>
+                  <label className="block text-xs font-bold text-gray-600 mb-1.5 uppercase tracking-wide">Intro Paragraph</label>
+                  <textarea
+                    value={aboutContent.intro ?? ""}
+                    onChange={e => updateAbout({ intro: e.target.value || undefined })}
+                    placeholder="MAK Painting Group is a Melbourne-based painting business led by Hossain…"
+                    rows={4}
+                    className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#c9a24b] transition-colors resize-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-gray-600 mb-1.5 uppercase tracking-wide">Story Section Heading</label>
+                  <input
+                    value={aboutContent.storyTitle ?? ""}
+                    onChange={e => updateAbout({ storyTitle: e.target.value || undefined })}
+                    placeholder="Our story"
+                    className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#c9a24b] transition-colors"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-gray-600 mb-1.5 uppercase tracking-wide">Story Body</label>
+                  <textarea
+                    value={aboutContent.storyBody ?? ""}
+                    onChange={e => updateAbout({ storyBody: e.target.value || undefined })}
+                    placeholder="What started as a passion for craftsmanship has grown into…"
+                    rows={4}
+                    className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#c9a24b] transition-colors resize-none"
+                  />
+                </div>
+                <p className="text-xs text-gray-400">Leave blank to use the default translated text.</p>
+              </div>
+            </section>
+
+            {/* About photos */}
+            <section className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
+              <SectionHead
+                letter="P" title="About Page Photos" sub={`${aboutPhotos.length} photos · shown below the story text`}
+                action={
+                  <button onClick={openAddAboutPhoto}
+                    className="flex items-center gap-1.5 bg-[#c9a24b] hover:bg-[#b8913a] text-[#1a1a1a] text-xs font-bold px-4 py-2 rounded-xl transition-colors">
+                    <svg className="w-3.5 h-3.5" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
+                    Add Photo
+                  </button>
+                }
+              />
+              <div className="divide-y divide-gray-50">
+                {aboutPhotos.length === 0
+                  ? <p className="text-center text-gray-400 text-sm py-12">No photos added. Click &ldquo;Add Photo&rdquo; to add one.</p>
+                  : aboutPhotos.map((photo, idx) => (
+                    <div key={photo.id} className="p-4 hover:bg-gray-50/50 transition-colors">
+                      <div className="flex items-start gap-4">
+                        <UploadableImg src={photo.src} className="w-20 h-16 flex-shrink-0"
+                          onDone={url => {
+                            const next = aboutPhotos.map((p, i) => i === idx ? { ...p, src: url } : p);
+                            updateAbout({ photos: next });
+                          }} />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-bold text-[#1a1a1a] truncate">{photo.caption || "—"}</p>
+                          <p className="text-xs text-gray-400 mt-0.5 truncate">{photo.src}</p>
+                        </div>
+                        <div className="flex items-center gap-1.5 flex-shrink-0">
+                          <button onClick={() => moveAboutPhoto(idx, -1)} disabled={idx === 0}
+                            className="w-7 h-7 flex items-center justify-center rounded-lg border border-gray-200 hover:border-gray-400 disabled:opacity-30 transition-colors text-gray-500">
+                            <svg className="w-3.5 h-3.5" viewBox="0 0 16 16" fill="none"><path d="M4 10l4-4 4 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                          </button>
+                          <button onClick={() => moveAboutPhoto(idx, 1)} disabled={idx === aboutPhotos.length - 1}
+                            className="w-7 h-7 flex items-center justify-center rounded-lg border border-gray-200 hover:border-gray-400 disabled:opacity-30 transition-colors text-gray-500">
+                            <svg className="w-3.5 h-3.5" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                          </button>
+                          <button onClick={() => openEditAboutPhoto(photo, idx)} className="text-xs font-bold text-[#c9a24b] bg-[#c9a24b]/10 hover:bg-[#c9a24b]/20 px-3 py-1.5 rounded-lg transition-colors">Edit</button>
+                          <button onClick={() => deleteAboutPhoto(idx)} className="text-xs font-bold text-red-500 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg transition-colors">Delete</button>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                }
+              </div>
+            </section>
+          </div>
+        )}
       </main>
 
       {/* ── Booking modal ── */}
@@ -1240,6 +1375,41 @@ export function DashboardClient({ bookings, config: initialConfig, hasBlobToken 
               <button onClick={saveGallery} disabled={!gForm.title || !gForm.before || !gForm.after || isPending}
                 className="flex-1 bg-[#c9a24b] hover:bg-[#b8913a] disabled:opacity-50 text-[#1a1a1a] font-bold rounded-xl py-3 text-sm transition-colors">
                 {gModal.mode === "add" ? "Add Pair" : "Save Changes"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── About photo modal ── */}
+      {aboutPhotoModal && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setAboutPhotoModal(null)}>
+          <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden" onClick={e => e.stopPropagation()}>
+            <div className="bg-[#1a1a1a] px-6 py-5 flex items-center justify-between">
+              <p className="text-white font-black">{aboutPhotoModal.mode === "add" ? "Add About Photo" : "Edit About Photo"}</p>
+              <button onClick={() => setAboutPhotoModal(null)} className="text-white/60 hover:text-white"><svg className="w-5 h-5" viewBox="0 0 20 20" fill="none"><path d="M15 5L5 15M5 5l10 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg></button>
+            </div>
+            <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+              <div>
+                <label className="block text-xs font-bold text-gray-600 mb-1.5 uppercase tracking-wide">Photo</label>
+                {aboutPhotoForm.src && <Img src={aboutPhotoForm.src} className="w-full h-48 rounded-xl mb-2" />}
+                <UploadBtn small label="Upload Photo" onDone={url => setAboutPhotoForm(f => ({ ...f, src: url }))} />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-gray-600 mb-1.5 uppercase tracking-wide">Caption <span className="normal-case text-gray-400 font-normal">(optional)</span></label>
+                <input
+                  value={aboutPhotoForm.caption ?? ""}
+                  onChange={e => setAboutPhotoForm(f => ({ ...f, caption: e.target.value }))}
+                  placeholder="e.g. Our team at work"
+                  className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#c9a24b] transition-colors"
+                />
+              </div>
+            </div>
+            <div className="px-6 pb-6 flex gap-3">
+              <button onClick={() => setAboutPhotoModal(null)} className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl py-3 text-sm">Cancel</button>
+              <button onClick={saveAboutPhoto} disabled={!aboutPhotoForm.src || isPending}
+                className="flex-1 bg-[#c9a24b] hover:bg-[#b8913a] disabled:opacity-50 text-[#1a1a1a] font-bold rounded-xl py-3 text-sm transition-colors">
+                {aboutPhotoModal.mode === "add" ? "Add Photo" : "Save Changes"}
               </button>
             </div>
           </div>

@@ -35,6 +35,7 @@ export default async function AdminDashboard() {
     pricing:         saved?.pricing?.length  ? saved.pricing  : DEFAULT_PRICING,
     faqs:            saved?.faqs?.length     ? saved.faqs     : DEFAULT_FAQS,
     album:           saved?.album?.length    ? saved.album    : DEFAULT_ALBUM_PHOTOS,
+    about:           saved?.about,
   };
 
   return <DashboardClient bookings={bookings} config={config} hasBlobToken={hasBlobToken} />;

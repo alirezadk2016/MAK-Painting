@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { WhyMAK } from "@/components/WhyMAK";
 import { Reviews } from "@/components/Reviews";
@@ -6,6 +7,7 @@ import { PageHeader } from "@/components/PageHeader";
 import { AboutCTA } from "@/components/AboutCTA";
 import { STATS } from "@/data/site";
 import { canonicalAlternates, pageOG, pageTwitter } from "@/lib/seo";
+import { getSiteConfig } from "@/lib/site-config";
 
 const aboutJsonLd = {
   "@context": "https://schema.org",
@@ -44,7 +46,16 @@ export default async function AboutPage({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const t = await getTranslations("AboutPage");
+  const [t, siteConfig] = await Promise.all([
+    getTranslations("AboutPage"),
+    getSiteConfig().catch(() => null),
+  ]);
+
+  const about = siteConfig?.about;
+  const intro      = about?.intro      ?? t("intro");
+  const storyTitle = about?.storyTitle ?? t("storyTitle");
+  const storyBody  = about?.storyBody  ?? t("storyBody");
+  const photos     = about?.photos ?? [];
 
   const values = [
     { title: t("value1Title"), body: t("value1Body") },
@@ -62,7 +73,7 @@ export default async function AboutPage({
       <section className="py-16 lg:py-20 bg-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="text-lg lg:text-xl text-charcoal leading-relaxed font-medium mb-12 text-balance">
-            {t("intro")}
+            {intro}
           </p>
 
           {/* Stats */}
@@ -78,8 +89,25 @@ export default async function AboutPage({
             ))}
           </div>
 
-          <h2 className="text-2xl lg:text-3xl font-black text-charcoal mb-4">{t("storyTitle")}</h2>
-          <p className="text-gray-600 leading-relaxed">{t("storyBody")}</p>
+          <h2 className="text-2xl lg:text-3xl font-black text-charcoal mb-4">{storyTitle}</h2>
+          <p className="text-gray-600 leading-relaxed">{storyBody}</p>
+
+          {/* Dynamic photo grid */}
+          {photos.length > 0 && (
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-12">
+              {photos.map((photo) => (
+                <div key={photo.id} className="relative aspect-square rounded-2xl overflow-hidden">
+                  <Image
+                    src={photo.src}
+                    alt={photo.caption ?? "MAK Painting project"}
+                    fill
+                    className="object-cover hover:scale-105 transition-transform duration-500"
+                    sizes="(max-width: 640px) 50vw, 33vw"
+                  />
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
