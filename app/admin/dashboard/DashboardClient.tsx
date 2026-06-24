@@ -474,9 +474,9 @@ export function DashboardClient({ bookings, config: initialConfig, hasBlobToken 
   const DEFAULT_ABOUT = {
     eyebrow:     "About us",
     pageTitle:   "Melbourne painters who actually care",
-    intro:       "MAK Painting Group is a Melbourne-based painting business led by Hossain, delivering premium interior, exterior, roof and commercial painting across the city. We built our 5-star reputation one job at a time — with honest advice, meticulous prep and finishes that last.",
+    intro:       "MAK Painting Group is a Melbourne-based painting business led by Hossain, with over 12 years of hands-on experience delivering premium interior, exterior, roof and commercial painting across the city. We built our 5-star reputation one job at a time — with honest advice, meticulous prep and finishes that last.",
     storyTitle:  "Our story",
-    storyBody:   "What started as a passion for craftsmanship has grown into one of eastern Melbourne's most trusted painting teams. From our base in Ferntree Gully we serve homeowners, landlords, builders and businesses — always with the same promise: turn up on time, protect your property, and leave a finish you're proud of.",
+    storyBody:   "With 12 years in the trade, what started as a passion for craftsmanship has grown into one of eastern Melbourne's most trusted painting teams. From our base in Ferntree Gully we serve homeowners, landlords, builders and businesses — always with the same promise: turn up on time, protect your property, and leave a finish you're proud of.",
     valuesTitle: "What we stand for",
     ctaTitle:    "Ready to transform your space?",
     ctaBody:     "Get a free, no-obligation on-site quote from Melbourne's 5-star painters.",
