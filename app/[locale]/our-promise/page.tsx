@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { setRequestLocale, getTranslations } from "next-intl/server";
+import { setRequestLocale } from "next-intl/server";
 import { PageHeader } from "@/components/PageHeader";
 import { AboutCTA } from "@/components/AboutCTA";
 import { canonicalAlternates, pageOG, pageTwitter } from "@/lib/seo";
@@ -64,8 +64,22 @@ export default async function OurPromisePage({
   const { locale } = await params;
   setRequestLocale(locale);
 
+  const howToLd = {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name: "How MAK Painting Group protects your home before painting",
+    description: "Our 6-step property protection process keeps your floors, furniture and fixtures safe before, during and after every paint job.",
+    step: steps.map((s, i) => ({
+      "@type": "HowToStep",
+      position: i + 1,
+      name: s.title,
+      text: s.body,
+    })),
+  };
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToLd) }} />
       <PageHeader
         eyebrow="Our promise to you"
         title="We treat your home like our own"

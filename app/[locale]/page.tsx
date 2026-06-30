@@ -38,7 +38,7 @@ export default async function HomePage({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const siteConfig = await getSiteConfig();
+  const siteConfig = await getSiteConfig().catch(() => null);
   const pricingTiers = siteConfig?.pricing?.length ? siteConfig.pricing : DEFAULT_PRICING;
   const serviceCards = siteConfig?.serviceCards;
   const servicesSection = siteConfig?.servicesSection;

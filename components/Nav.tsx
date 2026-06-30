@@ -109,7 +109,7 @@ export function Nav() {
             </div>
 
             <Link href="/gallery" className="text-sm font-semibold text-gray-600 hover:text-charcoal transition-colors">{t("gallery")}</Link>
-            <Link href="/our-promise" className="text-sm font-semibold text-gray-600 hover:text-charcoal transition-colors">Our Promise</Link>
+            <Link href="/our-promise" className="text-sm font-semibold text-gray-600 hover:text-charcoal transition-colors">{t("ourPromise")}</Link>
             <Link href="/contact" className="text-sm font-semibold text-gray-600 hover:text-charcoal transition-colors">{t("contact")}</Link>
           </nav>
 
@@ -191,7 +191,7 @@ export function Nav() {
           </Link>
           <Link href="/our-promise" onClick={() => setMenuOpen(false)}
             className="block py-3 px-3 text-sm font-semibold text-charcoal hover:bg-blue-muted rounded-xl transition-colors">
-            Our Promise
+            {t("ourPromise")}
           </Link>
           <Link href="/contact" onClick={() => setMenuOpen(false)}
             className="block py-3 px-3 text-sm font-semibold text-charcoal hover:bg-blue-muted rounded-xl transition-colors">

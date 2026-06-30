@@ -42,7 +42,7 @@ export default async function GalleryPage({
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations("GalleryPage");
-  const siteConfig = await getSiteConfig();
+  const siteConfig = await getSiteConfig().catch(() => null);
   const galleryPairs = siteConfig?.gallery?.length ? siteConfig.gallery : undefined;
   const albumPhotos = siteConfig?.album?.length ? siteConfig.album : DEFAULT_ALBUM_PHOTOS;
   return (
