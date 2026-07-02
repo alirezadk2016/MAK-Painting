@@ -1,8 +1,9 @@
 "use client";
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 import { REVIEWS, BRAND } from "@/data/site";
 
-const MAPS_URL = "https://www.google.com/maps/place/MAK+Painting+Group/@-37.9725665,145.0531353,17z";
+const MAPS_URL = "https://maps.app.goo.gl/eyYsR4ViUKb8RQrF9";
 
 function GoogleIcon() {
   return (
@@ -28,6 +29,7 @@ function StarRating({ rating }: { rating: number }) {
 }
 
 export function Reviews() {
+  const t = useTranslations("Reviews");
   const row1 = REVIEWS.slice(0, 4);
   const row2 = REVIEWS.slice(4);
 
@@ -47,9 +49,9 @@ export function Reviews() {
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-8">
         <div className="text-center mb-12">
-          <p className="text-xs font-bold uppercase tracking-widest text-gold-light mb-2">What clients say</p>
+          <p className="text-xs font-bold uppercase tracking-widest text-gold-light mb-2">{t("eyebrow")}</p>
           <h2 className="text-4xl lg:text-5xl font-black text-white mb-4">
-            Our customers say great things
+            {t("title")}
           </h2>
 
           {/* Live Google rating badge */}
@@ -63,9 +65,9 @@ export function Reviews() {
             <div className="flex items-center gap-2">
               <span className="font-black text-charcoal text-lg leading-none">{BRAND.googleRating}</span>
               <StarRating rating={5} />
-              <span className="text-gray-500 text-sm">({BRAND.googleReviewCount} reviews)</span>
+              <span className="text-gray-500 text-sm">{t("reviewsCount", { count: BRAND.googleReviewCount })}</span>
             </div>
-            <span className="text-xs text-gold-deep font-semibold group-hover:underline">View on Google →</span>
+            <span className="text-xs text-gold-deep font-semibold group-hover:underline">{t("viewOnGoogle")}</span>
           </a>
         </div>
 
@@ -144,7 +146,7 @@ export function Reviews() {
             className="inline-flex items-center gap-2 bg-white/15 hover:bg-white/25 text-white font-semibold rounded-full px-6 py-3 text-sm transition-colors border border-white/20"
           >
             <GoogleIcon />
-            Leave us a review on Google
+            {t("leaveReview")}
           </a>
         </div>
       </div>

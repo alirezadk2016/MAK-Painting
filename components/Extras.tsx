@@ -1,16 +1,18 @@
 "use client";
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 import { EXTRAS } from "@/data/site";
 
 export function Extras() {
+  const t = useTranslations("Extras");
   return (
     <section className="py-16 bg-canvas">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-10">
-          <p className="text-xs font-bold uppercase tracking-widest text-terra mb-2">Customise your job</p>
-          <h2 className="text-3xl lg:text-4xl font-black text-charcoal mb-3">Add-on extras</h2>
+          <p className="text-xs font-bold uppercase tracking-widest text-terra mb-2">{t("eyebrow")}</p>
+          <h2 className="text-3xl lg:text-4xl font-black text-charcoal mb-3">{t("title")}</h2>
           <p className="text-gray-500 max-w-lg mx-auto">
-            Tailor your painting project with any of these popular extras. Just let us know when booking.
+            {t("subtitle")}
           </p>
         </div>
         <div className="flex flex-wrap justify-center gap-3">

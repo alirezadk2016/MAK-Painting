@@ -7,7 +7,10 @@
     scroll-behavior: smooth;
   }
   body {
-    @apply text-charcoal bg-white antialiased;
+    @apply text-charcoal bg-silver antialiased font-sans;
+  }
+  body.font-fa {
+    font-family: var(--font-vazirmatn), var(--font-manrope), system-ui, sans-serif;
   }
   ::selection {
     background-color: #C9A24B;
@@ -34,5 +37,9 @@
   }
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
+  }
+  /* Flip icon horizontally in RTL layouts */
+  [dir="rtl"] .rtl-flip {
+    transform: scaleX(-1);
   }
 }

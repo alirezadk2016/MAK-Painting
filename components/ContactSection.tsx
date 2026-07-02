@@ -1,15 +1,67 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import { BRAND, SERVICES } from "@/data/site";
 
 export function ContactSection() {
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [files, setFiles] = useState<{ name: string; url: string }[]>([]);
+  const fileRef = useRef<HTMLInputElement>(null);
+  const t = useTranslations("Contact");
 
-  function handleSubmit(e: React.FormEvent) {
+  const [form, setForm] = useState({
+    firstName: "", lastName: "", email: "", phone: "",
+    suburb: "", service: "", message: "",
+  });
+
+  // Revoke object URLs on unmount to prevent memory leaks
+  useEffect(() => {
+    return () => { files.forEach(f => URL.revokeObjectURL(f.url)); };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  function set(k: keyof typeof form) {
+    return (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
+      setForm((f) => ({ ...f, [k]: e.target.value }));
+  }
+
+  function addFiles(e: React.ChangeEvent<HTMLInputElement>) {
+    const picked = Array.from(e.target.files ?? []);
+    if (!picked.length) return;
+    const newEntries = picked.map(f => ({ name: f.name, url: URL.createObjectURL(f) }));
+    setFiles(prev => [...prev, ...newEntries]);
+    // Reset input so same file can be picked again
+    if (fileRef.current) fileRef.current.value = "";
+  }
+
+  function removeFile(url: string) {
+    URL.revokeObjectURL(url);
+    setFiles(prev => prev.filter(f => f.url !== url));
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => { setLoading(false); setSent(true); }, 1200);
+    setError("");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...form, photoCount: files.length }),
+      });
+      if (res.ok) {
+        files.forEach(f => URL.revokeObjectURL(f.url));
+        setSent(true);
+      } else {
+        setError(t("errorGeneric"));
+      }
+    } catch {
+      setError(t("errorNetwork"));
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -19,20 +71,20 @@ export function ContactSection() {
 
           {/* Info */}
           <div>
-            <p className="text-xs font-bold uppercase tracking-widest text-terra mb-2">Get in touch</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-terra mb-2">{t("eyebrow")}</p>
             <h2 className="text-3xl lg:text-4xl font-black text-charcoal mb-4">
-              Get your free quote today.
+              {t("title")}
             </h2>
             <p className="text-gray-500 leading-relaxed mb-8">
-              Fill in the form and we&apos;ll contact you within one business day to arrange a free on-site consultation — obligation-free.
+              {t("subtitle")}
             </p>
 
             <div className="space-y-5">
               {[
-                { icon: "phone", label: "Phone", val: BRAND.phone, href: `tel:${BRAND.phone.replace(/\s/g,"")}` },
-                { icon: "whatsapp", label: "WhatsApp", val: "Chat on WhatsApp", href: `https://wa.me/${BRAND.whatsapp}` },
-                { icon: "email", label: "Email", val: BRAND.email, href: `mailto:${BRAND.email}` },
-                { icon: "pin", label: "Location", val: BRAND.address, href: BRAND.googleMapsUrl },
+                { icon: "phone", label: t("phone"), val: BRAND.phone, href: `tel:${BRAND.phone.replace(/\s/g, "")}`, ltr: true },
+                { icon: "whatsapp", label: t("whatsapp"), val: t("whatsappCta"), href: `https://wa.me/${BRAND.whatsapp}`, ltr: false },
+                { icon: "email", label: t("email"), val: BRAND.email, href: `mailto:${BRAND.email}`, ltr: true },
+                { icon: "pin", label: t("location"), val: BRAND.address, href: BRAND.googleMapsUrl, ltr: false },
               ].map((item) => (
                 <div key={item.label} className="flex items-start gap-3.5">
                   <div className="w-10 h-10 bg-blue-muted rounded-xl flex items-center justify-center flex-shrink-0 text-gold-deep">
@@ -51,25 +103,21 @@ export function ContactSection() {
                   </div>
                   <div>
                     <p className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-0.5">{item.label}</p>
-                    {item.href ? (
-                      <a href={item.href} className="font-semibold text-charcoal hover:text-gold-deep transition-colors">{item.val}</a>
-                    ) : (
-                      <p className="font-semibold text-charcoal">{item.val}</p>
-                    )}
+                    <a href={item.href} dir={item.ltr ? "ltr" : undefined} className="font-semibold text-charcoal hover:text-gold-deep transition-colors inline-block">{item.val}</a>
                   </div>
                 </div>
               ))}
             </div>
 
             <div className="mt-8 p-4 bg-white rounded-2xl border border-gray-100 shadow-card text-xs text-gray-400 leading-relaxed">
-              <strong className="text-gray-600">Speak to {BRAND.contactName}</strong> &nbsp;·&nbsp;
+              <strong className="text-gray-600">{t("speakTo", { name: BRAND.contactName })}</strong> &nbsp;·&nbsp;
               {BRAND.serviceTypes} &nbsp;·&nbsp;
-              Fully insured public liability
+              {t("insured")}
             </div>
           </div>
 
           {/* Form */}
-          <div className="bg-white rounded-3xl shadow-card-lg border border-gray-100 p-8">
+          <div className="bg-white rounded-3xl shadow-card-lg border border-gray-100 p-5 sm:p-8">
             {sent ? (
               <div className="text-center py-12">
                 <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -77,71 +125,114 @@ export function ContactSection() {
                     <path d="M20 6L9 17l-5-5" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
                 </div>
-                <h3 className="text-xl font-black text-charcoal mb-2">Enquiry received!</h3>
-                <p className="text-gray-500">We&apos;ll be in touch within one business day to arrange your free on-site quote.</p>
+                <h3 className="text-xl font-black text-charcoal mb-2">{t("successTitle")}</h3>
+                <p className="text-gray-500">{t("successBody")}</p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4">
-                <h3 className="text-xl font-black text-charcoal mb-6">Request a free quote</h3>
+                <h3 className="text-xl font-black text-charcoal mb-6">{t("formTitle")}</h3>
 
                 <div className="grid sm:grid-cols-2 gap-4">
-                  <Field label="First name" id="fname" placeholder="John" required />
-                  <Field label="Last name" id="lname" placeholder="Smith" required />
+                  <Field label={t("firstName")} id="fname" placeholder="John" value={form.firstName} onChange={set("firstName")} required />
+                  <Field label={t("lastName")} id="lname" placeholder="Smith" value={form.lastName} onChange={set("lastName")} required />
                 </div>
                 <div className="grid sm:grid-cols-2 gap-4">
-                  <Field label="Email" id="email" type="email" placeholder="john@email.com" required />
-                  <Field label="Phone" id="phone" type="tel" placeholder="04xx xxx xxx" required />
+                  <Field label={t("emailLabel")} id="email" type="email" placeholder="john@email.com" value={form.email} onChange={set("email")} required />
+                  <Field label={t("phoneLabel")} id="phone" type="tel" placeholder="04xx xxx xxx" value={form.phone} onChange={set("phone")} required />
                 </div>
-                <Field label="Suburb / Postcode" id="suburb" placeholder="e.g. Brighton 3186" required />
+                <Field label={t("suburb")} id="suburb" placeholder="e.g. Brighton 3186" value={form.suburb} onChange={set("suburb")} required />
 
                 <div className="flex flex-col gap-1">
                   <label className="text-xs font-bold uppercase tracking-wide text-gray-500" htmlFor="service">
-                    Service required
+                    {t("serviceRequired")}
                   </label>
                   <select
                     id="service"
-                    className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium text-charcoal focus:outline-none focus:border-blue-brand transition-colors"
+                    value={form.service}
+                    onChange={set("service")}
+                    className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium text-charcoal focus:outline-none focus:border-gold transition-colors"
                   >
-                    <option value="">Select a service…</option>
+                    <option value="">{t("selectService")}</option>
                     {SERVICES.map((s) => <option key={s.id}>{s.title}</option>)}
                   </select>
                 </div>
 
                 <div className="flex flex-col gap-1">
                   <label className="text-xs font-bold uppercase tracking-wide text-gray-500" htmlFor="msg">
-                    Tell us about your project
+                    {t("projectDetails")}
                   </label>
                   <textarea
                     id="msg"
                     rows={4}
-                    placeholder="Property type, number of rooms, timeline, any extras…"
-                    className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium text-charcoal focus:outline-none focus:border-blue-brand transition-colors resize-none"
+                    placeholder={t("projectPlaceholder")}
+                    value={form.message}
+                    onChange={set("message")}
+                    className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium text-charcoal focus:outline-none focus:border-gold transition-colors resize-none"
                   />
                 </div>
 
+                {/* Photo upload */}
                 <div className="flex flex-col gap-1">
                   <label className="text-xs font-bold uppercase tracking-wide text-gray-500">
-                    Upload photos (optional)
+                    {t("uploadPhotos")}
                   </label>
-                  <label className="flex flex-col items-center justify-center gap-2 bg-gray-50 border-2 border-dashed border-gray-200 rounded-xl p-6 cursor-pointer hover:border-blue-brand hover:bg-blue-muted/50 transition-all">
+                  <label
+                    htmlFor="file-upload"
+                    className="flex flex-col items-center justify-center gap-2 bg-gray-50 border-2 border-dashed border-gray-200 rounded-xl p-6 cursor-pointer hover:border-gold hover:bg-blue-muted/50 transition-all"
+                  >
                     <svg className="w-6 h-6 text-gray-400" viewBox="0 0 24 24" fill="none">
                       <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
-                    <span className="text-sm text-gray-400 font-medium">Click to upload or drag &amp; drop</span>
-                    <span className="text-xs text-gray-300">PNG, JPG up to 10MB each</span>
-                    <input type="file" accept="image/*" multiple className="hidden" />
+                    <span className="text-sm text-gray-400 font-medium">{t("uploadCta")}</span>
+                    <span className="text-xs text-gray-300">{t("uploadHint")}</span>
+                    <input
+                      id="file-upload"
+                      ref={fileRef}
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      className="hidden"
+                      onChange={addFiles}
+                    />
                   </label>
+
+                  {files.length > 0 && (
+                    <div className="grid grid-cols-3 gap-2 mt-2">
+                      {files.map((f) => (
+                        <div key={f.url} className="relative group">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={f.url} alt={f.name} className="w-full h-20 object-cover rounded-xl border border-gray-200" />
+                          {/* Remove button */}
+                          <button
+                            type="button"
+                            onClick={() => removeFile(f.url)}
+                            aria-label="Remove photo"
+                            className="absolute top-1 right-1 w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center opacity-100 transition-opacity shadow-sm"
+                          >
+                            <svg className="w-3 h-3" viewBox="0 0 12 12" fill="none">
+                              <path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+                            </svg>
+                          </button>
+                          <p className="text-xs text-gray-400 truncate mt-1">{f.name}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
+
+                {error && (
+                  <p className="text-sm text-red-500 text-center">{error}</p>
+                )}
 
                 <button
                   type="submit"
                   disabled={loading}
                   className="w-full bg-terra hover:bg-terra-dark disabled:opacity-70 text-ink font-bold rounded-xl py-4 text-base transition-all hover:shadow-md"
                 >
-                  {loading ? "Sending…" : "Send my free quote request"}
+                  {loading ? t("sending") : t("submit")}
                 </button>
                 <p className="text-xs text-gray-400 text-center">
-                  We respond within one business day. No obligation — ever.
+                  {t("respondNote")}
                 </p>
               </form>
             )}
@@ -153,9 +244,10 @@ export function ContactSection() {
 }
 
 function Field({
-  label, id, type = "text", placeholder, required,
+  label, id, type = "text", placeholder, value, onChange, required,
 }: {
-  label: string; id: string; type?: string; placeholder: string; required?: boolean;
+  label: string; id: string; type?: string; placeholder: string;
+  value: string; onChange: React.ChangeEventHandler<HTMLInputElement>; required?: boolean;
 }) {
   return (
     <div className="flex flex-col gap-1">
@@ -166,8 +258,11 @@ function Field({
         id={id}
         type={type}
         placeholder={placeholder}
+        value={value}
+        onChange={onChange}
         required={required}
-        className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium text-charcoal focus:outline-none focus:border-blue-brand transition-colors"
+        dir={type === "email" || type === "tel" ? "ltr" : undefined}
+        className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium text-charcoal focus:outline-none focus:border-gold transition-colors"
       />
     </div>
   );

@@ -1,10 +1,12 @@
 "use client";
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 import { useQuoteWizard } from "./QuoteWizardProvider";
 import { STEPS } from "@/data/site";
 
 export function HowItWorks() {
   const { open } = useQuoteWizard();
+  const t = useTranslations("HowItWorks");
 
   return (
     <section id="how-it-works" className="relative py-20 overflow-hidden">
@@ -23,17 +25,20 @@ export function HowItWorks() {
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-8">
         <div className="text-center mb-14">
-          <p className="text-xs font-bold uppercase tracking-widest text-gold-light mb-2">Simple process</p>
+          <p className="text-xs font-bold uppercase tracking-widest text-gold-light mb-2">{t("eyebrow")}</p>
           <h2 className="text-4xl lg:text-5xl font-black text-white mb-4">
-            Getting started is easy<br />as 1 2 3…
+            {t("title")}
           </h2>
           <p className="text-gray-300 text-lg max-w-xl mx-auto">
-            Who knew arranging a premium paint job could be this simple?
+            {t("subtitle")}
           </p>
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          {STEPS.map((step, i) => (
+          {STEPS.map((step, i) => {
+            const titleKey = `step${i}Title` as Parameters<typeof t>[0];
+            const descKey  = `step${i}Desc`  as Parameters<typeof t>[0];
+            return (
             <motion.div
               key={i}
               initial={{ opacity: 0, y: 20 }}
@@ -47,20 +52,20 @@ export function HowItWorks() {
                 <div className="hidden lg:block absolute top-10 -right-3 w-6 h-px bg-white/30 z-10" />
               )}
               <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center mb-4 shadow-md">
-                <span className="text-gold-deep font-black text-lg">{step.num}</span>
+                <span className="text-gold-deep font-black text-lg" dir="ltr">{step.num}</span>
               </div>
-              <h3 className="text-white font-bold text-lg mb-2">{step.title}</h3>
-              <p className="text-gray-300 text-sm leading-relaxed">{step.desc}</p>
+              <h3 className="text-white font-bold text-lg mb-2">{t(titleKey)}</h3>
+              <p className="text-gray-300 text-sm leading-relaxed">{t(descKey)}</p>
             </motion.div>
-          ))}
+          )})}
         </div>
 
         <div className="text-center">
           <button
-            onClick={open}
+            onClick={() => open()}
             className="bg-terra hover:bg-terra-dark text-ink font-bold rounded-full px-8 py-4 text-base transition-all hover:shadow-lg hover:-translate-y-px"
           >
-            Get my free quote — takes 60 seconds
+            {t("cta")}
           </button>
         </div>
       </div>

@@ -1,12 +1,13 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 import { STATS } from "@/data/site";
 
-const MAPS_URL = "https://www.google.com/maps/place/MAK+Painting+Group/@-37.9725665,145.0531353,17z";
+const MAPS_URL = "https://maps.app.goo.gl/eyYsR4ViUKb8RQrF9";
 
 function Counter({ target, suffix }: { target: number; suffix: string }) {
-  const [val, setVal] = useState(0);
+  const [val, setVal] = useState(target);
   const ref = useRef<HTMLSpanElement>(null);
   const started = useRef(false);
 
@@ -16,8 +17,9 @@ function Counter({ target, suffix }: { target: number; suffix: string }) {
     const io = new IntersectionObserver(([e]) => {
       if (e.isIntersecting && !started.current) {
         started.current = true;
+        setVal(0);
         const start = performance.now();
-        const dur = 1600;
+        const dur = 1400;
         const step = (now: number) => {
           const t = Math.min((now - start) / dur, 1);
           const ease = 1 - Math.pow(1 - t, 3);
@@ -28,7 +30,7 @@ function Counter({ target, suffix }: { target: number; suffix: string }) {
         requestAnimationFrame(step);
         io.disconnect();
       }
-    }, { threshold: 0.5 });
+    }, { threshold: 0.1 });
     io.observe(el);
     return () => io.disconnect();
   }, [target]);
@@ -44,14 +46,15 @@ const ICONS = [
 ];
 
 export function WhyMAK() {
+  const t = useTranslations("WhyMAK");
   return (
     <section id="why-mak" className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-14">
-          <p className="text-xs font-bold uppercase tracking-widest text-terra mb-2">Why choose us</p>
-          <h2 className="text-4xl lg:text-5xl font-black text-charcoal mb-4">Why Melbourne chooses MAK</h2>
+          <p className="text-xs font-bold uppercase tracking-widest text-terra mb-2">{t("eyebrow")}</p>
+          <h2 className="text-4xl lg:text-5xl font-black text-charcoal mb-4">{t("title")}</h2>
           <p className="text-gray-500 text-lg max-w-xl mx-auto">
-            5.0★ rated on Google. Trusted by homeowners and strata managers across Melbourne.
+            {t("subtitle")}
           </p>
         </div>
 
@@ -79,7 +82,7 @@ export function WhyMAK() {
                     <Counter target={stat.num} suffix={stat.suffix} />
                   </p>
                   <p className="text-sm font-semibold text-gray-500">{stat.label}</p>
-                  {isRating && <p className="text-xs text-gold-deep mt-1">View on Google →</p>}
+                  {isRating && <p className="text-xs text-gold-deep mt-1">{t("viewOnGoogle")}</p>}
                 </Wrapper>
               </motion.div>
             );
@@ -89,9 +92,9 @@ export function WhyMAK() {
         {/* Feature grid */}
         <div className="grid md:grid-cols-3 gap-6">
           {[
-            { title: "Dulux Accredited", desc: "We are certified Dulux Accredited painters — trusted to meet the highest industry standards for application and surface preparation." },
-            { title: "Fully insured & police checked", desc: "All MAK painters carry a current $20M public liability policy and valid police clearance. Your home is always in safe hands." },
-            { title: "Premium prep — always", desc: "We never skip prep. Every surface is washed, sanded, filled and primed before a single coat of paint is applied." },
+            { title: t("feature1Title"), desc: t("feature1Body") },
+            { title: t("feature2Title"), desc: t("feature2Body") },
+            { title: t("feature3Title"), desc: t("feature3Body") },
           ].map((f) => (
             <div key={f.title} className="flex gap-4 p-6 rounded-2xl border border-gray-100 bg-white shadow-card">
               <div className="w-8 h-8 bg-terra/10 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">

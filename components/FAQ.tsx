@@ -1,32 +1,40 @@
 "use client";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { FAQS } from "@/data/site";
+import type { FaqItem } from "@/lib/site-config";
 
-export function FAQ() {
+interface Props { faqs?: FaqItem[]; }
+
+export function FAQ({ faqs }: Props) {
+  const items = faqs ?? FAQS;
   const [open, setOpen] = useState<number | null>(null);
+  const t = useTranslations("FAQ");
 
   return (
     <section id="faq" className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-[1fr_2fr] gap-12 items-start">
           <div className="lg:sticky lg:top-24">
-            <p className="text-xs font-bold uppercase tracking-widest text-terra mb-2">FAQ</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-terra mb-2">{t("eyebrow")}</p>
             <h2 className="text-3xl lg:text-4xl font-black text-charcoal mb-4">
-              Frequently asked questions
+              {t("title")}
             </h2>
             <p className="text-gray-500 mb-6">
-              Can&apos;t find what you&apos;re looking for?{" "}
-              <a href="#contact" className="text-gold-deep font-semibold hover:underline">
-                Contact us
-              </a>{" "}
-              and we&apos;ll be happy to help.
+              {t("contactPrompt")}{" "}
+              <Link href="/contact" className="text-gold-deep font-semibold hover:underline">
+                {t("contactLink")}
+              </Link>{" "}
+              {t("contactSuffix")}
             </p>
             <div className="bg-blue-muted rounded-2xl p-6">
-              <p className="text-sm font-bold text-charcoal mb-2">Need a quick answer?</p>
-              <p className="text-sm text-gray-500 mb-4">Call us now — we answer during business hours.</p>
+              <p className="text-sm font-bold text-charcoal mb-2">{t("quickTitle")}</p>
+              <p className="text-sm text-gray-500 mb-4">{t("quickBody")}</p>
               <a
                 href="tel:0404000772"
+                dir="ltr"
                 className="flex items-center gap-2 bg-blue-brand text-ink font-bold rounded-xl px-4 py-3 text-sm hover:bg-blue-dark transition-colors"
               >
                 <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none">
@@ -38,7 +46,7 @@ export function FAQ() {
           </div>
 
           <div className="space-y-0 divide-y divide-gray-100">
-            {FAQS.map((faq, i) => (
+            {items.map((faq, i) => (
               <div key={i}>
                 <button
                   onClick={() => setOpen(open === i ? null : i)}
