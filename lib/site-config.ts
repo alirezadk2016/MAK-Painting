@@ -152,6 +152,7 @@ export const DEFAULT_FAQS: FaqItem[] = [
 ];
 
 export const DEFAULT_ALBUM_PHOTOS: AlbumPhoto[] = [
+  { id: 0,  src: "/photo_2026-07-02_09-52-32 (2).jpg", caption: "Our team on the job" },
   { id: 1,  src: "/living-room-after.jpg",    caption: "Interior Painting" },
   { id: 2,  src: "/kitchen-after.jpg",         caption: "Kitchen Painting" },
   { id: 3,  src: "/bedroom-pink-after.jpg",    caption: "Bedroom Painting" },
