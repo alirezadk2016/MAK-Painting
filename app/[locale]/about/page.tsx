@@ -104,6 +104,24 @@ export default async function AboutPage({
           <h2 className="text-2xl lg:text-3xl font-black text-charcoal mb-4">{storyTitle}</h2>
           <p className="text-gray-600 leading-relaxed">{storyBody}</p>
 
+          {/* Founder at work */}
+          <figure className="mt-10 relative rounded-2xl overflow-hidden shadow-card">
+            <div className="relative aspect-[4/3] sm:aspect-[16/10]">
+              <Image
+                src="/photo_2026-07-02_09-52-32.jpg"
+                alt="Hossain, founder of MAK Painting Group, painting on-site in Melbourne"
+                fill
+                className="object-cover"
+                sizes="(max-width: 896px) 100vw, 896px"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-charcoal/70 to-transparent" />
+            </div>
+            <figcaption className="absolute bottom-0 inset-x-0 p-5">
+              <p className="text-white font-black text-lg">Hossain — Founder & Lead Painter</p>
+              <p className="text-white/80 text-sm">Hands-on, on every job — bringing 12 years of craftsmanship to your home.</p>
+            </figcaption>
+          </figure>
+
           {/* Photo grid */}
           {photos.length > 0 && (
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-12">
